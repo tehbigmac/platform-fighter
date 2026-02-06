@@ -1,0 +1,24 @@
+using System;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class UIBootStrapper : MonoBehaviour
+{
+    void Awake()
+    {
+        if (!SceneManager.GetSceneByName("Managers").isLoaded)
+        {
+            SceneManager.LoadSceneAsync("Managers", LoadSceneMode.Additive);
+        }
+
+        if (!SceneManager.GetSceneByName("UI").isLoaded)
+        {
+            SceneManager.LoadSceneAsync("UI", LoadSceneMode.Additive);
+        }
+
+        if (!SceneManager.GetSceneByName("Stage").isLoaded)
+        {
+            SceneManager.LoadSceneAsync("Stage", LoadSceneMode.Additive);
+        }
+    }
+}
