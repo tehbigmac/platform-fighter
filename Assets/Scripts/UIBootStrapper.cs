@@ -20,5 +20,10 @@ public class UIBootStrapper : MonoBehaviour
         {
             SceneManager.LoadSceneAsync("Stage", LoadSceneMode.Additive);
         }
+
+        if (!SceneManager.GetSceneByName("Player").isLoaded)
+        {
+            SceneManager.LoadSceneAsync("Player", LoadSceneMode.Additive);
+        }
     }
 }
