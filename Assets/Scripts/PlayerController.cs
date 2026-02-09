@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private Rigidbody rb;
     void Start()
     {
-        Rigidbody rb;
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
