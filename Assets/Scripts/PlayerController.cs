@@ -19,12 +19,13 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!onGround) {
+            moveSpeed = 1;
+        } else {
+            moveSpeed = 1;
+        }
+
         rb.AddForce(Vector3.left * moveSpeed * moveValue.x * -1, ForceMode.Force);
-    if (!onGround) {
-        moveSpeed = 10;
-    } else {
-        moveSpeed = 100;
-    }
     }
 
     private void OnJump(InputValue value)
