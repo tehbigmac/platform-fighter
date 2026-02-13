@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 public class UIManager : MonoBehaviour
 {
@@ -7,16 +8,16 @@ public class UIManager : MonoBehaviour
 
 public float[] playerKB = new float[2]; // PLAYER COUNT GOES HERE AND ON DECLARATIONS BELOW
 public float[] playerKBPrev = new float[2];
-public TextMeshProUGUI[] playerKBDisplay = new TextMeshProUGUI[2]
+public TextMeshProUGUI[] playerKBDisplay = new TextMeshProUGUI[2];
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        foreach (int i in playerKB)
+        for (int i = 0; i < playerKB.Length; i++)
         {
             playerKB[i] = 0.0f;
         }
-        foreach (int i in playerKBPrev)
+        for (int i = 0; i < playerKBPrev.Length; i++)
         {
             playerKBPrev[i] = 0.0f;
         }
@@ -26,30 +27,31 @@ public TextMeshProUGUI[] playerKBDisplay = new TextMeshProUGUI[2]
     void Update()
     {
         
-        foreach (int i in playerKB)
+        for (int i = 0; i < playerKB.Length; i++)
         {
             playerKBDisplay[i].text = playerKB[i].ToString("F1") + "%";
             
-
             playerKBPrev[i] = playerKB[i];
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            playerOneKB += 6.7f;
+            playerKB[0] += 6.7f;
+            Debug.Log("q shi");
         }
         if (Input.GetKeyDown(KeyCode.E))
         {
-            playerTwoKB += 4.1f;
+            playerKB[1] += 4.1f;
+            Debug.Log("e shi");
         }
 
-        if (playerOneKBPrev != playerOneKB)
+        for (int i = 0; i < playerKB.Length; i++)
         {
-            
+            if (playerKBPrev[i] != playerKB[i])
+            {
+                playerKBDisplay[i].text = playerKB[i].ToString("F1") + "%";
+            }
         }
-
-        playerOneKBDisplay.text = playerOneKB.ToString("F1") + "%";
-        playerTwoKBDisplay.text = playerTwoKB.ToString("F1") + "%";
     }
 
     void KBUIEffect(TextMeshProUGUI toEffect)
