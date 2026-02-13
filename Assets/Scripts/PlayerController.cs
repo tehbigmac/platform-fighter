@@ -9,8 +9,11 @@ public class PlayerController : MonoBehaviour
 
     private bool onGround;
     private float jumps = 0;
+    private float dodgeCooldown = 0;
 
     private bool invulnerable = false;
+
+    private float stickNull = 6741; //arbitrary value can be anything over 360
 
     private Vector2 moveValue;
     void Start()
@@ -34,35 +37,70 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // INPUT FUNCTIONS ------------------------------------------------------------------------------------------
     private void OnJump(InputValue value)
-        {
-            if (jumps > 0) {
-                rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
-                jumps --;
-                onGround = false;
-            }
-        }
-
-    private void OnMove(InputValue value)
-        {
-            moveValue = value.Get<Vector2>();
-        }
-
-    private void OnDodge(InputValue value) {
-        if (moveValue.x >= 0 || moveValue.y >= 0) {
-            invulnerable = true;
-            float stickAngle = Mathf.Atan(moveValue.y / moveValue.x);
-            Debug.Log("angle of stick is " + stickAngle);
-            if (stickAngle > -0.45  && stickAngle > 0.45) {
-                Debug.Log("dodged right");
-            } else if (stickAngle > 0.45  && stickAngle < 1.45) {
-                Debug.Log("dodged up");
-            }
+    {
+        if (jumps > 0) {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+            jumps --;
+            onGround = false;
         }
     }
 
+    private void OnMove(InputValue value)
+    {
+        moveValue = value.Get<Vector2>();
+    }
+
+    private void OnDodge(InputValue value) 
+    {
+        float angle = CheckStickAngle();
+        if (dodgeCooldown <= 0) {
+            if (angle > 315 && angle <= 360 || angle < 45 && angle >= 0 ) {
+                Debug.Log("dodge right");
+            }
+            if (angle > 45 && angle <= 135) {
+                Debug.Log("dodge up");
+            }
+            if (angle > 135 && angle <= 225) {
+                Debug.Log("dodge left");
+            }
+            if (angle > 225 && angle <= 315) {
+                Debug.Log("dodge down");
+            }
+        }
+    }
+    
+
+    // DETECTOR FUNCTIONS ------------------------------------------------------------------------------------------
     private void OnCollisionEnter(Collision collision) {
         onGround = true;
         jumps = 2;
+    }
+
+    public float CheckStickAngle() {
+        //doom blackout coding idek but it works ig
+        if (moveValue.x > 0 && moveValue.y != 0) 
+        {
+            invulnerable = true;
+            float stickAngle = Mathf.Rad2Deg * Mathf.Atan(moveValue.y / moveValue.x);
+            stickAngle = (stickAngle + 360) % 360;
+
+            Debug.Log("angle of stick 1 is " + stickAngle);
+            return stickAngle;
+        }
+        else if (moveValue.x < 0 && moveValue.y != 0)
+        {
+            invulnerable = true;
+            float stickAngle = Mathf.Rad2Deg * Mathf.Atan(moveValue.y / moveValue.x);
+            stickAngle = (stickAngle + 180) % 360;
+
+            Debug.Log("angle of stick 2 is " + stickAngle);
+            return stickAngle;
+        } 
+        else {
+            Debug.Log("hi :D");
+            return stickNull;
+        }
     }
 }
