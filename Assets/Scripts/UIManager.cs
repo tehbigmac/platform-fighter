@@ -5,7 +5,6 @@ using Unity.VisualScripting;
 public class UIManager : MonoBehaviour
 {
 
-
 public float[] playerKB = new float[2]; // PLAYER COUNT GOES HERE AND ON DECLARATIONS BELOW
 public float[] playerKBPrev = new float[2];
 public TextMeshProUGUI[] playerKBDisplay = new TextMeshProUGUI[2];
@@ -16,6 +15,7 @@ public TextMeshProUGUI[] playerKBDisplay = new TextMeshProUGUI[2];
         for (int i = 0; i < playerKB.Length; i++)
         {
             playerKB[i] = 0.0f;
+            playerKBDisplay[i].SetText(playerKB[i].ToString("F1") + "%");
         }
         for (int i = 0; i < playerKBPrev.Length; i++)
         {
@@ -29,8 +29,6 @@ public TextMeshProUGUI[] playerKBDisplay = new TextMeshProUGUI[2];
         
         for (int i = 0; i < playerKB.Length; i++)
         {
-            playerKBDisplay[i].text = playerKB[i].ToString("F1") + "%";
-            
             playerKBPrev[i] = playerKB[i];
         }
 
@@ -54,9 +52,9 @@ public TextMeshProUGUI[] playerKBDisplay = new TextMeshProUGUI[2];
         }
     }
 
-    void KBUIEffect(TextMeshProUGUI toEffect)
+    void KBUIEffect(TextMeshProUGUI affectedGUI)
     {
-        
+        affectedGUI.color = Color.red;
     }
 }
 
