@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,32 +12,42 @@ public class PlayerController : MonoBehaviour
     private float jumps = 0;
     private float fastFallSpeed = -20;
     private float dodgeCooldown = 0;
-    private float dodgeForce = 20;
+    private float dodgeForce = 10;
 
     private bool invulnerable = false;
 
     private float stickNull = 6741; //arbitrary value can be anything over 360
 
     private Vector2 moveValue;
+
+    // UNITY STUFF ------------------------------------------------------------------------------------------
     void Start()
     {
         rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!onGround) {
-            moveSpeed = 8;
+            moveSpeed = 6;
         } else {
             moveSpeed = 10;
         }
 
-        EditXV(moveValue.x * moveSpeed);
+        if (!invulnerable || onGround) {
+            EditXV(moveValue.x * moveSpeed);
+        }
 
         if (moveValue.y <= -0.5 && !onGround) {
             AddLinearVelocity(0, fastFallSpeed, 0);
         }
+    }
+
+
+    // COROUTINES ------------------------------------------------------------------------------------------
+    IEnumerator IFrames() {
+        yield return new WaitForSeconds(0.67f);
+        invulnerable = false;
     }
 
     // INPUT FUNCTIONS ------------------------------------------------------------------------------------------
@@ -57,7 +68,9 @@ public class PlayerController : MonoBehaviour
     private void OnDodge(InputValue value) 
     {
         float angle = CheckStickAngle();
-        if (dodgeCooldown <= 0) {
+        if (invulnerable == false) {
+            invulnerable = true;
+            StartCoroutine(IFrames());
             if (angle > 315 && angle <= 360 || angle < 45 && angle >= 0 ) {
                 EditXV(dodgeForce);
                 Debug.Log("dodge right");
@@ -89,45 +102,46 @@ public class PlayerController : MonoBehaviour
         //doom blackout coding idek but it works ig
         if (moveValue.x > 0 && moveValue.y != 0) 
         {
-            invulnerable = true;
             float stickAngle = Mathf.Rad2Deg * Mathf.Atan(moveValue.y / moveValue.x);
             stickAngle = (stickAngle + 360) % 360;
 
-            Debug.Log("angle of stick 1 is " + stickAngle);
             return stickAngle;
         }
         else if (moveValue.x < 0 && moveValue.y != 0)
         {
-            invulnerable = true;
             float stickAngle = Mathf.Rad2Deg * Mathf.Atan(moveValue.y / moveValue.x);
             stickAngle = (stickAngle + 180) % 360;
 
-            Debug.Log("angle of stick 2 is " + stickAngle);
             return stickAngle;
-        } else if ((moveValue.x == 0 && moveValue.y != 0) || (moveValue.x != 0 && moveValue.y == 0)) {
-            if (moveValue.x > 0) 
-            {
-                return 0;
-            } 
-            else if (moveValue.x < 0) 
-            {
-                return  180;
-            } 
-            else if (moveValue.y > 0) 
-            {
-                return 90;
-            } 
-            else (moveValue.y < 0) 
-            {
-                return  270;
-            }
-            Debug.Log ("wasd input detected");
         }
-        else {
+        //  else if ((moveValue.x == 0 && moveValue.y != 0) || (moveValue.x != 0 && moveValue.y == 0)) 
+        // {
+        //     if (moveValue.x > 0) 
+        //     {
+        //         return 0;
+        //     } 
+        //     else if (moveValue.x < 0) 
+        //     {
+        //         return  180;
+        //     } 
+        //     else if (moveValue.y > 0) 
+        //     {
+        //         return 90;
+        //     } 
+        //     else (moveValue.y < 0) 
+        //     {
+        //         return  270;
+        //     }
+        //     Debug.Log ("wasd input detected");
+        // }
+        else 
+        {
             Debug.Log("hi :D");
             return stickNull;
         }
     }
+
+    // VELOCITY FUNCTIONS ------------------------------------------------------------------------------------------
 
     public void AddLinearVelocity(float x, float y, float z) {
         rb.linearVelocity = new Vector3(rb.linearVelocity.x + x, rb.linearVelocity.y + y, rb.linearVelocity.z + z);
@@ -139,9 +153,11 @@ public class PlayerController : MonoBehaviour
 
     public void EditXV(float x) {
         rb.linearVelocity = new Vector3(x, rb.linearVelocity.y, rb.linearVelocity.z);
+        Debug.Log("linear x velocity set to " + x);
     }
 
     public void EditYV(float y) {
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, y, rb.linearVelocity.z);
+        Debug.Log("linear y velocity set to " + y);
     }
 }
