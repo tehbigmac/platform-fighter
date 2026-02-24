@@ -2,7 +2,7 @@ using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
 
-public class UIManager : MonoBehaviour
+public class KBUIManager : MonoBehaviour
 {
 
 public float[] playerKB = new float[2]; // PLAYER COUNT GOES HERE AND ON DECLARATIONS BELOW
@@ -30,6 +30,7 @@ public TextMeshProUGUI[] playerKBDisplay = new TextMeshProUGUI[2];
         for (int i = 0; i < playerKB.Length; i++)
         {
             playerKBPrev[i] = playerKB[i];
+            //playerKBDisplay[i].color = new Color(1f, 1f, 1f, 1f);
         }
 
         if (Input.GetKeyDown(KeyCode.Q))
@@ -52,10 +53,10 @@ public TextMeshProUGUI[] playerKBDisplay = new TextMeshProUGUI[2];
         }
     }
 
-    void KBUIEffect(TextMeshProUGUI affectedGUI)
-    {
-        affectedGUI.color = Color.red;
-    }
+    // void KBUIEffect(TextMeshProUGUI affectedGUI)
+    // {
+    //     affectedGUI.color = new Color(1f, 0f, 0f, 1f);
+    // }
 }
 
 
