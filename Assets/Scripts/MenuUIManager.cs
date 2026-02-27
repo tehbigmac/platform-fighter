@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.InputSystem;
 
 public class MenuUIManager : MonoBehaviour
 {
@@ -52,7 +53,28 @@ public class MenuUIManager : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Return) && paused)
+        // if (Input.GetKeyDown(KeyCode.Return) && paused)
+        // {
+        //     Debug.Log("enter shi");
+        //     if (selectedIndex == 0)
+        //     {
+        //         Resume();
+        //     }
+        //     if (selectedIndex == 1)
+        //     {
+        //         Options();
+        //     }
+        //     if (selectedIndex == 2)
+        //     {
+        //         Exit();
+        //     }
+        // }
+
+    }
+
+    public void OnSubmit(InputValue value)
+    {
+        if (paused)
         {
             Debug.Log("enter shi");
             if (selectedIndex == 0)
@@ -68,7 +90,6 @@ public class MenuUIManager : MonoBehaviour
                 Exit();
             }
         }
-
     }
 
     public void Pause()

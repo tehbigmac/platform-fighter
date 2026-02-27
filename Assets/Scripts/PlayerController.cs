@@ -153,11 +153,11 @@ public class PlayerController : MonoBehaviour
 
     public void EditXV(float x) {
         rb.linearVelocity = new Vector3(x, rb.linearVelocity.y, rb.linearVelocity.z);
-        Debug.Log("linear x velocity set to " + x);
+        // Debug.Log("linear x velocity set to " + x);
     }
 
     public void EditYV(float y) {
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, y, rb.linearVelocity.z);
-        Debug.Log("linear y velocity set to " + y);
+        // Debug.Log("linear y velocity set to " + y);
     }
 }
