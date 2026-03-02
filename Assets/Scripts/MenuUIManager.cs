@@ -95,7 +95,7 @@ public class MenuUIManager : MonoBehaviour
     public void Pause()
     {
         paused = true;
-        Time.timeScale = 0f;
+        // Time.timeScale = 0f;
         MenuUI.SetActive(true);
         selectedIndex = 0;
         UpdateSelection();
