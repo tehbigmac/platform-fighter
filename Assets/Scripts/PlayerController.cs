@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using UnityEngine.UIElements.Experimental;
 
 public class PlayerController : MonoBehaviour
 {
@@ -51,7 +52,7 @@ public class PlayerController : MonoBehaviour
     }
 
     // INPUT FUNCTIONS ------------------------------------------------------------------------------------------
-    private void OnJump(InputValue value)
+    public void Jump()
     {
         if (jumps > 0) {
             EditYV(jumpForce);
@@ -60,12 +61,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnMove(InputValue value)
+    public void Move(InputValue value)
     {
         moveValue = value.Get<Vector2>();
     }
 
-    private void OnDodge(InputValue value) 
+    public void Dodge()
     {
         float angle = CheckStickAngle();
         if (invulnerable == false) {

@@ -34,24 +34,6 @@ public class MenuUIManager : MonoBehaviour
                 Resume();
             }
         }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            Debug.Log("down shi");
-            if (selectedIndex < menuElements.Length - 1)
-            {
-                selectedIndex ++;
-                UpdateSelection();
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            Debug.Log("up shi");
-            if (selectedIndex > 0)
-            {
-                selectedIndex --;
-                UpdateSelection();
-            }
-        }
 
         // if (Input.GetKeyDown(KeyCode.Return) && paused)
         // {
@@ -72,7 +54,7 @@ public class MenuUIManager : MonoBehaviour
 
     }
 
-    public void OnSubmit(InputValue value)
+    public void Submit()
     {
         if (paused)
         {
@@ -88,6 +70,28 @@ public class MenuUIManager : MonoBehaviour
             if (selectedIndex == 2)
             {
                 Exit();
+            }
+        }
+    }
+
+    public void Navigate(InputValue value)
+    {
+        if (value.Get<Vector2>().y <= -0.5)
+        {
+            Debug.Log("down shi");
+            if (selectedIndex < menuElements.Length - 1)
+            {
+                selectedIndex ++;
+                UpdateSelection();
+            }
+        }
+        if (value.Get<Vector2>().y >= 0.5)
+        {
+            Debug.Log("up shi");
+            if (selectedIndex > 0)
+            {
+                selectedIndex --;
+                UpdateSelection();
             }
         }
     }
