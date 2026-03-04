@@ -10,15 +10,17 @@ public class MenuUIManager : MonoBehaviour
     public int selectedIndex;
 
     public bool paused;
+    public bool navEligible;
+    public float stickThreshold;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         Resume();
         selectedIndex = menuElements.Length;
+        paused = false;
+        stickThreshold = 0.5f; // point at which stick will navigate
     }
 
-    // Update is called once per frame
     void Update()
     {
 
@@ -76,18 +78,24 @@ public class MenuUIManager : MonoBehaviour
 
     public void Navigate(InputValue value)
     {
-        if (value.Get<Vector2>().y <= -0.5)
+        if (value.Get<Vector2>().y > -stickThreshold && value.Get<Vector2>().y < stickThreshold)
+        {
+            navEligible = true;
+        }
+        if (value.Get<Vector2>().y <= -stickThreshold && navEligible)
         {
             Debug.Log("down shi");
+            navEligible = false;
             if (selectedIndex < menuElements.Length - 1)
             {
                 selectedIndex ++;
                 UpdateSelection();
             }
         }
-        if (value.Get<Vector2>().y >= 0.5)
+        if (value.Get<Vector2>().y >= stickThreshold && navEligible)
         {
             Debug.Log("up shi");
+            navEligible = false;
             if (selectedIndex > 0)
             {
                 selectedIndex --;

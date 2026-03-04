@@ -59,4 +59,13 @@ public class InputManager : MonoBehaviour
     {
         ui.Navigate(value);
     }
+    private void OnPause(InputValue value)
+    {
+        ui.Pause();
+    }
+
+    private void OnResume(InputValue value)
+    {
+        ui.Resume();
+    }
 }
