@@ -2,12 +2,13 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
 using UnityEngine.UIElements.Experimental;
+using System;
 
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody rb;
     private float moveSpeed;
-    private float jumpForce = 10;
+    private float jumpForce = 14;
 
     private bool onGround;
     private float jumps = 0;
@@ -30,13 +31,13 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         if (!onGround) {
-            moveSpeed = 6;
+            moveSpeed = 8;
         } else {
-            moveSpeed = 10;
+            moveSpeed = 12;
         }
 
         if (!invulnerable || onGround) {
-            EditXV(moveValue.x * moveSpeed);
+            EditXV(((moveValue.x / 2) + (Math.Sign(moveValue.x) * 0.5f)) * moveSpeed); // modified horizontal velocity (now range 0.5 - 1)
         }
 
         if (moveValue.y <= -0.5 && !onGround) {
