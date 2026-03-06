@@ -62,6 +62,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void Release()
+    {
+        EditYV(rb.linearVelocity.y * 0.5f);
+    }
+
     public void Move(InputValue value)
     {
         moveValue = value.Get<Vector2>();

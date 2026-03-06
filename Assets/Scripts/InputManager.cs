@@ -7,7 +7,7 @@ public class InputManager : MonoBehaviour
     
     private PlayerController player;
     private MenuUIManager ui;
-    private PlayerInput playerInput;
+    public PlayerInput playerInput;
     private bool paused;
 
     void Start()
@@ -26,16 +26,14 @@ public class InputManager : MonoBehaviour
         if (paused)
         {
             playerInput.SwitchCurrentActionMap("UI");
-            Debug.Log("uiuuiiui");
         }
         else
         {
             playerInput.SwitchCurrentActionMap("Player");
-            Debug.Log("plaeyre");
         }
     }
 
-        private void OnJump(InputValue value)
+    private void OnJump(InputValue value)
     {
         player.Jump();
     }
