@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.XR;
 
 public class InputManager : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class InputManager : MonoBehaviour
     private MenuUIManager ui;
     public PlayerInput playerInput;
     private bool paused;
+
+    private InputActionReference Jump;
 
     void Start()
     {
@@ -31,11 +34,16 @@ public class InputManager : MonoBehaviour
         {
             playerInput.SwitchCurrentActionMap("Player");
         }
+
+        //JUMP HEIGHT DETECTION
+        // if (Jump.action.ReadValueAsButton() > 0.5f) {
+        //     Debug.Log("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
+        // }
     }
 
     private void OnJump(InputValue value)
     {
-        player.Jump();
+        player.Jump(value);
     }
 
     private void OnMove(InputValue value)

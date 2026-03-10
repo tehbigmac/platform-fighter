@@ -8,11 +8,14 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody rb;
     private float moveSpeed;
+    
     private float jumpForce = 14;
-
     private bool onGround;
-    private float jumps = 0;
-    private float fastFallSpeed = -20;
+    private float jumpValue; // returns 1 if player is jumping, 0 if not
+    private bool jumping = false; // returns true if the player is in the jumping state, false if it is not. technically redundant but booleans are so much easier to read
+    private float jumps = 0; // how many jumps the player has left
+
+    private float fastFallSpeed = -10;
     private float dodgeCooldown = 0;
     private float dodgeForce = 10;
 
@@ -30,18 +33,25 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        //GROUND VS AIR SPEED
         if (!onGround) {
             moveSpeed = 8;
         } else {
-            moveSpeed = 12;
+            moveSpeed = 15;
         }
 
+        //MOVEMENT UPDATES
         if (!invulnerable || onGround) {
             EditXV(((moveValue.x / 2) + (Math.Sign(moveValue.x) * 0.5f)) * moveSpeed); // modified horizontal velocity (now range 0.5 - 1)
         }
 
+        //FASTFALL
         if (moveValue.y <= -0.5 && !onGround) {
             AddLinearVelocity(0, fastFallSpeed, 0);
+        }
+        
+        if (jumping) {
+            EditYV(jumpForce);
         }
     }
 
@@ -52,14 +62,22 @@ public class PlayerController : MonoBehaviour
         invulnerable = false;
     }
 
+    // IEnumerator JumpTime() {
+    //     yield return idk bro go find what to put here :D
+    // }
+
     // INPUT FUNCTIONS ------------------------------------------------------------------------------------------
-    public void Jump()
+    public void Jump(InputValue value)
     {
         if (jumps > 0) {
-            EditYV(jumpForce);
-            jumps --;
-            onGround = false;
-        }
+            jumpValue = value.Get<float>();
+            if (jumpValue == 1) {
+                jumping = true;
+            } else {
+                jumping = false;
+            }
+            //Debug.Log("jump button value is uh " + jumpValue + " i think");
+        }    
     }
 
     public void Release()
