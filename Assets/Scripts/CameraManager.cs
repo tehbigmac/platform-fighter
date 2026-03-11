@@ -74,9 +74,13 @@ public class CameraManager : MonoBehaviour
 
         Vector2 posDifference = upperBounds - lowerBounds;
 
-        cam.orthographicSize = posDifference.x * 2;
+        cam.orthographicSize = posDifference.x * 0.7f;
+        if (cam.orthographicSize < 5)
+        {
+            cam.orthographicSize = 5;
+        }
 
-        Debug.Log(posDifference.x * 2);
+        Debug.Log(posDifference.x * 0.7f);
 
 
         playerRatio = posDifference.x / posDifference.y;
