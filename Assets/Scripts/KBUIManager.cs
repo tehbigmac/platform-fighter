@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 public class KBUIManager : MonoBehaviour
 {
 
-public float[] playerKB = new float[2]; // PLAYER COUNT GOES HERE AND ON DECLARATIONS BELOW
+public float[] playerKB = new float[2]; // PLAYER COUNT GOES HERE AND ON DECLARATIONS BELOW + CAMERA MANGER
 public float[] playerKBPrev = new float[2];
 public TextMeshProUGUI[] playerKBDisplay = new TextMeshProUGUI[2];
 
