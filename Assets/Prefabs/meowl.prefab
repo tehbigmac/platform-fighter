@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6563866275501654794}
   - component: {fileID: 1975848476702217649}
   - component: {fileID: 8100037922843158919}
+  - component: {fileID: -2948303616458069056}
   - component: {fileID: 8436269221118500262}
   - component: {fileID: 8280225233982850417}
   - component: {fileID: 4291046196268308605}
@@ -109,10 +110,33 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1.98, y: 2.13, z: 0.2}
   m_Center: {x: 0, y: -0.06, z: 0}
+--- !u!136 &-2948303616458069056
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1380366687398286159}
+  m_Material: {fileID: 13400000, guid: 9a431f23e50f8444a950e6711f94a30a, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.57
+  m_Height: 2.25
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &8436269221118500262
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -291,7 +315,7 @@ MonoBehaviour:
     m_ActionId: 5f92638e-4615-4eb6-9537-850293f507ad
     m_ActionName: 'UI/Resume[/XInputControllerWindows/start,/Keyboard/p]'
   m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: Gamepad
+  m_DefaultControlScheme: 
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
