@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     private float jumpForce = 14;
     private bool onGround;
     private float jumpValue; // returns 1 if player is jumping, 0 if not
-    private bool jumping = false; // returns true if the player is in the jumping state, false if it is not. technically redundant but booleans are so much easier to read
+    private bool jumping; // returns true if the player is in the jumping state, false if it is not. technically redundant but booleans are so much easier to read
     private float jumps = 0; // how many jumps the player has left
 
     private float fastFallSpeed = -10;

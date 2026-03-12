@@ -10,6 +10,7 @@ public class InputManager : MonoBehaviour
     private MenuUIManager ui;
     public PlayerInput playerInput;
     private bool paused;
+    private bool lastPaused;
 
     private InputActionReference Jump;
 
@@ -26,13 +27,14 @@ public class InputManager : MonoBehaviour
     void Update()
     {
         paused = ui.paused;
-        if (paused)
+        if (paused != lastPaused)
         {
-            playerInput.SwitchCurrentActionMap("UI");
-        }
-        else
-        {
-            playerInput.SwitchCurrentActionMap("Player");
+            if (paused)
+                playerInput.SwitchCurrentActionMap("UI");
+            else
+                playerInput.SwitchCurrentActionMap("Player");
+
+            lastPaused = paused;
         }
 
         //JUMP HEIGHT DETECTION

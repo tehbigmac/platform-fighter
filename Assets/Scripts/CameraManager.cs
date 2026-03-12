@@ -5,16 +5,21 @@ public class CameraManager : MonoBehaviour
 {
 
 
-    private GameObject[] players = new GameObject[2]; // PLAYER COUNT GOES HERE + KB UI MANGER
+    private GameObject[] players = new GameObject[0]; // PLAYER COUNT GOES HERE + KB UI MANGER
 
     private Vector2 lowerBounds;
     private Vector2 upperBounds;
 
     private Vector2 cameraPos;
+    private Vector3 targetPos;
 
     private float screenRatio;
     private float playerRatio;
+
+    private float targetSize;
+    
     public Camera cam;
+    private Vector3 refVelocity;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -27,19 +32,19 @@ public class CameraManager : MonoBehaviour
 
         // rewrite ts later
 
-        players[0] = GameObject.Find("meowl");
-        players[1] = GameObject.Find("sandbag");
+        
+        print(players);
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        players = GameObject.FindGameObjectsWithTag("Player");
         // Camera cam = Camera.main;
         lowerBounds = players[0].transform.position;
         upperBounds = players[0].transform.position;
 
-        if(cam == null)
+        if (cam == null)
         {
             Debug.Log("idek");
         }
@@ -48,50 +53,52 @@ public class CameraManager : MonoBehaviour
         transform.localScale = new Vector3 (100f, 100f, 100f);
 
         
-
-        for (int i = 1; i < players.Length; i++) // start on second player (index 1)
+        if (players.Length > 0)
         {
-            if (players[i].transform.position.x < lowerBounds.x)
+            for (int i = 1; i < players.Length; i++) // start on second player (index 1)
             {
-                lowerBounds.x = players[i].transform.position.x;
-            }
-            if (players[i].transform.position.y < lowerBounds.y)
-            {
-                lowerBounds.y = players[i].transform.position.y;
-            }
-            if (players[i].transform.position.x > upperBounds.x)
-            {
-                upperBounds.x = players[i].transform.position.x;
-            }
-            if (players[i].transform.position.y > upperBounds.y)
-            {
-                upperBounds.y = players[i].transform.position.y;
+                if (players[i].transform.position.x < lowerBounds.x)
+                {
+                    lowerBounds.x = players[i].transform.position.x;
+                }
+                if (players[i].transform.position.y < lowerBounds.y)
+                {
+                    lowerBounds.y = players[i].transform.position.y;
+                }
+                if (players[i].transform.position.x > upperBounds.x)
+                {
+                    upperBounds.x = players[i].transform.position.x;
+                }
+                if (players[i].transform.position.y > upperBounds.y)
+                {
+                    upperBounds.y = players[i].transform.position.y;
+                }
             }
         }
 
-        Vector2 cameraPos = (upperBounds + lowerBounds) / 2;
-        transform.position = new Vector3(cameraPos.x, cameraPos.y, -20f);
+        // position code
+
+        cameraPos = (upperBounds + lowerBounds) / 2;
+        targetPos = new Vector3(cameraPos.x, cameraPos.y, -20f);
+
+        transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref refVelocity, 0.3f);
+
+        // scaling code
 
         Vector2 posDifference = upperBounds - lowerBounds;
 
-        cam.orthographicSize = posDifference.x * 0.7f;
-        if (cam.orthographicSize < 5)
-        {
-            cam.orthographicSize = 5;
-        }
-
-        Debug.Log(posDifference.x * 0.7f);
-
-
         playerRatio = posDifference.x / posDifference.y;
-
-        
-        
 
         if (playerRatio > screenRatio)
         {
-            
+            targetSize = (7 / (1 + Mathf.Pow(2.718f, -0.2f * (posDifference.x - 15)))) + 6;
         }
+        else
+        {
+            targetSize = (7 / (1 + Mathf.Pow(2.718f, -0.2f * ((posDifference.y * screenRatio) - 15)))) + 6;
+        }
+
+        cam.orthographicSize += (5f * Time.deltaTime * (targetSize - cam.orthographicSize));
 
     }
 }
