@@ -41,8 +41,11 @@ public class CameraManager : MonoBehaviour
     {
         players = GameObject.FindGameObjectsWithTag("Player");
         // Camera cam = Camera.main;
-        lowerBounds = players[0].transform.position;
-        upperBounds = players[0].transform.position;
+        if (players.Length > 0)
+        {
+            lowerBounds = players[0].transform.position;
+            upperBounds = players[0].transform.position;
+        }
 
         if (cam == null)
         {
