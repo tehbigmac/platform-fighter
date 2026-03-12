@@ -7,7 +7,8 @@ public class KBUIManager : MonoBehaviour
 
 public float[] playerKB = new float[2]; // PLAYER COUNT GOES HERE AND ON DECLARATIONS BELOW + CAMERA MANGER
 public float[] playerKBPrev = new float[2];
-public TextMeshProUGUI[] playerKBDisplay = new TextMeshProUGUI[2];
+private TextMeshProUGUI[] playerKBDisplay = new TextMeshProUGUI[0];
+public Vector2[] KBUISpawnPositions = new Vector2[4];
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
