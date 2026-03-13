@@ -25,10 +25,17 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 moveValue;
 
+
+    public float KB;             // JAKE USE THESE VARIABLES THANK YOU
+    public int lives;
+
+
     // UNITY STUFF ------------------------------------------------------------------------------------------
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        GameManager gm = FindFirstObjectByType<GameManager>();
+        gm.AddPlayer(this);
     }
 
     void Update()
@@ -69,6 +76,7 @@ public class PlayerController : MonoBehaviour
     // INPUT FUNCTIONS ------------------------------------------------------------------------------------------
     public void Jump(InputValue value)
     {
+        KB++;
         if (jumps > 0) {
             jumpValue = value.Get<float>();
             if (jumpValue == 1) {
