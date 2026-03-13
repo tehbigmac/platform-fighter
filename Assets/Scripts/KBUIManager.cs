@@ -7,26 +7,25 @@ public class KBUIManager : MonoBehaviour
 
     private List<PlayerController> players; // get players from game manager
 
-    public TextMeshProUGUI KBPRefab;
+    public TextMeshProUGUI KBPrefab;
     public Transform canvas;
 
-    private TextMeshProUGUI[] playerKBDisplay = new TextMeshProUGUI[4];
+    private TextMeshProUGUI[] KBUI = new TextMeshProUGUI[4];
 
     public Vector2[] KBUISpawnPositions = new Vector2[4];
 
 
     void Start()
     {
-
         players = FindFirstObjectByType<GameManager>().players;
 
         for (int i = 0; i < KBUISpawnPositions.Length; i++)
         {
-            playerKBDisplay[i] = Instantiate(KBPRefab, canvas);
-            RectTransform rect = playerKBDisplay[i].GetComponent<RectTransform>();
+            KBUI[i] = Instantiate(KBPrefab, canvas);
+            RectTransform rect = KBUI[i].GetComponent<RectTransform>();
             rect.anchoredPosition = KBUISpawnPositions[i];
 
-            playerKBDisplay[i].enabled = false;
+            KBUI[i].enabled = false;
         }
     }
 
@@ -36,8 +35,8 @@ public class KBUIManager : MonoBehaviour
         
         for (int i = 0; i < players.Count; i++)
         {
-            playerKBDisplay[i].text = players[i].KB.ToString("F1") + "%";
-            playerKBDisplay[i].enabled = true;
+            KBUI[i].text = players[i].KB.ToString("F1") + "%";
+            KBUI[i].enabled = true;
         }
     }
 

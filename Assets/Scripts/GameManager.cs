@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public List<PlayerController> players = new List<PlayerController>();
 
     private float[] KB = new float[4];
+    private int[] lives = new int[4];
 
     void Start()
     {
@@ -23,6 +24,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < players.Count; i++)
         {
             KB[i] = players[i].KB;
+            lives[i] = players[i].lives;
         }
     }
 

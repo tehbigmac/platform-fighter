@@ -383,7 +383,7 @@ Transform:
   m_GameObject: {fileID: 682427009}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 11.262421, y: 6.133209, z: 53.87246}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -948,6 +948,7 @@ GameObject:
   - component: {fileID: 1603493317}
   - component: {fileID: 1603493319}
   - component: {fileID: 1603493320}
+  - component: {fileID: 1603493321}
   m_Layer: 0
   m_Name: UI Manager
   m_TagString: Untagged
@@ -967,7 +968,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ee149b673380a145952ed9f57caa21f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  KBPRefab: {fileID: 5360527354845559743, guid: 9d53b0e0897221441954311784bf5897, type: 3}
+  KBPrefab: {fileID: 5360527354845559743, guid: 9d53b0e0897221441954311784bf5897, type: 3}
   canvas: {fileID: 86484711}
   KBUISpawnPositions:
   - {x: -300, y: -200}
@@ -1040,6 +1041,25 @@ MonoBehaviour:
   m_DefaultActionMap: UI
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &1603493321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1603493316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a428582f83780b47a8d8aa6fda2bd05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  livesPrefab: {fileID: 1421566935599817515, guid: fe054950a9deb524ba1f2b02f5078906, type: 3}
+  canvas: {fileID: 86484711}
+  livesUISpawnPositions:
+  - {x: -400, y: -100}
+  - {x: 400, y: -100}
+  - {x: -400, y: 100}
+  - {x: 400, y: 100}
 --- !u!1 &1616806870
 GameObject:
   m_ObjectHideFlags: 0
