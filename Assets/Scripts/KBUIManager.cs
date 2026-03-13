@@ -1,58 +1,47 @@
 using UnityEngine;
 using TMPro;
-using Unity.VisualScripting;
+using System.Collections.Generic;
 
 public class KBUIManager : MonoBehaviour
 {
 
-public float[] playerKB = new float[2]; // PLAYER COUNT GOES HERE AND ON DECLARATIONS BELOW + CAMERA MANGER
-public float[] playerKBPrev = new float[2];
-private TextMeshProUGUI[] playerKBDisplay = new TextMeshProUGUI[0];
-public Vector2[] KBUISpawnPositions = new Vector2[4];
+    private List<PlayerController> players; // get players from game manager
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    public TextMeshProUGUI KBPRefab;
+    public Transform canvas;
+
+    private TextMeshProUGUI[] playerKBDisplay = new TextMeshProUGUI[4];
+
+    public Vector2[] KBUISpawnPositions = new Vector2[4];
+
+
     void Start()
     {
-        for (int i = 0; i < playerKB.Length; i++)
+
+        players = FindFirstObjectByType<GameManager>().players;
+
+        for (int i = 0; i < KBUISpawnPositions.Length; i++)
         {
-            playerKB[i] = 0.0f;
-            playerKBDisplay[i].SetText(playerKB[i].ToString("F1") + "%");
-        }
-        for (int i = 0; i < playerKBPrev.Length; i++)
-        {
-            playerKBPrev[i] = 0.0f;
+            playerKBDisplay[i] = Instantiate(KBPRefab, canvas);
+            RectTransform rect = playerKBDisplay[i].GetComponent<RectTransform>();
+            rect.anchoredPosition = KBUISpawnPositions[i];
+
+            playerKBDisplay[i].enabled = false;
         }
     }
 
-    // Update is called once per frame
+
     void Update()
     {
         
-        for (int i = 0; i < playerKB.Length; i++)
+        for (int i = 0; i < players.Count; i++)
         {
-            playerKBPrev[i] = playerKB[i];
-            //playerKBDisplay[i].color = new Color(1f, 1f, 1f, 1f);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            playerKB[0] += 6.7f;
-            Debug.Log("q shi");
-        }
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            playerKB[1] += 4.1f;
-            Debug.Log("e shi");
-        }
-
-        for (int i = 0; i < playerKB.Length; i++)
-        {
-            if (playerKBPrev[i] != playerKB[i])
-            {
-                playerKBDisplay[i].text = playerKB[i].ToString("F1") + "%";
-            }
+            playerKBDisplay[i].text = players[i].KB.ToString("F1") + "%";
+            playerKBDisplay[i].enabled = true;
         }
     }
+
+    
 
     // void KBUIEffect(TextMeshProUGUI affectedGUI)
     // {
