@@ -179,7 +179,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInput: {fileID: 7722363260760307169}
-  testCount: 0
 --- !u!114 &4291046196268308605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,6 +198,9 @@ MonoBehaviour:
   FSAtk: {fileID: 8513043205223092860}
   DSAtk: {fileID: 8583030957251326721}
   USAtk: {fileID: 7007961571709444762}
+  ground:
+    serializedVersion: 2
+    m_Bits: 64
   KB: 0
   lives: 0
 --- !u!114 &7722363260760307169

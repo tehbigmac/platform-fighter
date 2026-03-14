@@ -20,12 +20,12 @@ public class PickupManager : MonoBehaviour
         int rando = Random.Range(0, 100);
         if (rando == 0)
         {
-            SpawnPickup(rerollStagePrefab);
+            // SpawnPickup(rerollStagePrefab);
         }
 
         if (rando == 1)
         {
-            SpawnPickup(rerollSpecialPrefab);
+            // SpawnPickup(rerollSpecialPrefab);
         }
     }
 

@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     private bool jumping; // returns true if the player is in the jumping state, false if it is not. technically redundant but booleans are so much easier to read
     private float jumps = 0; // how many jumps the player has left
 
-    private float fastFallSpeed = -10;
+    private float fastFallSpeed = -30;
     private float dodgeCooldown = 0;
     private float dodgeForce = 10;
 
@@ -34,8 +34,15 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 moveValue;
 
-    private Vector2 kbVel;
+    private float kbVel;
     private float kbVelDecay = 1;
+
+    private float airVel;
+    private float airVelAdd = 1;
+
+    private Collider playerCollider;
+    private bool prevGrounded;
+    public LayerMask ground;
 
 
     public float KB;             // JAKE USE THESE VARIABLES THANK YOU
@@ -47,6 +54,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         GameManager gm = FindFirstObjectByType<GameManager>();
+        playerCollider = GetComponent<Collider>();
         gm.AddPlayer(this);
         lives = 3;
 
@@ -63,39 +71,78 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        //GROUND VS AIR SPEED
+        // GROUND VS AIR SPEED
         if (!onGround) {
-            moveSpeed = 8;
+            moveSpeed = 20f;
         } else {
-            moveSpeed = 15;
+            moveSpeed = 12;
         }
 
-        //MOVEMENT UPDATES
-        if (!cantMove || onGround)
+        // GROUND RAYCAST
+        Vector3 origin = new Vector3(transform.position.x, transform.position.y - playerCollider.bounds.extents.y + 0.01f, transform.position.z);
+
+        Debug.DrawRay(origin, Vector3.down * 1.5f, Color.red);
+        prevGrounded = onGround;
+        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, 1.5f, ground))
         {
-            EditXV(((moveValue.x / 2) + (Math.Sign(moveValue.x) * 0.5f)) * moveSpeed); // modified horizontal velocity (now range 0.5 - 1)
+            onGround = true;
+            if (prevGrounded != onGround)
+            {
+                Debug.Log("landed");
+                jumps = 2;
+            }
+            Debug.Log("grounded");
         }
-        else 
+        else
+        {
+            onGround = false;
+            Debug.Log("ungrounded or broken");
+        }
+
+        // MOVEMENT UPDATES
+        if (!cantMove && onGround)
+        {
+            airVel = 0;
+            if (Mathf.Abs(moveValue.x) > 0.2f)
+            {
+                EditXV((moveValue.x - 0.2f) * moveSpeed * 1.25f); // fix this function (lower priority)
+            }
+            else
+            {
+                EditXV(0);
+            }
+            // EditXV(((moveValue.x / 2) + (Math.Sign(moveValue.x) * 0.5f)) * moveSpeed); // modified horizontal velocity (now range 0.5 - 1)
+        }
+        else if (!cantMove && !onGround)
+        {
+            // airVel = rb.linearVelocity.x;
+            airVel += airVelAdd * moveValue.x;
+            EditXV(0);
+        }
+        else
         {
             EditXV(0);
         }
 
-        if (Mathf.Abs(kbVel.x) > kbVelDecay)
+        // KB VELOCITY DECAY
+        if (Mathf.Abs(kbVel) > kbVelDecay)
         {
-            kbVel.x -= kbVelDecay * Mathf.Sign(kbVel.x);
+            kbVel -= kbVelDecay * Mathf.Sign(kbVel);
         }
         else {
-            kbVel.x = 0;
+            kbVel = 0;
         }
 
-        //FASTFALL
+        // FASTFALL
         if (moveValue.y <= -0.5 && !onGround) {
-            AddLinearVelocity(0, fastFallSpeed, 0);
+            EditYV(fastFallSpeed);
         }
         
         if (jumping) {
             EditYV(jumpForce);
         }
+
+
     }
 
 
@@ -117,11 +164,16 @@ public class PlayerController : MonoBehaviour
             jumpValue = value.Get<float>();
             if (jumpValue == 1) {
                 jumping = true;
+                jumps--;
             } else {
                 jumping = false;
             }
             //Debug.Log("jump button value is uh " + jumpValue + " i think");
-        }    
+        }
+        else
+        {
+            jumping = false;
+        }
     }
 
     public void Release()
@@ -207,10 +259,10 @@ public class PlayerController : MonoBehaviour
     
 
     // DETECTOR FUNCTIONS ------------------------------------------------------------------------------------------
-    private void OnCollisionEnter(Collision collision) {
-        onGround = true;
-        jumps = 2;
-    }
+    // private void OnCollisionEnter(Collision collision) {
+    //     onGround = true;
+    //     jumps = 2;
+    // }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -230,7 +282,7 @@ public class PlayerController : MonoBehaviour
     public void Die() {
         transform.position = new Vector3(0, 6, 0);
         rb.linearVelocity = new Vector3(0, 0, 0);
-        kbVel.x = 0;
+        kbVel = 0;
         lives --;
     }
 
@@ -243,10 +295,11 @@ public class PlayerController : MonoBehaviour
         KB += 0.1f * dmg;
 
         EditYV(1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Sin(angle));
-        kbVel.x = (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Cos(angle));
+        kbVel = (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Cos(angle));
 
         Debug.Log("attack recieved: dmg = " + dmg + " kb = " + kb + " angle = " + angle);
     }
+
     public float SimplifyStickAngle() {
         if (moveValue.x > 0 && moveValue.y != 0)
         {
@@ -357,7 +410,7 @@ public class PlayerController : MonoBehaviour
     }
 
     public void EditXV(float x) {
-        rb.linearVelocity = new Vector3(x + kbVel.x, rb.linearVelocity.y, rb.linearVelocity.z);
+        rb.linearVelocity = new Vector3(x + kbVel + airVel, rb.linearVelocity.y, rb.linearVelocity.z);
         // Debug.Log("linear x velocity set to " + x);
     }
 

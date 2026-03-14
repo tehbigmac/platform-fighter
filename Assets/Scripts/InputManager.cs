@@ -12,8 +12,6 @@ public class InputManager : MonoBehaviour
     private bool paused;
     private bool lastPaused;
 
-    public int testCount;
-
     private InputActionReference Jump;
 
     void Start()
@@ -80,7 +78,6 @@ private void OnControlsChanged(PlayerInput input)
     private void OnJump(InputValue value)
     {
         player.Jump(value);
-        testCount++;
     }
 
     private void OnMove(InputValue value)
