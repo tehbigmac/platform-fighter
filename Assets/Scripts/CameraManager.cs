@@ -108,11 +108,11 @@ public class CameraManager : MonoBehaviour
 
         if (playerRatio > screenRatio)
         {
-            targetSize = (7 / (1 + Mathf.Pow(2.718f, -0.2f * (posDifference.x - 15)))) + 6;
+            targetSize = (10 / (1 + Mathf.Pow(2.718f, -0.2f * (posDifference.x - 15)))) + 6;
         }
         else
         {
-            targetSize = (7 / (1 + Mathf.Pow(2.718f, -0.2f * ((posDifference.y * screenRatio) - 15)))) + 6;
+            targetSize = (10 / (1 + Mathf.Pow(2.718f, -0.2f * ((posDifference.y * screenRatio) - 15)))) + 6;
         }
 
         cam.orthographicSize += (5f * Time.deltaTime * (targetSize - cam.orthographicSize));
@@ -121,7 +121,9 @@ public class CameraManager : MonoBehaviour
 
     float CalculateInfluence(float bound)
     {
-        bound *= (1 / (1 + Mathf.Pow(2.718f, 0.3f * (Mathf.Abs(bound) - 25))));
+        float prevBound = bound;
+        bound = (60 / (1 + Mathf.Pow(2.718f, -0.06667f * (bound)))) - 30;
+        Debug.Log("bound set changed from " + prevBound + " to " + bound);
         return bound;
     }
 }
