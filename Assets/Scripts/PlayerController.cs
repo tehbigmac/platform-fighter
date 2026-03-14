@@ -6,6 +6,8 @@ using System;
 
 public class PlayerController : MonoBehaviour
 {
+    public GameObject NAtk;
+
     private Rigidbody rb;
     private float moveSpeed;
     
@@ -19,11 +21,14 @@ public class PlayerController : MonoBehaviour
     private float dodgeCooldown = 0;
     private float dodgeForce = 10;
 
-    private bool invulnerable = false;
+    private bool cantMove = false;
 
     private float stickNull = 6741; //arbitrary value can be anything over 360
 
     private Vector2 moveValue;
+
+    private Vector2 kbVel;
+    private float kbVelDecay = 1;
 
 
     public float KB;             // JAKE USE THESE VARIABLES THANK YOU
@@ -36,9 +41,13 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         GameManager gm = FindFirstObjectByType<GameManager>();
         gm.AddPlayer(this);
+        lives = 3;
+
+        NAtk.SetActive(false);
+
     }
 
-    void Update()
+    void FixedUpdate()
     {
         //GROUND VS AIR SPEED
         if (!onGround) {
@@ -48,8 +57,21 @@ public class PlayerController : MonoBehaviour
         }
 
         //MOVEMENT UPDATES
-        if (!invulnerable || onGround) {
+        if (!cantMove || onGround)
+        {
             EditXV(((moveValue.x / 2) + (Math.Sign(moveValue.x) * 0.5f)) * moveSpeed); // modified horizontal velocity (now range 0.5 - 1)
+        }
+        else 
+        {
+            EditXV(0);
+        }
+
+        if (Mathf.Abs(kbVel.x) > kbVelDecay)
+        {
+            kbVel.x -= kbVelDecay * Mathf.Sign(kbVel.x);
+        }
+        else {
+            kbVel.x = 0;
         }
 
         //FASTFALL
@@ -66,17 +88,17 @@ public class PlayerController : MonoBehaviour
     // COROUTINES ------------------------------------------------------------------------------------------
     IEnumerator IFrames() {
         yield return new WaitForSeconds(0.67f);
-        invulnerable = false;
+        cantMove = false;
     }
 
-    // IEnumerator JumpTime() {
-    //     yield return idk bro go find what to put here :D
-    // }
+    IEnumerator WaitToDelete(float s, GameObject gb) {
+        yield return new WaitForSeconds(s);
+        gb.SetActive(false);
+    }
 
     // INPUT FUNCTIONS ------------------------------------------------------------------------------------------
     public void Jump(InputValue value)
     {
-        KB++;
         if (jumps > 0) {
             jumpValue = value.Get<float>();
             if (jumpValue == 1) {
@@ -90,8 +112,38 @@ public class PlayerController : MonoBehaviour
 
     public void Release()
     {
-        EditYV(rb.linearVelocity.y * 0.5f);
+        EditYV(rb.linearVelocity.y * 2);
     }
+
+    public void Attack(InputValue value) 
+    {
+        if (!cantMove)
+        {
+            float angle = SimplifyStickAngle();
+
+            if (angle == stickNull)
+            {
+                NAtk.SetActive(true);
+                StartCoroutine(WaitToDelete(0.5f, NAtk));
+            }
+
+            Debug.Log("Attack in direction " + angle);
+        }
+    }
+
+    public void StrongAttack(InputValue value) 
+    {
+        float angle = SimplifyStickAngle();
+
+        Debug.Log("Strong Attack in direction " + angle);
+    }
+    public void Special(InputValue value)
+    {
+        float angle = SimplifyStickAngle();
+
+        Debug.Log("Special in direction " + angle);
+    }
+
 
     public void Move(InputValue value)
     {
@@ -101,8 +153,8 @@ public class PlayerController : MonoBehaviour
     public void Dodge()
     {
         float angle = CheckStickAngle();
-        if (invulnerable == false) {
-            invulnerable = true;
+        if (cantMove == false) {
+            cantMove = true;
             StartCoroutine(IFrames());
             if (angle > 315 && angle <= 360 || angle < 45 && angle >= 0 ) {
                 EditXV(dodgeForce);
@@ -130,7 +182,85 @@ public class PlayerController : MonoBehaviour
         jumps = 2;
     }
 
-    // MATHY FUNCTIONS ------------------------------------------------------------------------------------------
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Attack")) 
+        {
+            //Debug.Log("ow");
+            var atkStats = other.GetComponent<attack>();
+            ReceiveAttack(atkStats.GetDamage(), atkStats.GetKb(), atkStats.GetAngle());
+        }
+    }
+
+    // MATHY FUNCTIONS -------------------------------------------------------------------------------------------
+
+    private void ReceiveAttack(float dmg, float kb, float angle)
+    {
+        cantMove = true;
+        angle *= Mathf.Deg2Rad;
+        KB += 0.1f * dmg;
+
+        kbVel.y = (1 + (KB * kb) * Mathf.Sin(angle));
+        kbVel.x = (1 + (KB * kb) * Mathf.Cos(angle));
+
+        Debug.Log("attack recieved: dmg = " + dmg + " kb = " + kb + " angle = " + angle);
+    }
+    public float SimplifyStickAngle() {
+        if (moveValue.x > 0 && moveValue.y != 0)
+        {
+            float stickAngle = Mathf.Rad2Deg * Mathf.Atan(moveValue.y / moveValue.x);
+            stickAngle = (stickAngle + 360) % 360;
+
+            if (stickAngle > 315 && stickAngle <= 360 || stickAngle < 45 && stickAngle >= 0)
+            {
+                stickAngle = 0;
+            }
+            if (stickAngle > 45 && stickAngle <= 135)
+            {
+                stickAngle = 90;
+            }
+            if (stickAngle > 135 && stickAngle <= 225)
+            {
+                stickAngle = 180;
+            }
+            if (stickAngle > 225 && stickAngle <= 315)
+            {
+                stickAngle = 270;
+            }
+
+            return stickAngle;
+        }
+        else if (moveValue.x < 0 && moveValue.y != 0)
+        {
+            float stickAngle = Mathf.Rad2Deg * Mathf.Atan(moveValue.y / moveValue.x);
+            stickAngle = (stickAngle + 180) % 360;
+
+            if (stickAngle > 315 && stickAngle <= 360 || stickAngle < 45 && stickAngle >= 0)
+            {
+                stickAngle = 0;
+            }
+            if (stickAngle > 45 && stickAngle <= 135)
+            {
+                stickAngle = 90;
+            }
+            if (stickAngle > 135 && stickAngle <= 225)
+            {
+                stickAngle = 180;
+            }
+            if (stickAngle > 225 && stickAngle <= 315)
+            {
+                stickAngle = 270;
+            }
+
+            return stickAngle;
+        }
+        else
+        {
+            Debug.Log("hi :D");
+            return stickNull;
+        }
+    }
+    
     public float CheckStickAngle() {
         //doom blackout coding idek but it works ig
         if (moveValue.x > 0 && moveValue.y != 0) 
@@ -185,7 +315,7 @@ public class PlayerController : MonoBehaviour
     }
 
     public void EditXV(float x) {
-        rb.linearVelocity = new Vector3(x, rb.linearVelocity.y, rb.linearVelocity.z);
+        rb.linearVelocity = new Vector3(x + kbVel.x, rb.linearVelocity.y, rb.linearVelocity.z);
         // Debug.Log("linear x velocity set to " + x);
     }
 
