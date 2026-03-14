@@ -190,9 +190,19 @@ public class PlayerController : MonoBehaviour
             var atkStats = other.GetComponent<attack>();
             ReceiveAttack(atkStats.GetDamage(), atkStats.GetKb(), atkStats.GetAngle());
         }
+        if (other.CompareTag("Blast Zone")) 
+        {
+            Die();
+        }
     }
 
-    // MATHY FUNCTIONS -------------------------------------------------------------------------------------------
+    // MISC ------------------------------------------------------------------------------------------
+    public void Die() {
+        transform.position = new Vector3(0, 6, 0);
+        lives --;
+    }
+
+    // MATHY FUNCTIONS ------------------------------------------------------------------------------------------
 
     private void ReceiveAttack(float dmg, float kb, float angle)
     {
