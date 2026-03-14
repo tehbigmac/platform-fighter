@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.XR;
+using System;
 
 public class InputManager : MonoBehaviour
 {
@@ -43,6 +43,38 @@ public class InputManager : MonoBehaviour
         // if (Jump.action.ReadValueAsButton() > 0.5f) {
         //     Debug.Log("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
         // }
+    }
+
+// Callback method
+private void OnControlsChanged(PlayerInput input)
+    {
+        Gamepad gamepad = input.GetDevice<Gamepad>();
+        if (gamepad is UnityEngine.InputSystem.Switch.SwitchProControllerHID)
+        {
+            foreach (var item in Gamepad.all)
+            {
+                if ((item is UnityEngine.InputSystem.XInput.XInputController) && (System.Math.Abs(item.lastUpdateTime - gamepad.lastUpdateTime) < 0.1))
+                {
+                    Debug.Log($"Switch Pro controller detected and a copy of XInput was active at almost the same time. Disabling XInput device. `{gamepad}`; `{item}`");
+                    InputSystem.DisableDevice(item);
+                }
+            }
+        }
+    }
+
+    private void OnAttack(InputValue value) 
+    {
+        player.Attack(value);
+    }
+
+    private void OnStrongAttack(InputValue value)
+    {
+        player.StrongAttack(value);
+    }
+
+    private void OnSpecial(InputValue value)
+    {
+        player.Special(value);
     }
 
     private void OnJump(InputValue value)
