@@ -123,7 +123,6 @@ public class CameraManager : MonoBehaviour
     {
         float prevBound = bound;
         bound = (60 / (1 + Mathf.Pow(2.718f, -0.06667f * (bound)))) - 30;
-        Debug.Log("bound set changed from " + prevBound + " to " + bound);
         return bound;
     }
 }

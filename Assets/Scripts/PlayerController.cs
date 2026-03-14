@@ -137,6 +137,7 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log("Strong Attack in direction " + angle);
     }
+    
     public void Special(InputValue value)
     {
         float angle = SimplifyStickAngle();
@@ -199,6 +200,7 @@ public class PlayerController : MonoBehaviour
     // MISC ------------------------------------------------------------------------------------------
     public void Die() {
         transform.position = new Vector3(0, 6, 0);
+        rb.linearVelocity = new Vector3(0, 0, 0);
         lives --;
     }
 

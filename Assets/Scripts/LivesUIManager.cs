@@ -46,11 +46,8 @@ public class LivesUIManager : MonoBehaviour
 
             for (int j = 0; j < livesAssets.Length; j++)
             {
-                // livesAssets[j].enabled = j < players[i].lives;
-                // Debug.Log("comparing " + j + " with " +  players[i].lives);          CHANGE THIS CODE BACK ONCE PLAYER LIVES ARE IMPLEMENTED
-
-                livesAssets[j].enabled = j < 3;
-                Debug.Log("comparing " + j + " with " +  3);
+                livesAssets[j].enabled = j < players[i].lives;
+                Debug.Log("comparing " + j + " with " +  players[i].lives);
             }
         }
     }
