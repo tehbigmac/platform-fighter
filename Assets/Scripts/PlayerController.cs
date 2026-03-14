@@ -7,6 +7,13 @@ using System;
 public class PlayerController : MonoBehaviour
 {
     public GameObject NAtk;
+    public GameObject FAtk;
+    public GameObject DAtk;
+    public GameObject UAtk;
+
+    public GameObject FSAtk;
+    public GameObject DSAtk;
+    public GameObject USAtk;
 
     private Rigidbody rb;
     private float moveSpeed;
@@ -44,6 +51,13 @@ public class PlayerController : MonoBehaviour
         lives = 3;
 
         NAtk.SetActive(false);
+        FAtk.SetActive(false);
+        UAtk.SetActive(false);
+        DAtk.SetActive(false);
+
+        FSAtk.SetActive(false);
+        USAtk.SetActive(false);
+        DSAtk.SetActive(false);
 
     }
 
@@ -126,6 +140,21 @@ public class PlayerController : MonoBehaviour
                 NAtk.SetActive(true);
                 StartCoroutine(WaitToDelete(0.5f, NAtk));
             }
+            else if (angle == 0 || angle == 180)
+            {
+                FAtk.SetActive(true);
+                StartCoroutine(WaitToDelete(0.5f, FAtk));
+            }
+            else if (angle == 90)
+            {
+                UAtk.SetActive(true);
+                StartCoroutine(WaitToDelete(0.5f, UAtk));
+            }
+            else if (angle == 270)
+            {
+                DAtk.SetActive(true);
+                StartCoroutine(WaitToDelete(0.5f, DAtk));
+            }
 
             Debug.Log("Attack in direction " + angle);
         }
@@ -201,6 +230,7 @@ public class PlayerController : MonoBehaviour
     public void Die() {
         transform.position = new Vector3(0, 6, 0);
         rb.linearVelocity = new Vector3(0, 0, 0);
+        kbVel.x = 0;
         lives --;
     }
 
@@ -212,8 +242,8 @@ public class PlayerController : MonoBehaviour
         angle *= Mathf.Deg2Rad;
         KB += 0.1f * dmg;
 
-        kbVel.y = (1 + (KB * kb) * Mathf.Sin(angle));
-        kbVel.x = (1 + (KB * kb) * Mathf.Cos(angle));
+        EditYV(1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Sin(angle));
+        kbVel.x = (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Cos(angle));
 
         Debug.Log("attack recieved: dmg = " + dmg + " kb = " + kb + " angle = " + angle);
     }
