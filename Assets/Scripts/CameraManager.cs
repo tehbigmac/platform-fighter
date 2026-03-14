@@ -10,6 +10,11 @@ public class CameraManager : MonoBehaviour
     private Vector2 lowerBounds;
     private Vector2 upperBounds;
 
+    private float lowerInfX;
+    private float lowerInfY;
+    private float upperInfX;
+    private float upperInfY;
+
     private Vector2 cameraPos;
     private Vector3 targetPos;
 
@@ -81,6 +86,15 @@ public class CameraManager : MonoBehaviour
 
         // position code
 
+        // Debug.Log("horizontal distance from center to leftmost: " + lowerBounds.x);
+        // Debug.Log("adjusted distance from center to leftmost: " + (1 / (1 + Mathf.Pow(2.718f, 0.3f * (Mathf.Abs(lowerBounds.x) - 25)))));
+
+        lowerBounds.x = CalculateInfluence(lowerBounds.x);
+        lowerBounds.y = CalculateInfluence(lowerBounds.y);
+        upperBounds.x = CalculateInfluence(upperBounds.x);
+        upperBounds.y = CalculateInfluence(upperBounds.y);
+
+
         cameraPos = (upperBounds + lowerBounds) / 2;
         targetPos = new Vector3(cameraPos.x, cameraPos.y, -20f);
 
@@ -103,5 +117,11 @@ public class CameraManager : MonoBehaviour
 
         cam.orthographicSize += (5f * Time.deltaTime * (targetSize - cam.orthographicSize));
 
+    }
+
+    float CalculateInfluence(float bound)
+    {
+        bound *= (1 / (1 + Mathf.Pow(2.718f, 0.3f * (Mathf.Abs(bound) - 25))));
+        return bound;
     }
 }

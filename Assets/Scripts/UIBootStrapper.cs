@@ -30,5 +30,10 @@ public class UIBootStrapper : MonoBehaviour
         {
             SceneManager.LoadSceneAsync("Camera", LoadSceneMode.Additive);
         }
+
+        if (!SceneManager.GetSceneByName("Pickups").isLoaded)
+        {
+            SceneManager.LoadSceneAsync("Pickups", LoadSceneMode.Additive);
+        }
     }
 }
