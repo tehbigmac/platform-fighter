@@ -15,6 +15,11 @@ public class PlayerController : MonoBehaviour
     public GameObject DSAtk;
     public GameObject USAtk;
 
+    private string uSpec;
+    private string fSpec;
+    private string nSpec;
+    private string dSpec;
+
     private Rigidbody rb;
     private float moveSpeed;                    // how fast the player goes on the ground, and also the fastest a player can move in the air (ignoring knockback velocity)
     
@@ -45,6 +50,8 @@ public class PlayerController : MonoBehaviour
     private bool prevGrounded;                  // used to check if player landed on the frame and reset double jumps
     public LayerMask ground;                    // defines the ground layer for the player
 
+    private SpecialsLib specialsLib;            // references the specials library script attached to the player
+
 
     public float KB;                            // VARIABLES SENT TO UI
     public int lives;
@@ -58,16 +65,7 @@ public class PlayerController : MonoBehaviour
         playerCollider = GetComponent<Collider>();
         gm.AddPlayer(this);
         lives = 3;
-
-        NAtk.SetActive(false);
-        FAtk.SetActive(false);
-        UAtk.SetActive(false);
-        DAtk.SetActive(false);
-
-        FSAtk.SetActive(false);
-        USAtk.SetActive(false);
-        DSAtk.SetActive(false);
-
+        specialsLib = GetComponent<SpecialsLib>();
     }
 
     void FixedUpdate()
@@ -160,12 +158,12 @@ public class PlayerController : MonoBehaviour
 
 
     // COROUTINES ------------------------------------------------------------------------------------------
-    IEnumerator IFrames() {
+    public IEnumerator IFrames() {
         yield return new WaitForSeconds(0.67f);
         cantMove = false;
     }
 
-    IEnumerator WaitToDelete(float s, GameObject gb) {
+    public IEnumerator WaitToDelete(float s, GameObject gb) {
         yield return new WaitForSeconds(s);
         gb.SetActive(false);
     }
@@ -235,7 +233,10 @@ public class PlayerController : MonoBehaviour
     public void Special(InputValue value)
     {
         float angle = SimplifyStickAngle();
+        if (angle == stickNull)
+        {
 
+        }
         Debug.Log("Special in direction " + angle);
     }
 
