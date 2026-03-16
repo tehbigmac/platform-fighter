@@ -16,36 +16,37 @@ public class PlayerController : MonoBehaviour
     public GameObject USAtk;
 
     private Rigidbody rb;
-    private float moveSpeed;
+    private float moveSpeed;                    // how fast the player goes on the ground, and also the fastest a player can move in the air (ignoring knockback velocity)
     
     private float jumpForce = 14;
-    private bool onGround;
-    private float jumpValue; // returns 1 if player is jumping, 0 if not
-    private bool jumping; // returns true if the player is in the jumping state, false if it is not. technically redundant but booleans are so much easier to read
-    private float jumps = 0; // how many jumps the player has left
+    private bool onGround;                      // raycast determines whether character is on ground or not
+    private float jumpValue;                    // returns 1 if player is jumping, 0 if not
+    private bool jumping;                       // returns true if the player is in the jumping state, false if it is not. technically redundant but booleans are so much easier to read
+    private float jumps = 0;                    // how many jumps the player has left
 
-    private float fastFallSpeed = -30;
+    private float fastFallSpeed = -30;          // constant speed of fast fall
     private float dodgeCooldown = 0;
     private float dodgeForce = 10;
 
     private bool cantMove = false;
 
-    private float stickNull = 6741; //arbitrary value can be anything over 360
+    private float stickNull = 6741;             // arbitrary value used for checking if stick is centered
 
-    private Vector2 moveValue;
+    private Vector2 moveValue;                  // raw joystick input
+    private float curvedMoveValue;              // curves the joystick x input, used by x movement calculations
 
-    private float kbVel;
-    private float kbVelDecay = 1;
+    private float kbVel;                        // velocity from knockback, calculated separately from movement velocity
+    private float kbVelDecay = 1;               // how much velocity from knockback decays every update
 
-    private float airVel;
-    private float airVelAdd = 1;
+    private float airVel;                       // for changing velocity in mid-air; changes based on stick input
+    private float airVelAdd = 1.5f;             // how much airVel changes every update
 
-    private Collider playerCollider;
-    private bool prevGrounded;
-    public LayerMask ground;
+    private Collider playerCollider;            // collider component of the player
+    private bool prevGrounded;                  // used to check if player landed on the frame and reset double jumps
+    public LayerMask ground;                    // defines the ground layer for the player
 
 
-    public float KB;             // JAKE USE THESE VARIABLES THANK YOU
+    public float KB;                            // VARIABLES SENT TO UI
     public int lives;
 
 
@@ -72,13 +73,17 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         // GROUND VS AIR SPEED
-        if (!onGround) {
-            moveSpeed = 20f;
-        } else {
-            moveSpeed = 12;
-        }
+        // if (onGround) {
+        //     moveSpeed = 16;
+        // } else {
+        //     moveSpeed = 10;
+        // }
+
+        moveSpeed = 16;   // THIS IS BETTER TRUST
+
 
         // GROUND RAYCAST
+
         Vector3 origin = new Vector3(transform.position.x, transform.position.y - playerCollider.bounds.extents.y + 0.01f, transform.position.z);
 
         Debug.DrawRay(origin, Vector3.down * 1.5f, Color.red);
@@ -99,32 +104,38 @@ public class PlayerController : MonoBehaviour
             Debug.Log("ungrounded or broken");
         }
 
+
         // MOVEMENT UPDATES
-        if (!cantMove && onGround)
+
+        if (!cantMove && onGround) // IF GROUNDED AND CAN MOVE
         {
             airVel = 0;
-            if (Mathf.Abs(moveValue.x) > 0.2f)
+            EditXV(curvedMoveValue * moveSpeed);
+        }
+
+        else if (!cantMove && !onGround) // IF UNGROUNDED AND CAN MOVE
+        {
+            airVel = airVelAdd * curvedMoveValue;
+            if (Mathf.Abs(rb.linearVelocity.x + airVel) > moveSpeed)
             {
-                EditXV((moveValue.x - 0.2f) * moveSpeed * 1.25f); // fix this function (lower priority)
+                airVel = 0;
+                EditXV(moveSpeed * Mathf.Sign(rb.linearVelocity.x));
             }
             else
             {
-                EditXV(0);
+                EditXV(rb.linearVelocity.x + airVel);  // i dont know why this works the way it does. but it works lmao
             }
-            // EditXV(((moveValue.x / 2) + (Math.Sign(moveValue.x) * 0.5f)) * moveSpeed); // modified horizontal velocity (now range 0.5 - 1)
         }
-        else if (!cantMove && !onGround)
-        {
-            // airVel = rb.linearVelocity.x;
-            airVel += airVelAdd * moveValue.x;
-            EditXV(0);
-        }
+
         else
         {
             EditXV(0);
+            Debug.Log("huh");  // if you see this message then cantMove is currently set to true
         }
 
+
         // KB VELOCITY DECAY
+
         if (Mathf.Abs(kbVel) > kbVelDecay)
         {
             kbVel -= kbVelDecay * Mathf.Sign(kbVel);
@@ -133,7 +144,9 @@ public class PlayerController : MonoBehaviour
             kbVel = 0;
         }
 
+
         // FASTFALL
+
         if (moveValue.y <= -0.5 && !onGround) {
             EditYV(fastFallSpeed);
         }
@@ -230,6 +243,20 @@ public class PlayerController : MonoBehaviour
     public void Move(InputValue value)
     {
         moveValue = value.Get<Vector2>();
+
+        // gives raw stick input a curve for better feel
+        if (Mathf.Abs(moveValue.x) < 0.2)
+        {
+            curvedMoveValue = 0;
+        }
+        else if (Mathf.Abs(moveValue.x) > 0.7)
+        {
+            curvedMoveValue = 1 * Mathf.Sign(moveValue.x);
+        }
+        else
+        {
+            curvedMoveValue = (2 * moveValue.x) - (Mathf.Sign(moveValue.x) * 0.4f);
+        }
     }
 
     public void Dodge()
@@ -410,7 +437,7 @@ public class PlayerController : MonoBehaviour
     }
 
     public void EditXV(float x) {
-        rb.linearVelocity = new Vector3(x + kbVel + airVel, rb.linearVelocity.y, rb.linearVelocity.z);
+        rb.linearVelocity = new Vector3(x + kbVel, rb.linearVelocity.y, rb.linearVelocity.z);
         // Debug.Log("linear x velocity set to " + x);
     }
 
