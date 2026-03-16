@@ -21,6 +21,7 @@ public class SpecialsLib : MonoBehaviour
 
     public void IndexSpecials(string requestedSp, InputValue value) 
     {
+        Debug.Log("comparing " + requestedSp + " with " + SpecialsList.specialsList[0]);
         if (requestedSp == SpecialsList.specialsList[0])
         {
             Blast();
@@ -34,6 +35,7 @@ public class SpecialsLib : MonoBehaviour
 
     public void Blast() 
     {
+        Debug.Log("poop debug");
         blast.SetActive(true);
         blast.transform.Find("frame1").gameObject.SetActive(true);
         StartCoroutine(SwitchObjects(0.3f, blast.transform.Find("frame1").gameObject, 0.1f, blast.transform.Find("frame2").gameObject, 0.5f));

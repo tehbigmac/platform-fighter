@@ -105,13 +105,15 @@ public class PlayerController : MonoBehaviour
 
         // MOVEMENT UPDATES
 
-        if (!cantMove && onGround) // IF GROUNDED AND CAN MOVE
+        // if (!cantMove && onGround) // IF GROUNDED AND CAN MOVE
+        if (onGround)
         {
             airVel = 0;
             EditXV(curvedMoveValue * moveSpeed);
         }
 
-        else if (!cantMove && !onGround) // IF UNGROUNDED AND CAN MOVE
+        // else if (!cantMove && !onGround) // IF UNGROUNDED AND CAN MOVE
+        else if (!onGround)
         {
             airVel = airVelAdd * curvedMoveValue;
             if (Mathf.Abs(rb.linearVelocity.x + airVel) > moveSpeed)
@@ -194,7 +196,8 @@ public class PlayerController : MonoBehaviour
 
     public void Attack(InputValue value) 
     {
-        if (!cantMove)
+        // if (!cantMove)
+        if (true)
         {
             float angle = SimplifyStickAngle();
 
@@ -235,7 +238,7 @@ public class PlayerController : MonoBehaviour
         float angle = SimplifyStickAngle();
         if (angle == stickNull)
         {
-
+            // SpecialsLib.IndexSpecials("blast", value);
         }
         Debug.Log("Special in direction " + angle);
     }
@@ -264,7 +267,7 @@ public class PlayerController : MonoBehaviour
     {
         float angle = CheckStickAngle();
         if (cantMove == false) {
-            cantMove = true;
+            // cantMove = true;
             StartCoroutine(IFrames());
             if (angle > 315 && angle <= 360 || angle < 45 && angle >= 0 ) {
                 EditXV(dodgeForce);
@@ -318,7 +321,7 @@ public class PlayerController : MonoBehaviour
 
     private void ReceiveAttack(float dmg, float kb, float angle)
     {
-        cantMove = true;
+        // cantMove = true;
         angle *= Mathf.Deg2Rad;
         KB += 0.1f * dmg;
 
@@ -326,6 +329,7 @@ public class PlayerController : MonoBehaviour
         kbVel = (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Cos(angle));
 
         Debug.Log("attack recieved: dmg = " + dmg + " kb = " + kb + " angle = " + angle);
+        // IFrames();
     }
 
     public float SimplifyStickAngle()
