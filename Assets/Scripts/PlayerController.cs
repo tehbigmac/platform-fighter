@@ -327,55 +327,27 @@ public class PlayerController : MonoBehaviour
         Debug.Log("attack recieved: dmg = " + dmg + " kb = " + kb + " angle = " + angle);
     }
 
-    public float SimplifyStickAngle() {
-        if (moveValue.x > 0 && moveValue.y != 0)
+    public float SimplifyStickAngle()
+    {
+        if (moveValue.y != 0)
         {
             float stickAngle = Mathf.Rad2Deg * Mathf.Atan(moveValue.y / moveValue.x);
-            stickAngle = (stickAngle + 360) % 360;
+            
+            if (moveValue.x > 0)
+            {
+                stickAngle = (stickAngle + 405) % 360;
+            }
+            else
+            {
+                stickAngle = (stickAngle + 225) % 360;
+            }
 
-            if (stickAngle > 315 && stickAngle <= 360 || stickAngle < 45 && stickAngle >= 0)
-            {
-                stickAngle = 0;
-            }
-            if (stickAngle > 45 && stickAngle <= 135)
-            {
-                stickAngle = 90;
-            }
-            if (stickAngle > 135 && stickAngle <= 225)
-            {
-                stickAngle = 180;
-            }
-            if (stickAngle > 225 && stickAngle <= 315)
-            {
-                stickAngle = 270;
-            }
+            stickAngle = ((int)(stickAngle / 90) * 90.0f);
+            Debug.Log(stickAngle);
 
             return stickAngle;
         }
-        else if (moveValue.x < 0 && moveValue.y != 0)
-        {
-            float stickAngle = Mathf.Rad2Deg * Mathf.Atan(moveValue.y / moveValue.x);
-            stickAngle = (stickAngle + 180) % 360;
 
-            if (stickAngle > 315 && stickAngle <= 360 || stickAngle < 45 && stickAngle >= 0)
-            {
-                stickAngle = 0;
-            }
-            if (stickAngle > 45 && stickAngle <= 135)
-            {
-                stickAngle = 90;
-            }
-            if (stickAngle > 135 && stickAngle <= 225)
-            {
-                stickAngle = 180;
-            }
-            if (stickAngle > 225 && stickAngle <= 315)
-            {
-                stickAngle = 270;
-            }
-
-            return stickAngle;
-        }
         else
         {
             Debug.Log("hi :D");
