@@ -469,6 +469,7 @@ MonoBehaviour:
   hiJump: {fileID: 0}
   slam: {fileID: 0}
   dash: {fileID: 0}
+  laser: {fileID: 0}
 --- !u!114 &7722363260760307169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -697,7 +698,7 @@ Transform:
   m_GameObject: {fileID: 4278220121330285239}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.28, y: 0.08, z: 0.04}
+  m_LocalPosition: {x: 1.28, y: 0.08, z: 0.04}
   m_LocalScale: {x: 2.1, y: 1.42, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1134,7 +1135,7 @@ Transform:
   m_GameObject: {fileID: 8513043205223092860}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.79, y: 0.08, z: 0.04}
+  m_LocalPosition: {x: 1.79, y: 0.08, z: 0.04}
   m_LocalScale: {x: 3.06, y: 0.85, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

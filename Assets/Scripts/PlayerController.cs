@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using System.Collections;
 using UnityEngine.UIElements.Experimental;
 using System;
+// using System.Numerics;
 
 public class PlayerController : MonoBehaviour
 {
@@ -51,6 +52,7 @@ public class PlayerController : MonoBehaviour
     public LayerMask ground;                    // defines the ground layer for the player
 
     private SpecialsLib specialsLib;            // references the specials library script attached to the player
+    public Renderer rend;
 
 
     public float KB;                            // VARIABLES SENT TO UI
@@ -105,15 +107,15 @@ public class PlayerController : MonoBehaviour
 
         // MOVEMENT UPDATES
 
-        // if (!cantMove && onGround) // IF GROUNDED AND CAN MOVE
-        if (onGround)
+        if (!cantMove && onGround) // IF GROUNDED AND CAN MOVE
+        // if (onGround)
         {
             airVel = 0;
             EditXV(curvedMoveValue * moveSpeed);
         }
 
-        // else if (!cantMove && !onGround) // IF UNGROUNDED AND CAN MOVE
-        else if (!onGround)
+        else if (!cantMove && !onGround) // IF UNGROUNDED AND CAN MOVE
+        // else if (!onGround)
         {
             airVel = airVelAdd * curvedMoveValue;
             if (Mathf.Abs(rb.linearVelocity.x + airVel) > moveSpeed)
@@ -155,13 +157,25 @@ public class PlayerController : MonoBehaviour
             EditYV(jumpForce);
         }
 
+        // hotfix
+
+        if ((moveValue.x > 0) && onGround)
+        {
+            transform.rotation = new Quaternion(0, 0, 0, 0);
+        }
+        if ((moveValue.x < 0) && onGround)
+        {
+            transform.rotation = new Quaternion(0, 180, 0, 0);
+        }
 
     }
 
 
     // COROUTINES ------------------------------------------------------------------------------------------
     public IEnumerator IFrames() {
-        yield return new WaitForSeconds(0.67f);
+        Debug.Log("iframes start");
+        yield return new WaitForSeconds(2.67f);
+        Debug.Log("iframes end");
         cantMove = false;
     }
 
@@ -173,7 +187,7 @@ public class PlayerController : MonoBehaviour
     // INPUT FUNCTIONS ------------------------------------------------------------------------------------------
     public void Jump(InputValue value)
     {
-        if (jumps > 0) {
+        if (jumps > 0 && !cantMove) {
             jumpValue = value.Get<float>();
             if (jumpValue == 1) {
                 jumping = true;
@@ -196,8 +210,8 @@ public class PlayerController : MonoBehaviour
 
     public void Attack(InputValue value) 
     {
-        // if (!cantMove)
-        if (true)
+        if (!cantMove)
+        // if (true)
         {
             float angle = SimplifyStickAngle();
 
@@ -229,6 +243,25 @@ public class PlayerController : MonoBehaviour
     public void StrongAttack(InputValue value) 
     {
         float angle = SimplifyStickAngle();
+
+        if (!cantMove)
+        {
+            if ((angle == 0 || angle == 180 || angle == stickNull) && onGround)
+            {
+                FSAtk.SetActive(true);
+                StartCoroutine(WaitToDelete(1f, FSAtk));
+            }
+            else if (angle == 90 && onGround)
+            {
+                USAtk.SetActive(true);
+                StartCoroutine(WaitToDelete(1f, USAtk));
+            }
+            else if (angle == 270 && onGround)
+            {
+                DSAtk.SetActive(true);
+                StartCoroutine(WaitToDelete(1f, DSAtk));
+            }
+        }
 
         Debug.Log("Strong Attack in direction " + angle);
     }
@@ -267,7 +300,7 @@ public class PlayerController : MonoBehaviour
     {
         float angle = CheckStickAngle();
         if (cantMove == false) {
-            // cantMove = true;
+            cantMove = true;
             StartCoroutine(IFrames());
             if (angle > 315 && angle <= 360 || angle < 45 && angle >= 0 ) {
                 EditXV(dodgeForce);
@@ -315,13 +348,14 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = new Vector3(0, 0, 0);
         kbVel = 0;
         lives --;
+        KB = 0;
     }
 
     // MATHY FUNCTIONS ------------------------------------------------------------------------------------------
 
     private void ReceiveAttack(float dmg, float kb, float angle)
     {
-        // cantMove = true;
+        cantMove = true;
         angle *= Mathf.Deg2Rad;
         KB += 0.1f * dmg;
 
@@ -329,7 +363,7 @@ public class PlayerController : MonoBehaviour
         kbVel = (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Cos(angle));
 
         Debug.Log("attack recieved: dmg = " + dmg + " kb = " + kb + " angle = " + angle);
-        // IFrames();
+        StartCoroutine(IFrames());
     }
 
     public float SimplifyStickAngle()
