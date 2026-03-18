@@ -24,11 +24,13 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private float moveSpeed;                    // how fast the player goes on the ground, and also the fastest a player can move in the air (ignoring knockback velocity)
     
-    private float jumpForce = 14;
+    private float jumpForce = 40;
     private bool onGround;                      // raycast determines whether character is on ground or not
     private float jumpValue;                    // returns 1 if player is jumping, 0 if not
     private bool jumping;                       // returns true if the player is in the jumping state, false if it is not. technically redundant but booleans are so much easier to read
     private float jumps = 0;                    // how many jumps the player has left
+    private float toJump;
+    private float jumpDecay = 0.75f;
 
     private float fastFallSpeed = -30;          // constant speed of fast fall
     private float dodgeCooldown = 0;
@@ -94,6 +96,7 @@ public class PlayerController : MonoBehaviour
             if (prevGrounded != onGround)
             {
                 Debug.Log("landed");
+                
                 jumps = 2;
             }
             Debug.Log("grounded");
@@ -142,19 +145,26 @@ public class PlayerController : MonoBehaviour
         {
             kbVel -= kbVelDecay * Mathf.Sign(kbVel);
         }
-        else {
+        else
+        {
             kbVel = 0;
         }
 
 
         // FASTFALL
 
-        if (moveValue.y <= -0.5 && !onGround) {
+        if (moveValue.y <= -0.5 && !onGround)
+        {
             EditYV(fastFallSpeed);
         }
         
-        if (jumping) {
-            EditYV(jumpForce);
+        if (jumping)
+        {
+            toJump *= jumpDecay;
+            if (toJump > 5)
+            {
+                EditYV(toJump);
+            }
         }
 
         // hotfix
@@ -189,6 +199,7 @@ public class PlayerController : MonoBehaviour
     {
         if (jumps > 0 && !cantMove) {
             jumpValue = value.Get<float>();
+            toJump = jumpForce;
             if (jumpValue == 1) {
                 jumping = true;
                 jumps--;
