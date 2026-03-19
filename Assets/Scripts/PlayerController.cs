@@ -24,15 +24,15 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private float moveSpeed;                    // how fast the player goes on the ground, and also the fastest a player can move in the air (ignoring knockback velocity)
     
-    private float jumpForce = 40;
+    private float jumpForce = 10;
     private bool onGround;                      // raycast determines whether character is on ground or not
     private float jumpValue;                    // returns 1 if player is jumping, 0 if not
     private bool jumping;                       // returns true if the player is in the jumping state, false if it is not. technically redundant but booleans are so much easier to read
     private float jumps = 0;                    // how many jumps the player has left
     private float toJump;
-    private float jumpDecay = 0.75f;
+    private float jumpDecay = 0.5f;
 
-    private float fastFallSpeed = -30;          // constant speed of fast fall
+    private float fastFallSpeed = -20;          // constant speed of fast fall
     private float dodgeCooldown = 0;
     private float dodgeForce = 10;
 
@@ -98,6 +98,7 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("landed");
                 
                 jumps = 2;
+                toJump = jumpForce;
             }
             Debug.Log("grounded");
         }
@@ -157,11 +158,13 @@ public class PlayerController : MonoBehaviour
         {
             EditYV(fastFallSpeed);
         }
-        
+
+        // JUMP
+
         if (jumping)
         {
-            toJump *= jumpDecay;
-            if (toJump > 5)
+            toJump -= jumpDecay;
+            if (toJump > 6)
             {
                 EditYV(toJump);
             }
