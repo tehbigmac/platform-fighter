@@ -265,7 +265,7 @@ GameObject:
   - component: {fileID: 4291046196268308605}
   - component: {fileID: 627478309679450327}
   - component: {fileID: 7722363260760307169}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: meowl
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -448,9 +448,11 @@ MonoBehaviour:
   FSAtk: {fileID: 8513043205223092860}
   DSAtk: {fileID: 8583030957251326721}
   USAtk: {fileID: 7007961571709444762}
+  playerID: 0
   ground:
     serializedVersion: 2
     m_Bits: 64
+  rend: {fileID: 0}
   KB: 0
   lives: 0
 --- !u!114 &627478309679450327

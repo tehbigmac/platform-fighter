@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     private string nSpec;
     private string dSpec;
 
+    public int playerID;
+
     private Rigidbody rb;
     private float moveSpeed;                    // how fast the player goes on the ground, and also the fastest a player can move in the air (ignoring knockback velocity)
     
@@ -70,6 +72,13 @@ public class PlayerController : MonoBehaviour
         gm.AddPlayer(this);
         lives = 3;
         specialsLib = GetComponent<SpecialsLib>();
+
+        playerID = GetComponent<PlayerInput>().playerIndex;
+        Debug.Log("Player index " + playerID + " spawned");
+
+        transform.position = new Vector3(transform.position.x, transform.position.y + (-0.01f * playerID), transform.position.z);
+
+        // rb.useGravity = false;
     }
 
     void FixedUpdate()
@@ -168,6 +177,11 @@ public class PlayerController : MonoBehaviour
             {
                 EditYV(toJump);
             }
+        }
+
+        if (!onGround && !jumping)
+        {
+            EditYV(-5);
         }
 
         // hotfix

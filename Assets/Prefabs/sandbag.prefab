@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3329198545668833736}
   - component: {fileID: 8708536233637536699}
   - component: {fileID: 4329914213134204034}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: sandbag
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -165,6 +165,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 384b4f290d34b3c4983a04aef3f116e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NAtk: {fileID: 0}
+  FAtk: {fileID: 0}
+  DAtk: {fileID: 0}
+  UAtk: {fileID: 0}
+  FSAtk: {fileID: 0}
+  DSAtk: {fileID: 0}
+  USAtk: {fileID: 0}
+  playerID: 0
+  ground:
+    serializedVersion: 2
+    m_Bits: 0
+  rend: {fileID: 0}
+  KB: 0
+  lives: 0
 --- !u!114 &4329914213134204034
 MonoBehaviour:
   m_ObjectHideFlags: 0
