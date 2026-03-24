@@ -26,13 +26,18 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private float moveSpeed;                    // how fast the player goes on the ground, and also the fastest a player can move in the air (ignoring knockback velocity)
     
-    private float jumpForce = 10;
-    private bool onGround;                      // raycast determines whether character is on ground or not
+    private float jumpForce = 6;               // base jump multi (might become obsolete)
+    private float toJump;                       // important probably
+    private float jumpDuration;
+    private float jumpDecay = 0.5f;             // might also be obsolete
+    private float shortJump;
+
     private float jumpValue;                    // returns 1 if player is jumping, 0 if not
     private bool jumping;                       // returns true if the player is in the jumping state, false if it is not. technically redundant but booleans are so much easier to read
     private float jumps = 0;                    // how many jumps the player has left
-    private float toJump;
-    private float jumpDecay = 0.5f;
+    
+
+    private bool onGround;                      // raycast determines whether character is on ground or not
 
     private float fastFallSpeed = -20;          // constant speed of fast fall
     private float dodgeCooldown = 0;
@@ -109,12 +114,12 @@ public class PlayerController : MonoBehaviour
                 jumps = 2;
                 toJump = jumpForce;
             }
-            Debug.Log("grounded");
+            // Debug.Log("grounded");
         }
         else
         {
             onGround = false;
-            Debug.Log("ungrounded or broken");
+            // Debug.Log("ungrounded or broken");
         }
 
 
@@ -170,21 +175,33 @@ public class PlayerController : MonoBehaviour
 
         // JUMP
 
-        if (jumping)
+        if ((!onGround || jumping))
         {
-            toJump -= jumpDecay;
-            if (toJump > 6)
+            // toJump = -Mathf.Sqrt(Mathf.Pow(4 * jumpDuration, 2) + 4) - (0.5f * jumpDuration) + 6;
+
+            if (jumpDuration == 0.4f && jumping == false)
             {
-                EditYV(toJump);
+                shortJump = 2.5f;
             }
-        }
+            
+            toJump = FuckassJumpCalculator(jumpDuration, shortJump);
 
-        if (!onGround && !jumping)
+            EditYV(toJump);
+
+            Debug.Log("input: " + jumpDuration + " - output: " + toJump);
+
+            jumpDuration += 0.1f;
+        }
+        else if (onGround)
         {
-            EditYV(-5);
+            jumpDuration = 1.348f; // maximum of the jump pos equation
+        }
+        else
+        {
+            jumpDuration = 0;
         }
 
-        // hotfix
+        // mirroring
 
         if ((moveValue.x > 0) && onGround)
         {
@@ -211,23 +228,40 @@ public class PlayerController : MonoBehaviour
         gb.SetActive(false);
     }
 
+    // public IEnumerator JumpStillDown() {
+    //     return new WaitForSeconds(0.2f);
+    //     if (jumping) {return true;}
+    //     else {return false;}
+    // }
+
     // INPUT FUNCTIONS ------------------------------------------------------------------------------------------
     public void Jump(InputValue value)
     {
         if (jumps > 0 && !cantMove) {
+
             jumpValue = value.Get<float>();
-            toJump = jumpForce;
-            if (jumpValue == 1) {
+
+            if (jumpValue == 1)
+            {
                 jumping = true;
+                shortJump = 1;
                 jumps--;
-            } else {
-                jumping = false;
+                jumpDuration = 0;
+                
+                Debug.Log("jumped this frame");
             }
+            else
+            {
+                jumping = false;
+                
+            }
+
             //Debug.Log("jump button value is uh " + jumpValue + " i think");
         }
         else
         {
             jumping = false;
+            
         }
     }
 
@@ -463,6 +497,12 @@ public class PlayerController : MonoBehaviour
             Debug.Log("hi :D");
             return stickNull;
         }
+    }
+
+    public float FuckassJumpCalculator(float f, float multi)
+    {
+        f *= multi;
+        return ((-((4 * ((4 * f) - 5.65f)) / Mathf.Sqrt(Mathf.Pow((4 * f) - 5.65f, 2) + 4)) - 0.5f) + (((5.6f * f) - 7.56f) * Mathf.Pow(2.718f, -Mathf.Pow(((2 * f) - 2.7f), 2)))) * jumpForce;
     }
 
     // VELOCITY FUNCTIONS ------------------------------------------------------------------------------------------
