@@ -76,6 +76,7 @@ public class PlayerController : MonoBehaviour
         playerCollider = GetComponent<Collider>();
         gm.AddPlayer(this);
         lives = 3;
+        shortJump = 1;
         specialsLib = GetComponent<SpecialsLib>();
 
         playerID = GetComponent<PlayerInput>().playerIndex;
@@ -179,9 +180,9 @@ public class PlayerController : MonoBehaviour
         {
             // toJump = -Mathf.Sqrt(Mathf.Pow(4 * jumpDuration, 2) + 4) - (0.5f * jumpDuration) + 6;
 
-            if (jumpDuration == 0.4f && jumping == false)
+            if (jumpDuration == 0.4f && jumping == false && jumps == 1)
             {
-                shortJump = 2.5f;
+                shortJump = 0.6f;
             }
             
             toJump = FuckassJumpCalculator(jumpDuration, shortJump);
@@ -502,7 +503,7 @@ public class PlayerController : MonoBehaviour
     public float FuckassJumpCalculator(float f, float multi)
     {
         f *= multi;
-        return ((-((4 * ((4 * f) - 5.65f)) / Mathf.Sqrt(Mathf.Pow((4 * f) - 5.65f, 2) + 4)) - 0.5f) + (((5.6f * f) - 7.56f) * Mathf.Pow(2.718f, -Mathf.Pow(((2 * f) - 2.7f), 2)))) * jumpForce;
+        return ((-((4 * (((4 * f) / multi) - 5.65f)) / Mathf.Sqrt(Mathf.Pow(((4 * f) / multi) - 5.65f, 2) + 4)) - (0.5f / Mathf.Pow(multi, 3))) + (multi * ((((5.6f * f) / Mathf.Pow(multi, 2)) - (7.56f / multi)) * Mathf.Pow(2.718f, -Mathf.Pow((((2 * f) / multi) - 2.7f), 2))))) * jumpForce * multi;
     }
 
     // VELOCITY FUNCTIONS ------------------------------------------------------------------------------------------
