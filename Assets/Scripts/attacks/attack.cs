@@ -6,6 +6,12 @@ public class attack : MonoBehaviour
     public float kb;
     public float angle;
 
+    public float sLag;
+    public float aLength;
+    public float eLag;
+
+    public float[] lagStats;
+
     public float GetDamage() {
         return damage;
     }
@@ -16,5 +22,16 @@ public class attack : MonoBehaviour
 
     public float GetAngle() {
         return angle;
+    }
+
+    public float[] GetLagPack()
+    {
+        lagStats = new float[] {sLag * 0.02f, aLength * 0.02f, eLag * 0.02f};
+
+        //lagStats[0] = sLag * 0.02f;
+        //lagStats[1] = aLength * 0.02f;
+        //lagStats[2] = eLag * 0.02f;
+        Debug.Log("lagPack exported successfully: " + lagStats[0] + " " + lagStats[1] + " " + lagStats[2]);
+        return lagStats;
     }
 }

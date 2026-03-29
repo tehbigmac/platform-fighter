@@ -67,6 +67,9 @@ public class PlayerController : MonoBehaviour
     public float KB;                            // VARIABLES SENT TO UI
     public int lives;
 
+    public bool inAttack = false;                       //Unimplemented yet but will be placed in the universal canmove checker when we do that
+    public bool inAirAttack = false;
+
 
     // UNITY STUFF ------------------------------------------------------------------------------------------
     void Start()
@@ -111,7 +114,12 @@ public class PlayerController : MonoBehaviour
             if (prevGrounded != onGround)
             {
                 Debug.Log("landed");
-                
+                //if (inAirAttack) 
+                //{
+                //    inAirAttack = false;     //MAKE THIS CANCEL AERIALS WHEN YOU TOUCH THE FLOOR PLEASE THANK YOU
+                //    inAttack = false;
+                //    StopAllCoroutines();
+                //}
                 jumps = 2;
                 toJump = jumpForce;
             }
@@ -204,11 +212,11 @@ public class PlayerController : MonoBehaviour
 
         // mirroring
 
-        if ((moveValue.x > 0) && onGround)
+        if ((moveValue.x > 0) && canMoveChecker() == 0 && onGround)
         {
             transform.rotation = new Quaternion(0, 0, 0, 0);
         }
-        if ((moveValue.x < 0) && onGround)
+        if ((moveValue.x < 0) && canMoveChecker() == 0 && onGround)
         {
             transform.rotation = new Quaternion(0, 180, 0, 0);
         }
@@ -229,11 +237,18 @@ public class PlayerController : MonoBehaviour
         gb.SetActive(false);
     }
 
-    // public IEnumerator JumpStillDown() {
-    //     return new WaitForSeconds(0.2f);
-    //     if (jumping) {return true;}
-    //     else {return false;}
-    // }
+    public IEnumerator AttackLagHandler(float sLag, float aLength, float eLag, GameObject gb, bool inAir) // inputs are: start lag, active hitbox length, end lag, hitbox object, is this an air attack
+    {
+        if (inAir) { inAirAttack = true; }
+        inAttack = true;
+        yield return new WaitForSeconds(sLag);
+        gb.SetActive(true);
+        yield return new WaitForSeconds(aLength);
+        gb.SetActive(false);
+        yield return new WaitForSeconds(eLag);
+        inAttack = false;
+        if (inAir) { inAirAttack = false; }
+    }
 
     // INPUT FUNCTIONS ------------------------------------------------------------------------------------------
     public void Jump(InputValue value)
@@ -273,15 +288,41 @@ public class PlayerController : MonoBehaviour
 
     public void Attack(InputValue value) 
     {
-        if (!cantMove)
+        if (canMoveChecker() == 0 && !onGround)
         // if (true)
         {
             float angle = SimplifyStickAngle();
 
             if (angle == stickNull)
             {
-                NAtk.SetActive(true);
-                StartCoroutine(WaitToDelete(0.5f, NAtk));
+                float[] lagStats = NAtk.GetComponent<attack>().GetLagPack();
+                StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], NAtk, true));
+            }
+            else if (angle == 0 || angle == 180)
+            {
+                FAtk.SetActive(true);
+                StartCoroutine(WaitToDelete(0.5f, FAtk));
+            }
+            else if (angle == 90)
+            {
+                UAtk.SetActive(true);
+                StartCoroutine(WaitToDelete(0.5f, UAtk));
+            }
+            else if (angle == 270)
+            {
+                DAtk.SetActive(true);
+                StartCoroutine(WaitToDelete(0.5f, DAtk));
+            }
+
+            Debug.Log("Attack in direction " + angle);
+        }
+        else {
+            float angle = SimplifyStickAngle();
+
+            if (angle == stickNull)
+            {
+                float[] lagStats = NAtk.GetComponent<attack>().GetLagPack();
+                StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], NAtk, false));
             }
             else if (angle == 0 || angle == 180)
             {
@@ -383,13 +424,22 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    
+
 
     // DETECTOR FUNCTIONS ------------------------------------------------------------------------------------------
-    // private void OnCollisionEnter(Collision collision) {
-    //     onGround = true;
-    //     jumps = 2;
-    // }
+    public float canMoveChecker() {
+        if (!cantMove && !inAttack) {
+            return 0; // can move
+        } 
+        else if (inAirAttack) 
+        {
+            return 2; //cant attack
+        }
+        else
+        {
+            return 1; // cant move
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
