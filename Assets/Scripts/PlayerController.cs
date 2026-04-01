@@ -26,10 +26,20 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb;
     private float moveSpeed;                    // how fast the player goes on the ground, and also the fastest a player can move in the air (ignoring knockback velocity)
     
-    private float jumpForce = 6;               // base jump multi (might become obsolete)
+    
     private float toJump;                       // important probably
-    private float jumpDuration;
-    private float jumpDecay = 0.5f;             // might also be obsolete
+    private float toFall;
+
+    private float jumpDecay;
+    private float fallDecay;
+
+    private float jumpForce = 6;               // base jump multi (might become obsolete)
+    private float terminalVel;
+
+
+
+    // private float jumpDuration;
+    // private float jumpDecay = 0.5f;             // might also be obsolete
     private float shortJump;
 
     private float jumpValue;                    // returns 1 if player is jumping, 0 if not
@@ -184,30 +194,36 @@ public class PlayerController : MonoBehaviour
 
         // JUMP
 
-        if ((!onGround || jumping))
-        {
-            // toJump = -Mathf.Sqrt(Mathf.Pow(4 * jumpDuration, 2) + 4) - (0.5f * jumpDuration) + 6;
+        // if ((!onGround || jumping))
+        // {
+        //     // toJump = -Mathf.Sqrt(Mathf.Pow(4 * jumpDuration, 2) + 4) - (0.5f * jumpDuration) + 6;
 
-            if (jumpDuration == 0.4f && jumping == false && jumps == 1)
-            {
-                shortJump = 0.6f;
-            }
+        //     if (jumpDuration == 0.4f && jumping == false && jumps == 1)
+        //     {
+        //         shortJump = 0.6f;
+        //     }
             
-            toJump = FuckassJumpCalculator(jumpDuration, shortJump);
+        //     toJump = FuckassJumpCalculator(jumpDuration, shortJump);
 
-            EditYV(toJump);
+        //     EditYV(toJump);
 
-            Debug.Log("input: " + jumpDuration + " - output: " + toJump);
+        //     Debug.Log("input: " + jumpDuration + " - output: " + toJump);
 
-            jumpDuration += 0.1f;
-        }
-        else if (onGround)
+        //     jumpDuration += 0.1f;
+        // }
+        // else if (onGround)
+        // {
+        //     jumpDuration = 1.348f; // maximum of the jump pos equation
+        // }
+        // else
+        // {
+        //     jumpDuration = 0;
+        // }
+
+        if (!onGround)
         {
-            jumpDuration = 1.348f; // maximum of the jump pos equation
-        }
-        else
-        {
-            jumpDuration = 0;
+            toJump = 
+            toJump += rb.linearVelocity.y;
         }
 
         // mirroring
@@ -253,7 +269,7 @@ public class PlayerController : MonoBehaviour
     // INPUT FUNCTIONS ------------------------------------------------------------------------------------------
     public void Jump(InputValue value)
     {
-        if (jumps > 0 && !cantMove) {
+        // if (jumps > 0 && !cantMove) {
 
             jumpValue = value.Get<float>();
 
@@ -262,9 +278,9 @@ public class PlayerController : MonoBehaviour
                 jumping = true;
                 shortJump = 1;
                 jumps--;
-                jumpDuration = 0;
+                // jumpDuration = 0;
                 
-                Debug.Log("jumped this frame");
+                Debug.Log("jumpValue: " + jumpValue);
             }
             else
             {
@@ -273,12 +289,12 @@ public class PlayerController : MonoBehaviour
             }
 
             //Debug.Log("jump button value is uh " + jumpValue + " i think");
-        }
-        else
-        {
-            jumping = false;
+        // }
+        // else
+        // {
+        //     jumping = false;
             
-        }
+        // }
     }
 
     public void Release()
