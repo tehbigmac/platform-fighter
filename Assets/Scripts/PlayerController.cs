@@ -44,6 +44,9 @@ public class PlayerController : MonoBehaviour
 
     private float jumpValue;                    // returns 1 if player is jumping, 0 if not
     private bool jumping;                       // returns true if the player is in the jumping state, false if it is not. technically redundant but booleans are so much easier to read
+    private bool activeJumping;
+    private bool prevActiveJumping;
+    private float jumpDelay;
     private float jumps = 0;                    // how many jumps the player has left
     
 
@@ -132,6 +135,7 @@ public class PlayerController : MonoBehaviour
                 //}
                 jumps = 2;
                 toJump = jumpForce;
+                activeJumping = false;
             }
             // Debug.Log("grounded");
         }
@@ -220,11 +224,47 @@ public class PlayerController : MonoBehaviour
         //     jumpDuration = 0;
         // }
 
+        prevActiveJumping = activeJumping;
+
+        if (jumping && !activeJumping)
+        {
+            jumpDelay++;
+        }
+
+        if (!jumping && jumpDelay > 0 && jumpDelay < 4)
+        {
+            jumpDelay = 0;
+            activeJumping = true;
+        }
+        
+        
+        if (activeJumping)
+        {
+            if (!prevActiveJumping)
+            {
+                toJump = jumpForce;
+            }
+            else if (toJump > 0)
+            {
+                toJump -= jumpDecay;
+            }
+
+            // toJump += rb.linearVelocity.y;
+        }
+
         if (!onGround)
         {
-            toJump = 
-            toJump += rb.linearVelocity.y;
+            toFall -= fallDecay;
         }
+
+        if (onGround)
+        {
+            toJump = 0;
+            toFall = 0;
+        }
+
+        EditYV(toJump - toFall);
+
 
         // mirroring
 
@@ -284,9 +324,12 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                jumpDelay = 0;
                 jumping = false;
                 
             }
+
+            
 
             //Debug.Log("jump button value is uh " + jumpValue + " i think");
         // }
