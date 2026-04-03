@@ -30,11 +30,11 @@ public class PlayerController : MonoBehaviour
     private float toJump;                       // important probably
     private float toFall;
 
-    private float jumpDecay;
-    private float fallDecay;
+    private float jumpDecay = 0.5f;
+    private float fallDecay = 0.5f;
 
-    private float jumpForce = 6;               // base jump multi (might become obsolete)
-    private float terminalVel;
+    private float jumpForce = 15;               // base jump multi (might become obsolete)
+    private float terminalVel = 100;
 
 
 
@@ -224,6 +224,12 @@ public class PlayerController : MonoBehaviour
         //     jumpDuration = 0;
         // }
 
+        if (onGround)
+        {
+            toJump = 0;
+            activeJumping = false;
+        }
+
         prevActiveJumping = activeJumping;
 
         if (jumping && !activeJumping)
@@ -235,12 +241,21 @@ public class PlayerController : MonoBehaviour
         {
             jumpDelay = 0;
             activeJumping = true;
+            Debug.Log("short jump");
+        }
+
+        if (jumping && jumpDelay > 3)
+        {
+            jumpDelay = 0;
+            activeJumping = true;
+            Debug.Log("long jump");
         }
         
         
         if (activeJumping)
         {
-            if (!prevActiveJumping)
+            Debug.Log("ts got called");
+            if (prevActiveJumping != activeJumping)
             {
                 toJump = jumpForce;
             }
@@ -254,16 +269,18 @@ public class PlayerController : MonoBehaviour
 
         if (!onGround)
         {
-            toFall -= fallDecay;
+            toFall += fallDecay;
         }
 
         if (onGround)
         {
-            toJump = 0;
             toFall = 0;
         }
 
         EditYV(toJump - toFall);
+        // EditYV(toJump);
+
+        Debug.Log($"jumpDelay: {jumpDelay} | activeJumping: {activeJumping} | toJump: {toJump} | toFall: {toFall} | onGround: {onGround}");
 
 
         // mirroring
