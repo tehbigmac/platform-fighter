@@ -127,6 +127,7 @@ MonoBehaviour:
   sLag: 0
   aLength: 0
   eLag: 0
+  lagStats: []
 --- !u!1 &1326337051825903235
 GameObject:
   m_ObjectHideFlags: 0
@@ -254,6 +255,7 @@ MonoBehaviour:
   sLag: 0
   aLength: 0
   eLag: 0
+  lagStats: []
 --- !u!1 &1380366687398286159
 GameObject:
   m_ObjectHideFlags: 0
@@ -462,6 +464,7 @@ MonoBehaviour:
   KB: 0
   lives: 0
   inAttack: 0
+  inAirAttack: 0
 --- !u!114 &627478309679450327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -805,6 +808,7 @@ MonoBehaviour:
   sLag: 0
   aLength: 0
   eLag: 0
+  lagStats: []
 --- !u!1 &4363865803539166330
 GameObject:
   m_ObjectHideFlags: 0
@@ -997,6 +1001,7 @@ MonoBehaviour:
   sLag: 0
   aLength: 0
   eLag: 0
+  lagStats: []
 --- !u!1 &7400243031506710767
 GameObject:
   m_ObjectHideFlags: 0
@@ -1124,6 +1129,7 @@ MonoBehaviour:
   sLag: 3
   aLength: 27
   eLag: 18
+  lagStats: []
 --- !u!1 &8513043205223092860
 GameObject:
   m_ObjectHideFlags: 0
@@ -1251,6 +1257,7 @@ MonoBehaviour:
   sLag: 0
   aLength: 0
   eLag: 0
+  lagStats: []
 --- !u!1 &8583030957251326721
 GameObject:
   m_ObjectHideFlags: 0
@@ -1378,6 +1385,7 @@ MonoBehaviour:
   sLag: 0
   aLength: 0
   eLag: 0
+  lagStats: []
 --- !u!1 &8659085394222368701
 GameObject:
   m_ObjectHideFlags: 0
@@ -1505,6 +1513,7 @@ MonoBehaviour:
   sLag: 0
   aLength: 0
   eLag: 0
+  lagStats: []
 --- !u!1 &8944498433712656988
 GameObject:
   m_ObjectHideFlags: 0
@@ -1632,3 +1641,4 @@ MonoBehaviour:
   sLag: 0
   aLength: 0
   eLag: 0
+  lagStats: []

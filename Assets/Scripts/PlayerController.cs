@@ -46,6 +46,7 @@ public class PlayerController : MonoBehaviour
     private bool jumping;                       // returns true if the player is in the jumping state, false if it is not. technically redundant but booleans are so much easier to read
     private bool activeJumping;
     private bool prevActiveJumping;
+    private bool shortJumping;
     private float jumpDelay;
     private float jumps = 0;                    // how many jumps the player has left
     
@@ -119,9 +120,9 @@ public class PlayerController : MonoBehaviour
 
         Vector3 origin = new Vector3(transform.position.x, transform.position.y - playerCollider.bounds.extents.y + 0.01f, transform.position.z);
 
-        Debug.DrawRay(origin, Vector3.down * 1.5f, Color.red);
+        Debug.DrawRay(origin, Vector3.down * 1.15f, Color.red);
         prevGrounded = onGround;
-        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, 1.5f, ground))
+        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, 1.15f, ground))
         {
             onGround = true;
             if (prevGrounded != onGround)
@@ -237,17 +238,28 @@ public class PlayerController : MonoBehaviour
             jumpDelay++;
         }
 
-        if (!jumping && jumpDelay > 0 && jumpDelay < 4)
+        if (jumpValue == 1 && activeJumping && jumps > 0)
+        {
+            jumpDelay = 0;
+            toJump = 0;
+            activeJumping = true;
+            shortJumping = false;
+            Debug.Log("long jump");
+        }
+
+        if (!jumping && jumpDelay > 0 && jumpDelay < 5)
         {
             jumpDelay = 0;
             activeJumping = true;
+            shortJumping = true;
             Debug.Log("short jump");
         }
 
-        if (jumping && jumpDelay > 3)
+        if (jumping && jumpDelay > 4)
         {
             jumpDelay = 0;
             activeJumping = true;
+            shortJumping = false;
             Debug.Log("long jump");
         }
         
@@ -257,7 +269,14 @@ public class PlayerController : MonoBehaviour
             Debug.Log("ts got called");
             if (prevActiveJumping != activeJumping)
             {
-                toJump = jumpForce;
+                if (shortJumping)
+                {
+                    toJump = jumpForce / 2;
+                }
+                else
+                {
+                    toJump = jumpForce;
+                }
             }
             else if (toJump > 0)
             {
@@ -280,7 +299,7 @@ public class PlayerController : MonoBehaviour
         EditYV(toJump - toFall);
         // EditYV(toJump);
 
-        Debug.Log($"jumpDelay: {jumpDelay} | activeJumping: {activeJumping} | toJump: {toJump} | toFall: {toFall} | onGround: {onGround}");
+        Debug.Log($"jumping: {jumping} | jumps: {jumps} | jumpValue: {jumpValue} jumpDelay: {jumpDelay} | activeJumping: {activeJumping} | toJump: {toJump} | toFall: {toFall} | onGround: {onGround}");
 
 
         // mirroring
@@ -341,7 +360,6 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                jumpDelay = 0;
                 jumping = false;
                 
             }
