@@ -31,18 +31,20 @@ public class PlayerController : MonoBehaviour
     private float toFall;
 
     private float jumpDecay = 0.5f;
-    private float fallDecay = 0.5f;
+    private float fallDecay = 1.5f;
 
-    private float jumpForce = 15;               // base jump multi (might become obsolete)
-    private float terminalVel = 100;
+    private float jumpForce = 22;               // base jump multi (might become obsolete) (NOT OBSOLETE DONT DELETE)
+    private float terminalVel = 40;            // this ones probably useless
 
 
 
     // private float jumpDuration;
-    // private float jumpDecay = 0.5f;             // might also be obsolete
+    // private float jumpDecay = 0.5f;          // might also be obsolete
     private float shortJump;
 
     private float jumpValue;                    // returns 1 if player is jumping, 0 if not
+    private bool jumpFrame;
+    private float prevJumpValue;
     private bool jumping;                       // returns true if the player is in the jumping state, false if it is not. technically redundant but booleans are so much easier to read
     private bool activeJumping;
     private bool prevActiveJumping;
@@ -127,7 +129,7 @@ public class PlayerController : MonoBehaviour
             onGround = true;
             if (prevGrounded != onGround)
             {
-                Debug.Log("landed");
+                // Debug.Log("landed");
                 //if (inAirAttack) 
                 //{
                 //    inAirAttack = false;     //MAKE THIS CANCEL AERIALS WHEN YOU TOUCH THE FLOOR PLEASE THANK YOU
@@ -225,6 +227,17 @@ public class PlayerController : MonoBehaviour
         //     jumpDuration = 0;
         // }
 
+        if (jumping && prevJumpValue == 0)
+        {
+            jumpFrame = true;
+        }
+        else
+        {
+            jumpFrame = false;
+        }
+
+        prevJumpValue = jumpValue;
+
         if (onGround)
         {
             toJump = 0;
@@ -238,13 +251,14 @@ public class PlayerController : MonoBehaviour
             jumpDelay++;
         }
 
-        if (jumpValue == 1 && activeJumping && jumps > 0)
+        if (jumpFrame && !onGround && jumps > 0)
         {
             jumpDelay = 0;
             toJump = 0;
+            toFall = 0;
             activeJumping = true;
             shortJumping = false;
-            Debug.Log("long jump");
+            Debug.Log("air jump");
         }
 
         if (!jumping && jumpDelay > 0 && jumpDelay < 5)
@@ -266,12 +280,15 @@ public class PlayerController : MonoBehaviour
         
         if (activeJumping)
         {
-            Debug.Log("ts got called");
-            if (prevActiveJumping != activeJumping)
+            // Debug.Log("ts got called");
+            if (prevActiveJumping != activeJumping || (jumpFrame && !onGround && jumps > 0))
             {
+
+                jumps--;
                 if (shortJumping)
                 {
-                    toJump = jumpForce / 2;
+                    toJump = jumpForce / 1.5f;
+                    toFall = fallDecay * 5;
                 }
                 else
                 {
@@ -289,6 +306,12 @@ public class PlayerController : MonoBehaviour
         if (!onGround)
         {
             toFall += fallDecay;
+            Debug.Log("toFall: " + toFall);
+            if (toFall > terminalVel)
+            {
+                toFall = terminalVel;
+                Debug.Log("terminal velocity!");
+            }
         }
 
         if (onGround)
@@ -299,7 +322,7 @@ public class PlayerController : MonoBehaviour
         EditYV(toJump - toFall);
         // EditYV(toJump);
 
-        Debug.Log($"jumping: {jumping} | jumps: {jumps} | jumpValue: {jumpValue} jumpDelay: {jumpDelay} | activeJumping: {activeJumping} | toJump: {toJump} | toFall: {toFall} | onGround: {onGround}");
+        // Debug.Log($"jumping: {jumping} | jumpFrame: {jumpFrame} | jumps: {jumps} | jumpValue: {jumpValue} jumpDelay: {jumpDelay} | activeJumping: {activeJumping} | toJump: {toJump} | toFall: {toFall} | onGround: {onGround}");
 
 
         // mirroring
@@ -348,21 +371,25 @@ public class PlayerController : MonoBehaviour
         // if (jumps > 0 && !cantMove) {
 
             jumpValue = value.Get<float>();
+            
 
             if (jumpValue == 1)
             {
+                
                 jumping = true;
                 shortJump = 1;
-                jumps--;
+                
                 // jumpDuration = 0;
                 
-                Debug.Log("jumpValue: " + jumpValue);
+                // Debug.Log("jumpValue: " + jumpValue);
             }
             else
             {
                 jumping = false;
+                jumpFrame = false;
                 
             }
+
 
             
 
