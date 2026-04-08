@@ -10,7 +10,11 @@ public class attack : MonoBehaviour
     public float aLength;
     public float eLag;
 
+    public string attribute;
+
     public float[] lagStats;
+
+    public GameObject[] children;
 
     public float GetDamage() {
         return damage;
@@ -33,5 +37,13 @@ public class attack : MonoBehaviour
         //lagStats[2] = eLag * 0.02f;
         Debug.Log("lagPack exported successfully: " + lagStats[0] + " " + lagStats[1] + " " + lagStats[2]);
         return lagStats;
+    }
+
+    public string GetAttribute() {
+        return attribute;
+    }
+
+    public GameObject[] GetChildren() {
+        return children;
     }
 }

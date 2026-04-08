@@ -365,6 +365,22 @@ public class PlayerController : MonoBehaviour
         if (inAir) { inAirAttack = false; }
     }
 
+    public IEnumerator AttackLagHandler(GameObject[] hitboxes) {
+        if (inAir) { inAirAttack = true; }
+        inAttack = true;
+        for (int i = 0; i < hitboxes.Length(); i ++) 
+        {
+            float[] atkData = hitboxes[i].GetLagPack();
+            yield return new WaitForSeconds(atkData[0]);
+            hitboxes[i].SetActive(true);
+            yield return new WaitForSeconds(atkData[1]);
+            hitboxes[i].SetActive(false);
+            yield return new WaitForSeconds(atkData[2]);
+            inAttack = false;
+            if (inAir) { inAirAttack = false; }
+        }
+    }
+
     // INPUT FUNCTIONS ------------------------------------------------------------------------------------------
     public void Jump(InputValue value)
     {
@@ -583,6 +599,21 @@ public class PlayerController : MonoBehaviour
         kbVel = 0;
         lives --;
         KB = 0;
+    }
+
+    public void SortAttackType(GameObject attack) //processes an inputted attack and sends it into the correct attack lag handler WIP !!!!!!!!!!!
+    {
+        string attackAttribute = attack.GetAttribute();
+        if (attackAttribute = null) 
+        {
+            float[] lagStats = attack.GetComponent<attack>().GetLagPack();
+            StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], NAtk, true));
+        }
+        else if (attackAttribute = "multi") 
+        {
+            gameObject[] attackPack = attack.GetChildren();
+            StartCoroutine(AttackLagHandler(attackPack));
+        }
     }
 
     // MATHY FUNCTIONS ------------------------------------------------------------------------------------------
