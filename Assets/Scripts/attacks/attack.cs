@@ -2,18 +2,19 @@ using UnityEngine;
 
 public class attack : MonoBehaviour
 {
+    [Header("Data for Victim")]
     public float damage;
     public float kb;
     public float angle;
 
+    [Header("Frame Data")]
     public float sLag;
     public float aLength;
     public float eLag;
 
+    [Header("Data for User")]
     public string attribute;
-
     public float[] lagStats;
-
     public GameObject[] children;
 
     public float GetDamage() {

@@ -12,6 +12,12 @@ public class PlayerController : MonoBehaviour
     public GameObject DAtk;
     public GameObject UAtk;
 
+    public GameObject NAir;
+    public GameObject FAir;
+    public GameObject BAir;
+    public GameObject DAir;
+    public GameObject UAir;
+
     public GameObject FSAtk;
     public GameObject DSAtk;
     public GameObject USAtk;
@@ -327,11 +333,11 @@ public class PlayerController : MonoBehaviour
 
         // mirroring
 
-        if ((moveValue.x > 0) && canMoveChecker() == 0 && onGround)
+        if ((moveValue.x > 0) && canMoveChecker() && onGround)
         {
             transform.rotation = new Quaternion(0, 0, 0, 0);
         }
-        if ((moveValue.x < 0) && canMoveChecker() == 0 && onGround)
+        if ((moveValue.x < 0) && canMoveChecker() && onGround)
         {
             transform.rotation = new Quaternion(0, 180, 0, 0);
         }
@@ -365,12 +371,12 @@ public class PlayerController : MonoBehaviour
         if (inAir) { inAirAttack = false; }
     }
 
-    public IEnumerator AttackLagHandler(GameObject[] hitboxes) {
+    public IEnumerator AttackLagHandler(GameObject[] hitboxes, bool inAir) {
         if (inAir) { inAirAttack = true; }
         inAttack = true;
-        for (int i = 0; i < hitboxes.Length(); i ++) 
+        for (int i = 0; i < hitboxes.Length; i ++) 
         {
-            float[] atkData = hitboxes[i].GetLagPack();
+            float[] atkData = hitboxes[i].GetComponent<attack>().GetLagPack();
             yield return new WaitForSeconds(atkData[0]);
             hitboxes[i].SetActive(true);
             yield return new WaitForSeconds(atkData[1]);
@@ -381,7 +387,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // INPUT FUNCTIONS ------------------------------------------------------------------------------------------
+    //▮▮▮▮▮▮▮▮▮     ▮▮▮▮   ▮▮    ▮▮▮▮▮▮      ▮▮        ▮▮     ▮▮▮▮▮▮▮▮▮▮
+    //▮▮▮▮▮▮▮▮▮     ▮▮▮▮   ▮▮    ▮▮▮▮▮▮      ▮▮        ▮▮     ▮▮▮▮▮▮▮▮▮▮
+    //     ▮▮▮           ▮▮ ▮▮ ▮▮    ▮▮      ▮▮    ▮▮        ▮▮            ▮▮
+    //     ▮▮▮           ▮▮ ▮▮ ▮▮    ▮▮      ▮▮    ▮▮        ▮▮            ▮▮
+    //     ▮▮▮           ▮▮   ▮▮▮     ▮▮▮▮▮▮▮    ▮▮        ▮▮             ▮▮
+    //▮▮▮▮▮▮▮▮▮     ▮▮    ▮▮▮    ▮▮              ▮▮▮▮▮▮▮▮             ▮▮
+    //▮▮▮▮▮▮▮▮▮     ▮▮      ▮▮    ▮▮                ▮▮▮▮▮▮              ▮▮
     public void Jump(InputValue value)
     {
         // if (jumps > 0 && !cantMove) {
@@ -425,37 +437,29 @@ public class PlayerController : MonoBehaviour
 
     public void Attack(InputValue value) 
     {
-        if (canMoveChecker() == 0 && !onGround)
+        float angle = SimplifyStickAngle();
+        if (canMoveChecker() && !onGround)
         // if (true)
         {
-            float angle = SimplifyStickAngle();
-
             if (angle == stickNull)
             {
-                float[] lagStats = NAtk.GetComponent<attack>().GetLagPack();
-                StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], NAtk, true));
+                SortAttackType(NAir);
             }
             else if (angle == 0 || angle == 180)
             {
-                FAtk.SetActive(true);
-                StartCoroutine(WaitToDelete(0.5f, FAtk));
+                SortAttackType(FAir);
             }
             else if (angle == 90)
             {
-                UAtk.SetActive(true);
-                StartCoroutine(WaitToDelete(0.5f, UAtk));
+                SortAttackType(UAir);
             }
             else if (angle == 270)
             {
-                DAtk.SetActive(true);
-                StartCoroutine(WaitToDelete(0.5f, DAtk));
+                SortAttackType(DAir);
             }
-
-            Debug.Log("Attack in direction " + angle);
         }
-        else {
-            float angle = SimplifyStickAngle();
-
+        else 
+        {
             if (angle == stickNull)
             {
                 float[] lagStats = NAtk.GetComponent<attack>().GetLagPack();
@@ -476,8 +480,6 @@ public class PlayerController : MonoBehaviour
                 DAtk.SetActive(true);
                 StartCoroutine(WaitToDelete(0.5f, DAtk));
             }
-
-            Debug.Log("Attack in direction " + angle);
         }
     }
 
@@ -564,17 +566,14 @@ public class PlayerController : MonoBehaviour
 
 
     // DETECTOR FUNCTIONS ------------------------------------------------------------------------------------------
-    public float canMoveChecker() {
-        if (!cantMove && !inAttack) {
-            return 0; // can move
-        } 
-        else if (inAirAttack) 
+    public bool canMoveChecker() {
+        if (cantMove || inAttack)
         {
-            return 2; //cant attack
+            return false;
         }
         else
         {
-            return 1; // cant move
+            return true;
         }
     }
 
@@ -603,16 +602,17 @@ public class PlayerController : MonoBehaviour
 
     public void SortAttackType(GameObject attack) //processes an inputted attack and sends it into the correct attack lag handler WIP !!!!!!!!!!!
     {
-        string attackAttribute = attack.GetAttribute();
-        if (attackAttribute = null) 
+        string attackAttribute = attack.GetComponent<attack>().GetAttribute();
+        if (attackAttribute == "reg")
         {
+            Debug.Log("regular attack inputted!");
             float[] lagStats = attack.GetComponent<attack>().GetLagPack();
-            StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], NAtk, true));
+            StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], NAtk, !onGround));
         }
-        else if (attackAttribute = "multi") 
+        else if (attackAttribute == "multi") 
         {
-            gameObject[] attackPack = attack.GetChildren();
-            StartCoroutine(AttackLagHandler(attackPack));
+            GameObject[] attackPack = attack.GetComponent<attack>().GetChildren();
+            StartCoroutine(AttackLagHandler(attackPack, !onGround));
         }
     }
 
