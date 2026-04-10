@@ -44,8 +44,6 @@ public class PlayerController : MonoBehaviour
 
 
 
-    // private float jumpDuration;
-    // private float jumpDecay = 0.5f;          // might also be obsolete
     private float shortJump;
 
     private float jumpValue;                    // returns 1 if player is jumping, 0 if not
@@ -387,13 +385,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //▮▮▮▮▮▮▮▮▮     ▮▮▮▮   ▮▮    ▮▮▮▮▮▮      ▮▮        ▮▮     ▮▮▮▮▮▮▮▮▮▮
-    //▮▮▮▮▮▮▮▮▮     ▮▮▮▮   ▮▮    ▮▮▮▮▮▮      ▮▮        ▮▮     ▮▮▮▮▮▮▮▮▮▮
-    //     ▮▮▮           ▮▮ ▮▮ ▮▮    ▮▮      ▮▮    ▮▮        ▮▮            ▮▮
-    //     ▮▮▮           ▮▮ ▮▮ ▮▮    ▮▮      ▮▮    ▮▮        ▮▮            ▮▮
-    //     ▮▮▮           ▮▮   ▮▮▮     ▮▮▮▮▮▮▮    ▮▮        ▮▮             ▮▮
-    //▮▮▮▮▮▮▮▮▮     ▮▮    ▮▮▮    ▮▮              ▮▮▮▮▮▮▮▮             ▮▮
-    //▮▮▮▮▮▮▮▮▮     ▮▮      ▮▮    ▮▮                ▮▮▮▮▮▮              ▮▮
+    //▮▮▮▮▮▮▮▮▮   ▮▮▮▮  ▮▮    ▮▮▮▮▮▮      ▮▮      ▮▮    ▮▮▮▮▮▮▮▮▮▮
+    //▮▮▮▮▮▮▮▮▮   ▮▮▮▮  ▮▮    ▮▮▮▮▮▮      ▮▮      ▮▮    ▮▮▮▮▮▮▮▮▮▮
+    //   ▮▮▮      ▮▮ ▮▮ ▮▮    ▮▮    ▮▮    ▮▮      ▮▮        ▮▮
+    //   ▮▮▮      ▮▮ ▮▮ ▮▮    ▮▮    ▮▮    ▮▮      ▮▮        ▮▮
+    //   ▮▮▮      ▮▮   ▮▮▮    ▮▮▮▮▮▮▮     ▮▮      ▮▮        ▮▮
+    //▮▮▮▮▮▮▮▮▮   ▮▮   ▮▮▮    ▮▮           ▮▮▮▮▮▮▮▮         ▮▮
+    //▮▮▮▮▮▮▮▮▮   ▮▮    ▮▮    ▮▮            ▮▮▮▮▮▮          ▮▮
     public void Jump(InputValue value)
     {
         // if (jumps > 0 && !cantMove) {
@@ -462,23 +460,19 @@ public class PlayerController : MonoBehaviour
         {
             if (angle == stickNull)
             {
-                float[] lagStats = NAtk.GetComponent<attack>().GetLagPack();
-                StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], NAtk, false));
+                SortAttackType(NAtk);
             }
             else if (angle == 0 || angle == 180)
             {
-                FAtk.SetActive(true);
-                StartCoroutine(WaitToDelete(0.5f, FAtk));
+                SortAttackType(FAtk);
             }
             else if (angle == 90)
             {
-                UAtk.SetActive(true);
-                StartCoroutine(WaitToDelete(0.5f, UAtk));
+                SortAttackType(UAtk);
             }
             else if (angle == 270)
             {
-                DAtk.SetActive(true);
-                StartCoroutine(WaitToDelete(0.5f, DAtk));
+                SortAttackType(DAtk);
             }
         }
     }
@@ -607,7 +601,7 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("regular attack inputted!");
             float[] lagStats = attack.GetComponent<attack>().GetLagPack();
-            StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], NAtk, !onGround));
+            StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], attack, !onGround));
         }
         else if (attackAttribute == "multi") 
         {

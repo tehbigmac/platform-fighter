@@ -747,8 +747,8 @@ MonoBehaviour:
   kb: 5
   angle: 45
   sLag: 3
-  aLength: 27
-  eLag: 18
+  aLength: 3
+  eLag: 0
   attribute: 
   lagStats: []
   children: []
@@ -1007,8 +1007,8 @@ MonoBehaviour:
   kb: 5
   angle: 45
   sLag: 3
-  aLength: 27
-  eLag: 2
+  aLength: 3
+  eLag: 0
   attribute: 
   lagStats: []
   children: []
@@ -1178,9 +1178,9 @@ MonoBehaviour:
   damage: 70
   kb: 5
   angle: 45
-  sLag: 3
-  aLength: 27
-  eLag: 18
+  sLag: 0
+  aLength: 0
+  eLag: 0
   attribute: multi
   lagStats: []
   children:
@@ -1312,8 +1312,8 @@ MonoBehaviour:
   kb: 5
   angle: 45
   sLag: 3
-  aLength: 27
-  eLag: 2
+  aLength: 3
+  eLag: 0
   attribute: 
   lagStats: []
   children: []
@@ -1932,7 +1932,7 @@ MonoBehaviour:
   kb: 5
   angle: 45
   sLag: 3
-  aLength: 27
+  aLength: 2
   eLag: 18
   attribute: reg
   lagStats: []
@@ -2582,7 +2582,7 @@ MonoBehaviour:
   kb: 8
   angle: 90
   sLag: 3
-  aLength: 10
+  aLength: 3
   eLag: 5
   attribute: reg
   lagStats: []

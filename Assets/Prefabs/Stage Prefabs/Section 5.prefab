@@ -300,7 +300,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c3220a28bdf74e242975598baa6275d1, type: 2}
+  - {fileID: 2100000, guid: 54e20e9bea6d30748bdaab31c0d97fd7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -397,7 +397,7 @@ GameObject:
   - component: {fileID: 2552399301756188878}
   - component: {fileID: 8125263643649703035}
   - component: {fileID: 9131271764173302747}
-  - component: {fileID: 1145905311677514256}
+  - component: {fileID: 7313425879499007047}
   m_Layer: 6
   m_Name: Cube (1)
   m_TagString: Untagged
@@ -547,55 +547,55 @@ MonoBehaviour:
   - m_Vertices: 0b0000000e00000012000000
   m_SharedTextures: []
   m_Positions:
-  - {x: -2, y: -0.25, z: 2.5}
+  - {x: 1.7143142, y: -3.4568925, z: 2.5}
   - {x: 2, y: -0.25, z: 2.5}
-  - {x: -2, y: 0.25, z: 2.5}
+  - {x: -3.3636253, y: 1.6475109, z: 2.5}
   - {x: 2, y: 0.25, z: 2.5}
   - {x: 2, y: -0.25, z: 2.5}
   - {x: 2, y: -0.25, z: -2.5}
   - {x: 2, y: 0.25, z: 2.5}
   - {x: 2, y: 0.25, z: -2.5}
   - {x: 2, y: -0.25, z: -2.5}
-  - {x: -2, y: -0.25, z: -2.5}
+  - {x: 1.7143142, y: -3.4568925, z: -2.5}
   - {x: 2, y: 0.25, z: -2.5}
-  - {x: -2, y: 0.25, z: -2.5}
-  - {x: -2, y: -0.25, z: -2.5}
-  - {x: -2, y: -0.25, z: 2.5}
-  - {x: -2, y: 0.25, z: -2.5}
-  - {x: -2, y: 0.25, z: 2.5}
-  - {x: -2, y: 0.25, z: 2.5}
+  - {x: -3.3636253, y: 1.6475109, z: -2.5}
+  - {x: 1.7143142, y: -3.4568925, z: -2.5}
+  - {x: 1.7143142, y: -3.4568925, z: 2.5}
+  - {x: -3.3636253, y: 1.6475109, z: -2.5}
+  - {x: -3.3636253, y: 1.6475109, z: 2.5}
+  - {x: -3.3636253, y: 1.6475109, z: 2.5}
   - {x: 2, y: 0.25, z: 2.5}
-  - {x: -2, y: 0.25, z: -2.5}
+  - {x: -3.3636253, y: 1.6475109, z: -2.5}
   - {x: 2, y: 0.25, z: -2.5}
-  - {x: -2, y: -0.25, z: -2.5}
+  - {x: 1.7143142, y: -3.4568925, z: -2.5}
   - {x: 2, y: -0.25, z: -2.5}
-  - {x: -2, y: -0.25, z: 2.5}
+  - {x: 1.7143142, y: -3.4568925, z: 2.5}
   - {x: 2, y: -0.25, z: 2.5}
   m_Textures0:
-  - {x: 4, y: 0.5}
-  - {x: 0, y: 0.5}
-  - {x: 4, y: 1}
-  - {x: 0, y: 1}
+  - {x: 0.28568578, y: -4.1044035}
+  - {x: 0, y: -0.8975109}
+  - {x: 5.3636255, y: 1}
+  - {x: 0, y: -0.3975109}
   - {x: 5, y: 0.5}
   - {x: 0, y: 0.5}
   - {x: 5, y: 1}
   - {x: 0, y: 1}
-  - {x: 4, y: 0.5}
-  - {x: 0, y: 0.5}
-  - {x: 4, y: 1}
+  - {x: 5.3636255, y: -0.8975109}
+  - {x: 5.0779395, y: -4.1044035}
+  - {x: 5.3636255, y: -0.3975109}
   - {x: 0, y: 1}
-  - {x: 5, y: 0.5}
-  - {x: 0, y: 0.5}
+  - {x: 5, y: -6.200028}
+  - {x: 0, y: -6.200028}
   - {x: 5, y: 1}
   - {x: 0, y: 1}
   - {x: 0, y: 1}
-  - {x: 4, y: 1}
+  - {x: 5.5426993, y: 1}
   - {x: 0, y: -4}
-  - {x: 4, y: -4}
-  - {x: 4, y: -4}
-  - {x: 0, y: -4}
-  - {x: 4, y: 1}
+  - {x: 5.5426993, y: -4}
+  - {x: 0, y: -2.2195926}
   - {x: 0, y: 1}
+  - {x: 5, y: -2.2195926}
+  - {x: 5, y: 1}
   m_Textures2: []
   m_Textures3: []
   m_Tangents:
@@ -615,14 +615,14 @@ MonoBehaviour:
   - {x: 0, y: 0, z: -1, w: -1}
   - {x: 0, y: 0, z: -1, w: -1}
   - {x: 0, y: 0, z: -1, w: -1}
-  - {x: 1, y: 0, z: 0, w: -1}
-  - {x: 1, y: 0, z: 0, w: -1}
-  - {x: 1, y: 0, z: 0, w: -1}
-  - {x: 1, y: 0, z: 0, w: -1}
-  - {x: -1, y: 0, z: 0, w: -1}
-  - {x: -1, y: 0, z: 0, w: -1}
-  - {x: -1, y: 0, z: 0, w: -1}
-  - {x: -1, y: 0, z: 0, w: -1}
+  - {x: 0.96769196, y: -0.25213546, z: 0, w: -1}
+  - {x: 0.96769196, y: -0.25213546, z: 0, w: -1}
+  - {x: 0.96769196, y: -0.25213546, z: 0, w: -1}
+  - {x: 0.96769196, y: -0.25213546, z: 0, w: -1}
+  - {x: 0, y: 0, z: 1, w: -1}
+  - {x: 0, y: 0, z: 1, w: -1}
+  - {x: 0, y: 0, z: 1, w: -1}
+  - {x: 0, y: 0, z: 1, w: -1}
   m_Colors: []
   m_UnwrapParameters:
     m_HardAngle: 88
@@ -632,7 +632,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 6089
+  m_VersionIndex: 7131
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -684,7 +684,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c3220a28bdf74e242975598baa6275d1, type: 2}
+  - {fileID: 2100000, guid: 54e20e9bea6d30748bdaab31c0d97fd7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -714,8 +714,8 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2518852884237288277}
   m_Mesh: {fileID: 0}
---- !u!65 &1145905311677514256
-BoxCollider:
+--- !u!64 &7313425879499007047
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -732,6 +732,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 4, y: 0.5, z: 5}
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}

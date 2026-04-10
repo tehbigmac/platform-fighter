@@ -14,6 +14,7 @@ public class attack : MonoBehaviour
 
     [Header("Data for User")]
     public string attribute;
+    public bool isStrong = false;
     public float[] lagStats;
     public GameObject[] children;
 
@@ -29,13 +30,9 @@ public class attack : MonoBehaviour
         return angle;
     }
 
-    public float[] GetLagPack()
+    public float[] GetLagPack() //takes inputted frame counts and converts them to seconds format before returning an array of floats
     {
         lagStats = new float[] {sLag * 0.02f, aLength * 0.02f, eLag * 0.02f};
-
-        //lagStats[0] = sLag * 0.02f;
-        //lagStats[1] = aLength * 0.02f;
-        //lagStats[2] = eLag * 0.02f;
         Debug.Log("lagPack exported successfully: " + lagStats[0] + " " + lagStats[1] + " " + lagStats[2]);
         return lagStats;
     }
