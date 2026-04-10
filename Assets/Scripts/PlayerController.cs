@@ -112,14 +112,8 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // GROUND VS AIR SPEED
-        // if (onGround) {
-        //     moveSpeed = 16;
-        // } else {
-        //     moveSpeed = 10;
-        // }
 
-        moveSpeed = 16;   // THIS IS BETTER TRUST
+        moveSpeed = 16;   // maximum movespeed
 
 
         // GROUND RAYCAST
@@ -133,13 +127,7 @@ public class PlayerController : MonoBehaviour
             onGround = true;
             if (prevGrounded != onGround)
             {
-                // Debug.Log("landed");
-                //if (inAirAttack) 
-                //{
-                //    inAirAttack = false;     //MAKE THIS CANCEL AERIALS WHEN YOU TOUCH THE FLOOR PLEASE THANK YOU
-                //    inAttack = false;
-                //    StopAllCoroutines();
-                //}
+                DisableAllAttacks();
                 jumps = 2;
                 toJump = jumpForce;
                 activeJumping = false;
@@ -155,7 +143,7 @@ public class PlayerController : MonoBehaviour
 
         // MOVEMENT UPDATES
 
-        if (!cantMove && onGround) // IF GROUNDED AND CAN MOVE
+        if (canMoveChecker() && onGround) // IF GROUNDED AND CAN MOVE
         // if (onGround)
         {
             airVel = 0;
@@ -387,7 +375,7 @@ public class PlayerController : MonoBehaviour
 
     //▮▮▮▮▮▮▮▮▮   ▮▮▮▮  ▮▮    ▮▮▮▮▮▮      ▮▮      ▮▮    ▮▮▮▮▮▮▮▮▮▮
     //▮▮▮▮▮▮▮▮▮   ▮▮▮▮  ▮▮    ▮▮▮▮▮▮      ▮▮      ▮▮    ▮▮▮▮▮▮▮▮▮▮
-    //   ▮▮▮      ▮▮ ▮▮ ▮▮    ▮▮    ▮▮    ▮▮      ▮▮        ▮▮
+    //   ▮▮▮      ▮▮ ▮▮ ▮▮    ▮▮    ▮▮    ▮▮      ▮▮        ▮▮
     //   ▮▮▮      ▮▮ ▮▮ ▮▮    ▮▮    ▮▮    ▮▮      ▮▮        ▮▮
     //   ▮▮▮      ▮▮   ▮▮▮    ▮▮▮▮▮▮▮     ▮▮      ▮▮        ▮▮
     //▮▮▮▮▮▮▮▮▮   ▮▮   ▮▮▮    ▮▮           ▮▮▮▮▮▮▮▮         ▮▮
@@ -561,7 +549,7 @@ public class PlayerController : MonoBehaviour
 
     // DETECTOR FUNCTIONS ------------------------------------------------------------------------------------------
     public bool canMoveChecker() {
-        if (cantMove || inAttack)
+        if (inAttack)
         {
             return false;
         }
@@ -577,7 +565,7 @@ public class PlayerController : MonoBehaviour
         {
             //Debug.Log("ow");
             var atkStats = other.GetComponent<attack>();
-            ReceiveAttack(atkStats.GetDamage(), atkStats.GetKb(), atkStats.GetAngle());
+            ReceiveAttack(atkStats.GetDamage(), atkStats.GetKb(), atkStats.GetAngle(), other.transform.position);
         }
         if (other.CompareTag("Blast Zone")) 
         {
@@ -594,7 +582,7 @@ public class PlayerController : MonoBehaviour
         KB = 0;
     }
 
-    public void SortAttackType(GameObject attack) //processes an inputted attack and sends it into the correct attack lag handler WIP !!!!!!!!!!!
+    public void SortAttackType(GameObject attack) //processes an inputted attack and sends it into the correct attack lag handler
     {
         string attackAttribute = attack.GetComponent<attack>().GetAttribute();
         if (attackAttribute == "reg")
@@ -610,16 +598,66 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void DisableAllAttacks() 
+    {
+        GameObject[] attacksList = {NAtk, FAtk, UAtk, DAtk, NAir, UAir, DAir, FAir, BAir, FSAtk, DSAtk, USAtk }; //list of every normal attack
+
+        StopAllCoroutines(); //shuts off all coroutines
+
+        for (int i = 0; i < attacksList.Length; i++) //begins a loop that repeats once for every item in the attacksList
+        {
+            if (attacksList[i].GetComponent<attack>().GetAttribute() == "multi") //if this is a multi-attack, parse and disable children instead of the parent
+            {
+                GameObject[] subAttackList = attacksList[i].GetComponent<attack>().GetChildren();
+                for (int k = 0; k < subAttackList.Length; k++)
+                {
+                    subAttackList[k].SetActive(false);
+                }
+            }
+            else //otherwise disable the found object
+            {
+                attacksList[i].SetActive(false);
+            }
+            inAttack = false;
+            inAirAttack = false;
+        }
+    }
+
     // MATHY FUNCTIONS ------------------------------------------------------------------------------------------
 
-    private void ReceiveAttack(float dmg, float kb, float angle)
+    private void ReceiveAttack(float dmg, float kb, float angle, Vector3 origin)
     {
         cantMove = true;
-        angle *= Mathf.Deg2Rad;
+        if (angle == 362)
+        {
+            if (KB > 60)
+            {
+                angle = 180 * Mathf.Deg2Rad;
+            }
+            else
+            {
+                angle = 60 * Mathf.Deg2Rad;
+            }
+        }
+        else if (angle == 361)
+        {
+            angle = Mathf.Atan2((transform.position.x - origin.x) * Mathf.Deg2Rad, (transform.position.y - origin.y) * Mathf.Deg2Rad);
+        }
+        else 
+        {
+            angle *= Mathf.Deg2Rad;
+        }
         KB += 0.1f * dmg;
 
-        EditYV(1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Sin(angle));
-        kbVel = (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Cos(angle));
+        if (kb == 0)
+        {
+
+        }
+        else
+        {
+            EditYV(1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Sin(angle));
+            kbVel = (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Cos(angle));
+        }
 
         Debug.Log("attack recieved: dmg = " + dmg + " kb = " + kb + " angle = " + angle);
         StartCoroutine(IFrames());

@@ -6,6 +6,7 @@ public class attack : MonoBehaviour
     public float damage;
     public float kb;
     public float angle;
+    public string kbType;
 
     [Header("Frame Data")]
     public float sLag;
@@ -15,8 +16,9 @@ public class attack : MonoBehaviour
     [Header("Data for User")]
     public string attribute;
     public bool isStrong = false;
-    public float[] lagStats;
     public GameObject[] children;
+    
+    private float[] lagStats;
 
     public float GetDamage() {
         return damage;
