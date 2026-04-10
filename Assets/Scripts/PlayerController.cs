@@ -64,6 +64,7 @@ public class PlayerController : MonoBehaviour
     private float dodgeForce = 10;
 
     private bool cantMove = false;
+    private bool stun = false;
 
     private float stickNull = 6741;             // arbitrary value used for checking if stick is centered
 
@@ -344,6 +345,11 @@ public class PlayerController : MonoBehaviour
         gb.SetActive(false);
     }
 
+    public IEnumerator WaitToDisable(float s, bool b) {
+        yield return new WaitForSeconds(s);
+        b = !b;
+    }
+
     public IEnumerator AttackLagHandler(float sLag, float aLength, float eLag, GameObject gb, bool inAir) // inputs are: start lag, active hitbox length, end lag, hitbox object, is this an air attack
     {
         if (inAir) { inAirAttack = true; }
@@ -357,7 +363,8 @@ public class PlayerController : MonoBehaviour
         if (inAir) { inAirAttack = false; }
     }
 
-    public IEnumerator AttackLagHandler(GameObject[] hitboxes, bool inAir) {
+    public IEnumerator AttackLagHandler(GameObject[] hitboxes, bool inAir) 
+    {
         if (inAir) { inAirAttack = true; }
         inAttack = true;
         for (int i = 0; i < hitboxes.Length; i ++) 
@@ -373,13 +380,30 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //▮▮▮▮▮▮▮▮▮   ▮▮▮▮  ▮▮    ▮▮▮▮▮▮      ▮▮      ▮▮    ▮▮▮▮▮▮▮▮▮▮
-    //▮▮▮▮▮▮▮▮▮   ▮▮▮▮  ▮▮    ▮▮▮▮▮▮      ▮▮      ▮▮    ▮▮▮▮▮▮▮▮▮▮
-    //   ▮▮▮      ▮▮ ▮▮ ▮▮    ▮▮    ▮▮    ▮▮      ▮▮        ▮▮
-    //   ▮▮▮      ▮▮ ▮▮ ▮▮    ▮▮    ▮▮    ▮▮      ▮▮        ▮▮
-    //   ▮▮▮      ▮▮   ▮▮▮    ▮▮▮▮▮▮▮     ▮▮      ▮▮        ▮▮
-    //▮▮▮▮▮▮▮▮▮   ▮▮   ▮▮▮    ▮▮           ▮▮▮▮▮▮▮▮         ▮▮
-    //▮▮▮▮▮▮▮▮▮   ▮▮    ▮▮    ▮▮            ▮▮▮▮▮▮          ▮▮
+    public IEnumerator AttackLagHandler(float sLag, float sLag2, float aLength, float eLag, GameObject gb) //for strong attacks
+    {
+        inAttack = true;
+        yield return new WaitForSeconds(sLag);
+        for (int i = 0; i < 60; i++)
+        {
+            if (/*the x button is down*/) {
+                Debug.Log("charging strong attack for " + i + " frames")
+            }
+            else
+            {
+                StartCoroutine(AttackLagHandler(sLag2, aLength, eLag, gb, false));
+                yield break;
+            }
+        }
+    }
+
+    //▮▮▮▮▮▮▮    ▮▮▮    ▮▮  ▮▮▮▮▮▮▮    ▮▮       ▮▮  ▮▮▮▮▮▮
+    //▮▮▮▮▮▮▮    ▮▮▮    ▮▮  ▮▮▮▮▮▮▮    ▮▮       ▮▮  ▮▮▮▮▮▮
+    //   ▮▮▮        ▮▮ ▮▮ ▮▮  ▮▮       ▮▮   ▮▮       ▮▮     ▮▮
+    //   ▮▮▮        ▮▮ ▮▮ ▮▮  ▮▮       ▮▮   ▮▮       ▮▮     ▮▮
+    //   ▮▮▮        ▮▮    ▮▮▮  ▮▮▮▮▮▮▮    ▮▮       ▮▮      ▮▮
+    //▮▮▮▮▮▮▮    ▮▮    ▮▮▮  ▮▮             ▮▮▮▮▮▮▮▮     ▮▮
+    //▮▮▮▮▮▮▮    ▮▮      ▮▮  ▮▮              ▮▮▮▮▮▮        ▮▮
     public void Jump(InputValue value)
     {
         // if (jumps > 0 && !cantMove) {
@@ -473,18 +497,15 @@ public class PlayerController : MonoBehaviour
         {
             if ((angle == 0 || angle == 180 || angle == stickNull) && onGround)
             {
-                FSAtk.SetActive(true);
-                StartCoroutine(WaitToDelete(1f, FSAtk));
+                SortAttackType(FSAtk);
             }
             else if (angle == 90 && onGround)
             {
-                USAtk.SetActive(true);
-                StartCoroutine(WaitToDelete(1f, USAtk));
+                SortAttackType(USAtk);
             }
             else if (angle == 270 && onGround)
             {
-                DSAtk.SetActive(true);
-                StartCoroutine(WaitToDelete(1f, DSAtk));
+                SortAttackType(DSAtk);
             }
         }
 
@@ -549,7 +570,11 @@ public class PlayerController : MonoBehaviour
 
     // DETECTOR FUNCTIONS ------------------------------------------------------------------------------------------
     public bool canMoveChecker() {
-        if (inAttack)
+        if (inAttack && !inAirAttack)
+        {
+            return false;
+        }
+        else if (stun)
         {
             return false;
         }
@@ -651,7 +676,10 @@ public class PlayerController : MonoBehaviour
 
         if (kb == 0)
         {
-
+            stun = true;
+            EditXV(0);
+            EditYV(0);
+            StartCoroutine(WaitToDisable(0.3f, stun));
         }
         else
         {

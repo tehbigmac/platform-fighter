@@ -2204,9 +2204,9 @@ MonoBehaviour:
   kb: 10
   angle: 90
   kbType: reg
-  sLag: 0
-  aLength: 0
-  eLag: 0
+  sLag: 10
+  aLength: 5
+  eLag: 20
   attribute: reg
   isStrong: 1
   children: []
@@ -2703,9 +2703,9 @@ MonoBehaviour:
   kb: 150
   angle: 180
   kbType: 362
-  sLag: 0
-  aLength: 0
-  eLag: 0
+  sLag: 10
+  aLength: 5
+  eLag: 20
   attribute: reg
   isStrong: 1
   children: []
@@ -2834,9 +2834,9 @@ MonoBehaviour:
   kb: 150
   angle: 90
   kbType: reg
-  sLag: 0
-  aLength: 0
-  eLag: 0
+  sLag: 10
+  aLength: 5
+  eLag: 20
   attribute: reg
   isStrong: 1
   children: []
