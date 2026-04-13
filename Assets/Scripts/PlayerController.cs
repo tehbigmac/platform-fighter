@@ -62,6 +62,8 @@ public class PlayerController : MonoBehaviour
     private float fastFallSpeed = -20;          // constant speed of fast fall
     private float dodgeCooldown = 0;
     private float dodgeForce = 10;
+    private float chargingStrong;
+    private bool justStrongAttacked = false;
 
     private bool cantMove = false;
     private bool stun = false;
@@ -90,6 +92,7 @@ public class PlayerController : MonoBehaviour
 
     public bool inAttack = false;                       //Unimplemented yet but will be placed in the universal canmove checker when we do that
     public bool inAirAttack = false;
+    public bool mirror;
 
 
     // UNITY STUFF ------------------------------------------------------------------------------------------
@@ -323,10 +326,12 @@ public class PlayerController : MonoBehaviour
         if ((moveValue.x > 0) && canMoveChecker() && onGround)
         {
             transform.rotation = new Quaternion(0, 0, 0, 0);
+            mirror = true;
         }
         if ((moveValue.x < 0) && canMoveChecker() && onGround)
         {
             transform.rotation = new Quaternion(0, 180, 0, 0);
+            mirror = false;
         }
 
     }
@@ -380,21 +385,24 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public IEnumerator AttackLagHandler(float sLag, float sLag2, float aLength, float eLag, GameObject gb) //for strong attacks
+    public IEnumerator AttackLagHandler(float sLag, float aLength, float eLag, GameObject gb) //for strong attacks
     {
+        Debug.Log("strong attack step one active");
         inAttack = true;
         yield return new WaitForSeconds(sLag);
-        for (int i = 0; i < 60; i++)
+        for (int i = 0; i < 120 * Time.deltaTime; i++)
         {
-            if (/*the x button is down*/) {
-                Debug.Log("charging strong attack for " + i + " frames")
+            if (chargingStrong == 1) {
+                Debug.Log("charging strong attack for " + i + " frames");
             }
             else
             {
-                StartCoroutine(AttackLagHandler(sLag2, aLength, eLag, gb, false));
+                StartCoroutine(AttackLagHandler(sLag, aLength, eLag, gb, false));
                 yield break;
             }
         }
+        StartCoroutine(AttackLagHandler(sLag, aLength, eLag, gb, false));
+        yield break;
     }
 
     //▮▮▮▮▮▮▮    ▮▮▮    ▮▮  ▮▮▮▮▮▮▮    ▮▮       ▮▮  ▮▮▮▮▮▮
@@ -457,7 +465,8 @@ public class PlayerController : MonoBehaviour
             }
             else if (angle == 0 || angle == 180)
             {
-                SortAttackType(FAir);
+                if (BackAirInput()) { SortAttackType(BAir); }
+                else { SortAttackType(FAir); }
             }
             else if (angle == 90)
             {
@@ -491,9 +500,11 @@ public class PlayerController : MonoBehaviour
 
     public void StrongAttack(InputValue value) 
     {
+        chargingStrong = value.Get<float>();
+        justStrongAttacked = true;
         float angle = SimplifyStickAngle();
 
-        if (!cantMove)
+        if (!cantMove && chargingStrong == 1 && !inAttack)
         {
             if ((angle == 0 || angle == 180 || angle == stickNull) && onGround)
             {
@@ -584,6 +595,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public bool BackAirInput()
+    {
+        if (mirror && SimplifyStickAngle() == 180) { Debug.Log("mirror plus 180deg"); return true; }
+        else if (!mirror && SimplifyStickAngle() == 0) { Debug.Log("no mirror plus 0deg"); return true; }
+        else { return false; }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Attack")) 
@@ -609,12 +627,14 @@ public class PlayerController : MonoBehaviour
 
     public void SortAttackType(GameObject attack) //processes an inputted attack and sends it into the correct attack lag handler
     {
+        var isStrong = attack.GetComponent<attack>().IsStrong();
         string attackAttribute = attack.GetComponent<attack>().GetAttribute();
         if (attackAttribute == "reg")
         {
             Debug.Log("regular attack inputted!");
             float[] lagStats = attack.GetComponent<attack>().GetLagPack();
-            StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], attack, !onGround));
+            if (isStrong) { StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], attack)); }
+            else { StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], attack, !onGround)); }
         }
         else if (attackAttribute == "multi") 
         {

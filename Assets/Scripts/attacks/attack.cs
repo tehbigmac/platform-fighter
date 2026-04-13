@@ -46,4 +46,9 @@ public class attack : MonoBehaviour
     public GameObject[] GetChildren() {
         return children;
     }
+
+    public bool IsStrong()
+    {
+        return isStrong;
+    }
 }
