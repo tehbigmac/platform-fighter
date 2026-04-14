@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Attack
   - Blast Zone
+  - Semisolid
   layers:
   - Default
   - TransparentFX
