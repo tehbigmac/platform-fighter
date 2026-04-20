@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9029168962800697072}
   m_Layer: 6
   m_Name: Section 1
-  m_TagString: Untagged
+  m_TagString: Semisolid
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -749,7 +749,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd0269ec4d279084d8d38a6b61d5a43f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collision: {fileID: 0}
 --- !u!65 &8317910917347716135
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -769,5 +768,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 8.16, y: 0.5, z: 5}
-  m_Center: {x: 0, y: -0.23, z: 0}
+  m_Size: {x: 8.68, y: 0.5, z: 5}
+  m_Center: {x: 0, y: -0.14, z: 0}

@@ -80,6 +80,7 @@ public class PlayerController : MonoBehaviour
     private float airVelAdd = 1.5f;             // how much airVel changes every update
 
     private Collider playerCollider;            // collider component of the player
+    private OnGroundChecker onGroundChecker;
     private bool prevGrounded;                  // used to check if player landed on the frame and reset double jumps
     public LayerMask ground;                    // defines the ground layer for the player
 
@@ -100,11 +101,12 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         GameManager gm = FindFirstObjectByType<GameManager>();
-        playerCollider = GetComponent<Collider>();
+        playerCollider = GetComponent<CapsuleCollider>();
         gm.AddPlayer(this);
         lives = 3;
         shortJump = 1;
         specialsLib = GetComponent<SpecialsLib>();
+        onGroundChecker = GameObject.Find("groundHb").GetComponent<OnGroundChecker>();
 
         playerID = GetComponent<PlayerInput>().playerIndex;
         Debug.Log("Player index " + playerID + " spawned");
@@ -119,14 +121,9 @@ public class PlayerController : MonoBehaviour
 
         moveSpeed = 16;   // maximum movespeed
 
-
-        // GROUND RAYCAST
-
-        Vector3 origin = new Vector3(transform.position.x, transform.position.y - playerCollider.bounds.extents.y + 0.01f, transform.position.z);
-
-        Debug.DrawRay(origin, Vector3.down * 1.15f, Color.red);
+        // GROUND DETECTION
         prevGrounded = onGround;
-        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, 1.15f, ground))
+        if (onGroundChecker.Check())
         {
             onGround = true;
             if (prevGrounded != onGround)
@@ -279,7 +276,7 @@ public class PlayerController : MonoBehaviour
             // Debug.Log("ts got called");
             if (prevActiveJumping != activeJumping || (jumpFrame && !onGround && jumps > 0))
             {
-
+                if (onGround) { onGroundChecker.FuckYouYoureWrong(); }
                 jumps--;
                 if (shortJumping)
                 {
@@ -456,7 +453,7 @@ public class PlayerController : MonoBehaviour
     public void Attack(InputValue value) 
     {
         float angle = SimplifyStickAngle();
-        if (canMoveChecker() && !onGround)
+        if (canMoveChecker() && !onGroundChecker.Check())
         // if (true)
         {
             if (angle == stickNull)
@@ -614,6 +611,11 @@ public class PlayerController : MonoBehaviour
         {
             Die();
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        
     }
 
     // MISC ------------------------------------------------------------------------------------------

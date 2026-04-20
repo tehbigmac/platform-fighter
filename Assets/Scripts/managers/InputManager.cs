@@ -36,11 +36,6 @@ public class InputManager : MonoBehaviour
 
             lastPaused = paused;
         }
-
-        //JUMP HEIGHT DETECTION
-        // if (Jump.action.ReadValueAsButton() > 0.5f) {
-        //     Debug.Log("AHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
-        // }
     }
 
 // Callback method

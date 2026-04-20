@@ -17,6 +17,7 @@ public class SemisolidPlatformBehavior : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         Debug.Log("Motion uhm un-trigger");
+        other.transform.position = new Vector3(other.transform.position.x, other.transform.position.y + 0.1f, other.transform.position.z);
         Physics.IgnoreCollision(other, collision, false);
     }
 }
