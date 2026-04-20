@@ -55,6 +55,8 @@ public class PlayerController : MonoBehaviour
     private bool shortJumping;
     private float jumpDelay;
     private float jumps = 0;                    // how many jumps the player has left
+
+    private bool canRaycast = true;
     
 
     private bool onGround;                      // raycast determines whether character is on ground or not
@@ -118,12 +120,13 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-
+        Vector3 origin = new Vector3(transform.position.x, transform.position.y - playerCollider.bounds.extents.y + 0.01f, transform.position.z);
         moveSpeed = 16;   // maximum movespeed
 
         // GROUND DETECTION
         prevGrounded = onGround;
-        if (onGroundChecker.Check())
+        //if (onGroundChecker.Check())
+        if (canRaycast && Physics.Raycast(origin, Vector3.down, out RaycastHit hit, 1.15f, ground))
         {
             onGround = true;
             if (prevGrounded != onGround)
@@ -315,7 +318,7 @@ public class PlayerController : MonoBehaviour
         EditYV(toJump - toFall);
         // EditYV(toJump);
 
-        // Debug.Log($"jumping: {jumping} | jumpFrame: {jumpFrame} | jumps: {jumps} | jumpValue: {jumpValue} jumpDelay: {jumpDelay} | activeJumping: {activeJumping} | toJump: {toJump} | toFall: {toFall} | onGround: {onGround}");
+        Debug.Log($"toJump: {toJump} | toFall: {toFall} | onGround: {onGround}");
 
 
         // mirroring
@@ -625,6 +628,11 @@ public class PlayerController : MonoBehaviour
         kbVel = 0;
         lives --;
         KB = 0;
+    }
+
+    public void ToggleRaycast(bool b) 
+    {
+        canRaycast = b;
     }
 
     public void SortAttackType(GameObject attack) //processes an inputted attack and sends it into the correct attack lag handler

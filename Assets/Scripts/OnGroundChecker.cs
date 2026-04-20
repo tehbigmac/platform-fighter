@@ -11,24 +11,27 @@ public class OnGroundChecker : MonoBehaviour
         box = GetComponent<BoxCollider>();
     }
 
-    private void OnTriggerEnter(Collider collision)
+    private void OnTriggerStay(Collider collision)
     {
-        if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("Semisolid"))
+        if (!collision.gameObject.CompareTag("Player"))
         {
-            onGround = true;
+            Debug.Log("trigger enter asd");
+            collision.GetComponent<PlayerController>().ToggleRaycast(true);
         }
     }
 
     private void OnTriggerExit(Collider collision)
     {
-        if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("Semisolid"))
+        if (!collision.gameObject.CompareTag("Player"))
         {
+            Debug.Log("trigger exit asd");
             onGround = false;
         }
     }
 
     public void FuckYouYoureWrong()
     {
+        Debug.Log("fuck you asd");
         onGround = false;
     }
     public bool Check() 
