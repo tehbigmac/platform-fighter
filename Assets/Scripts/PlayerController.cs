@@ -120,15 +120,18 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector3 origin = new Vector3(transform.position.x, transform.position.y - playerCollider.bounds.extents.y + 0.01f, transform.position.z);
+        Vector3 origin = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         moveSpeed = 16;   // maximum movespeed
 
         // GROUND DETECTION
         prevGrounded = onGround;
         //if (onGroundChecker.Check())
-        if (canRaycast && Physics.Raycast(origin, Vector3.down, out RaycastHit hit, 1.15f, ground))
+        float asdasdasd = 0.05f + playerCollider.bounds.extents.y;
+        Debug.DrawRay(origin, Vector3.down * asdasdasd, Color.red);
+        if (canRaycast && Physics.Raycast(origin, Vector3.down, out RaycastHit hit, asdasdasd, ground))
         {
             onGround = true;
+            Debug.Log("raycast asd");
             if (prevGrounded != onGround)
             {
                 DisableAllAttacks();
@@ -141,9 +144,9 @@ public class PlayerController : MonoBehaviour
         else
         {
             onGround = false;
+            Debug.Log("Raycats failed asd. canraycast = " + canRaycast);
             // Debug.Log("ungrounded or broken");
         }
-
 
         // MOVEMENT UPDATES
 
@@ -154,7 +157,7 @@ public class PlayerController : MonoBehaviour
             EditXV(curvedMoveValue * moveSpeed);
         }
 
-        else if (!cantMove && !onGround) // IF UNGROUNDED AND CAN MOVE
+        else if (canMoveChecker() && !onGround) // IF UNGROUNDED AND CAN MOVE
         // else if (!onGround)
         {
             airVel = airVelAdd * curvedMoveValue;
@@ -456,7 +459,7 @@ public class PlayerController : MonoBehaviour
     public void Attack(InputValue value) 
     {
         float angle = SimplifyStickAngle();
-        if (canMoveChecker() && !onGroundChecker.Check())
+        if (canMoveChecker() && !onGround)
         // if (true)
         {
             if (angle == stickNull)

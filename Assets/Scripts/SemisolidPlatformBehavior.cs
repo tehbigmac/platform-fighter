@@ -11,7 +11,7 @@ public class SemisolidPlatformBehavior : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Motion trigger");
-        other.GetComponent<PlayerController>().ToggleRaycast(true);
+        other.GetComponent<PlayerController>().ToggleRaycast(false);
         Physics.IgnoreCollision(other, collision, true);
     }
 
@@ -19,7 +19,7 @@ public class SemisolidPlatformBehavior : MonoBehaviour
     {
         Debug.Log("Motion uhm un-trigger");
         other.transform.position = new Vector3(other.transform.position.x, other.transform.position.y + 0.1f, other.transform.position.z);
-        other.GetComponent<PlayerController>().ToggleRaycast(false);
+        other.GetComponent<PlayerController>().ToggleRaycast(true);
         Physics.IgnoreCollision(other, collision, false);
     }
 }

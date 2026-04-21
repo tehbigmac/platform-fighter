@@ -15,27 +15,28 @@ public class OnGroundChecker : MonoBehaviour
     {
         if (!collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("trigger enter asd");
-            collision.GetComponent<PlayerController>().ToggleRaycast(true);
+            Debug.Log("trigger stay asd");
+            transform.parent.GetComponent<PlayerController>().ToggleRaycast(true);
+        
         }
     }
 
-    private void OnTriggerExit(Collider collision)
-    {
-        if (!collision.gameObject.CompareTag("Player"))
-        {
-            Debug.Log("trigger exit asd");
-            onGround = false;
-        }
-    }
+    // private void OnTriggerExit(Collider collision)
+    // {
+    //     if (!collision.gameObject.CompareTag("Player"))
+    //     {
+    //         Debug.Log("trigger exit asd");
+    //         onGround = false;
+    //     }
+    // }
 
     public void FuckYouYoureWrong()
     {
         Debug.Log("fuck you asd");
         onGround = false;
     }
-    public bool Check() 
-    {
-        return onGround;
-    }
+    // public bool Check() 
+    // {
+    //     return onGround;
+    // }
 }
