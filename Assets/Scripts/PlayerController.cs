@@ -423,8 +423,8 @@ public class PlayerController : MonoBehaviour
     {
         if (onSemisolidGround && SimplifyStickAngle() == 270)
         {
-            transform.position = new Vector3(transform.position.x, transform.position.y - 0.15f, transform.position.z);
             canRaycast = false;
+            transform.position = new Vector3(transform.position.x, transform.position.y - 0.2f, transform.position.z);
             return;
         }
         jumpValue = value.Get<float>();
@@ -503,7 +503,7 @@ public class PlayerController : MonoBehaviour
         justStrongAttacked = true;
         float angle = SimplifyStickAngle();
 
-        if (!cantMove && chargingStrong == 1 && !inAttack)
+        if (canMoveChecker() && chargingStrong == 1 && !inAttack)
         {
             if ((angle == 0 || angle == 180 || angle == stickNull) && onGround)
             {
