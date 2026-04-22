@@ -57,7 +57,8 @@ public class PlayerController : MonoBehaviour
     private float jumps = 0;                    // how many jumps the player has left
 
     private bool canRaycast = true;
-    
+    private bool onSemisolidGround;
+
 
     private bool onGround;                      // raycast determines whether character is on ground or not
 
@@ -127,7 +128,10 @@ public class PlayerController : MonoBehaviour
         prevGrounded = onGround;
         //if (onGroundChecker.Check())
         float asdasdasd = 0.05f + playerCollider.bounds.extents.y;
-        Debug.DrawRay(origin, Vector3.down * asdasdasd, Color.red);
+
+        if (canRaycast) { Debug.DrawRay(origin, Vector3.down * asdasdasd, Color.green); }
+        else { Debug.DrawRay(origin, Vector3.down * asdasdasd, Color.red); }
+
         if (canRaycast && Physics.Raycast(origin, Vector3.down, out RaycastHit hit, asdasdasd, ground))
         {
             onGround = true;
@@ -417,38 +421,30 @@ public class PlayerController : MonoBehaviour
     //▮▮▮▮▮▮▮    ▮▮      ▮▮  ▮▮              ▮▮▮▮▮▮        ▮▮
     public void Jump(InputValue value)
     {
-        // if (jumps > 0 && !cantMove) {
-
-            jumpValue = value.Get<float>();
+        if (onSemisolidGround && SimplifyStickAngle() == 270)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y - 0.15f, transform.position.z);
+            canRaycast = false;
+            return;
+        }
+        jumpValue = value.Get<float>();
+        
+        if (jumpValue == 1)
+        {
             
-
-            if (jumpValue == 1)
-            {
-                
-                jumping = true;
-                shortJump = 1;
-                
-                // jumpDuration = 0;
-                
-                // Debug.Log("jumpValue: " + jumpValue);
-            }
-            else
-            {
-                jumping = false;
-                jumpFrame = false;
-                
-            }
-
-
+            jumping = true;
+            shortJump = 1;
             
-
-            //Debug.Log("jump button value is uh " + jumpValue + " i think");
-        // }
-        // else
-        // {
-        //     jumping = false;
+            // jumpDuration = 0;
             
-        // }
+            // Debug.Log("jumpValue: " + jumpValue);
+        }
+        else
+        {
+            jumping = false;
+            jumpFrame = false;
+            
+        }
     }
 
     public void Release()
@@ -636,6 +632,11 @@ public class PlayerController : MonoBehaviour
     public void ToggleRaycast(bool b) 
     {
         canRaycast = b;
+    }
+
+    public void ToggleOnSemisolid(bool b) 
+    {
+        onSemisolidGround = b;
     }
 
     public void SortAttackType(GameObject attack) //processes an inputted attack and sends it into the correct attack lag handler

@@ -18,8 +18,13 @@ public class SemisolidPlatformBehavior : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         Debug.Log("Motion uhm un-trigger");
-        other.transform.position = new Vector3(other.transform.position.x, other.transform.position.y + 0.1f, other.transform.position.z);
-        other.GetComponent<PlayerController>().ToggleRaycast(true);
+
+        if (other.gameObject.CompareTag("GHB")) { other.transform.position = new Vector3(other.transform.position.x, other.transform.position.y, other.transform.position.z); }
+        else
+        {
+            other.transform.position = new Vector3(other.transform.position.x, other.transform.position.y, other.transform.position.z);
+            other.GetComponent<PlayerController>().ToggleRaycast(true);
+        }
         Physics.IgnoreCollision(other, collision, false);
     }
 }
