@@ -1788,8 +1788,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c23e97550e65c5f4aa0901ea5c95978d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 90
-  kb: 8
+  damage: 20
+  kb: 7
   angle: 362
   kbType: reg
   sLag: 3
@@ -2377,7 +2377,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c23e97550e65c5f4aa0901ea5c95978d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 70
+  damage: 20
   kb: 5
   angle: 361
   kbType: jab

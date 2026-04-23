@@ -607,7 +607,7 @@ public class PlayerController : MonoBehaviour
         {
             //Debug.Log("ow");
             var atkStats = other.GetComponent<attack>();
-            ReceiveAttack(atkStats.GetDamage(), atkStats.GetKb(), atkStats.GetAngle(), other.transform.position);
+            ReceiveAttack(atkStats.GetDamage(), atkStats.GetKb(), atkStats.GetAngle(), other.transform.position, other.gameObject);
         }
         if (other.CompareTag("Blast Zone")) 
         {
@@ -627,6 +627,11 @@ public class PlayerController : MonoBehaviour
         kbVel = 0;
         lives --;
         KB = 0;
+    }
+
+    public bool GetMirror()
+    {
+        return mirror;
     }
 
     public void ToggleRaycast(bool b) 
@@ -684,19 +689,30 @@ public class PlayerController : MonoBehaviour
 
     // MATHY FUNCTIONS ------------------------------------------------------------------------------------------
 
-    private void ReceiveAttack(float dmg, float kb, float angle, Vector3 origin)
+    private void ReceiveAttack(float dmg, float kb, float angle, Vector3 origin, GameObject gb)
     {
         cantMove = true;
         if (angle == 362)
         {
-            if (KB > 60)
+            if (KB < 60)
             {
-                angle = 180 * Mathf.Deg2Rad;
+                angle = 180;
             }
             else
             {
-                angle = 60 * Mathf.Deg2Rad;
+                angle = 120;
             }
+
+            if (gb.transform.parent.transform.parent.GetComponent<PlayerController>().GetMirror()) 
+            {
+                angle = 180 - angle;
+                Debug.Log("knocked right angle: " + angle);
+            }
+            else
+            {
+                Debug.Log("knocked LEFT AHHHH angle: " + angle);
+            }
+            angle = angle * Mathf.Deg2Rad;
         }
         else if (angle == 361)
         {
