@@ -31,6 +31,6 @@ public class PickupManager : MonoBehaviour
 
     void SpawnPickup(GameObject prefab)
     {
-        Instantiate(prefab, pickupSpawnPositions[Random.Range(0, 3)], Quaternion.Euler(0f, 140f, 0f));
+        Instantiate(prefab, pickupSpawnPositions[Random.Range(0, 3)], Quaternion.Euler(0f, 0f, 0f));
     }
 }

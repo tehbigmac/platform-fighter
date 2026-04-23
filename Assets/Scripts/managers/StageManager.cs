@@ -20,8 +20,9 @@ public class StageManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || StaticLib.stageRollReq)
         {
+            StaticLib.stageRollReq = false;
             swapStage(Random.Range(0, 3));
         }
     }

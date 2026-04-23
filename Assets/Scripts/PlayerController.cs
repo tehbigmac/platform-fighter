@@ -43,6 +43,9 @@ public class PlayerController : MonoBehaviour
     private float terminalVel = 40;            // this ones probably useless
 
 
+    private GameObject targetItem;
+    private bool canGetItem = false;
+    private bool hasItem = false;
 
     private float shortJump;
 
@@ -341,6 +344,11 @@ public class PlayerController : MonoBehaviour
             mirror = false;
         }
 
+        if (hasItem)
+        {
+            //if (mirror) { targetItem.transform.position = new Vector3(transform.position.x -1, transform.position.y, transform.position.z); }
+            targetItem.transform.position = new Vector3(transform.position.x + 1, transform.position.y, transform.position.z);
+        }
     }
 
 
@@ -454,6 +462,20 @@ public class PlayerController : MonoBehaviour
 
     public void Attack(InputValue value) 
     {
+        if (hasItem) 
+        {
+            targetItem.GetComponent<BasicItemBehavior>().AddLinearVelocity(5, 30, 0);
+            targetItem.GetComponent<BasicItemBehavior>().ActivateFunction();
+            hasItem = false;
+            return;
+        }
+
+        if (canGetItem && !hasItem) 
+        {
+            hasItem = true;
+            return;
+        }
+
         float angle = SimplifyStickAngle();
         if (canMoveChecker() && !onGround)
         // if (true)
@@ -613,11 +635,19 @@ public class PlayerController : MonoBehaviour
         {
             Die();
         }
+        if (other.CompareTag("Pickup") && !hasItem)
+        {
+            canGetItem = true;
+            targetItem = other.gameObject;
+        }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerExit(Collider other)
     {
-        
+        if(other.CompareTag("Pickup"))
+        {
+            canGetItem = false;
+        }
     }
 
     // MISC ------------------------------------------------------------------------------------------

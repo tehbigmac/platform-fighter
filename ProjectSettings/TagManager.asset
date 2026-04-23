@@ -9,6 +9,7 @@ TagManager:
   - Semisolid
   - Ground
   - GHB
+  - Pickup
   layers:
   - Default
   - TransparentFX
