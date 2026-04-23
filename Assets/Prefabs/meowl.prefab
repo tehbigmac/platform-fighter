@@ -2246,7 +2246,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c23e97550e65c5f4aa0901ea5c95978d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 150
+  damage: 15
   kb: 10
   angle: 90
   kbType: reg
@@ -2746,12 +2746,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 20
-  kb: 150
+  kb: 15
   angle: 180
   kbType: 362
-  sLag: 10
+  sLag: 5
   aLength: 5
-  eLag: 20
+  eLag: 10
   attribute: reg
   isStrong: 1
   children: []
@@ -2877,7 +2877,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 20
-  kb: 150
+  kb: 15
   angle: 90
   kbType: reg
   sLag: 10
@@ -3138,7 +3138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c23e97550e65c5f4aa0901ea5c95978d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 90
+  damage: 40
   kb: 8
   angle: 90
   kbType: reg

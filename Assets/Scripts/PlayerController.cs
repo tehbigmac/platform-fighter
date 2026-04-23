@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using System.Collections;
 using UnityEngine.UIElements.Experimental;
 using System;
+using Unity.VisualScripting;
 // using System.Numerics;
 
 public class PlayerController : MonoBehaviour
@@ -80,6 +81,7 @@ public class PlayerController : MonoBehaviour
     private float curvedMoveValue;              // curves the joystick x input, used by x movement calculations
 
     private float kbVel;                        // velocity from knockback, calculated separately from movement velocity
+    private float kbYVel;
     private float kbVelDecay = 1;               // how much velocity from knockback decays every update
 
     private float airVel;                       // for changing velocity in mid-air; changes based on stick input
@@ -191,10 +193,23 @@ public class PlayerController : MonoBehaviour
         if (Mathf.Abs(kbVel) > kbVelDecay)
         {
             kbVel -= kbVelDecay * Mathf.Sign(kbVel);
+            Debug.Log("decay vel");
         }
         else
         {
             kbVel = 0;
+            Debug.Log("decay end");
+        }
+
+        if (Mathf.Abs(kbYVel) > kbVelDecay)
+        {
+            kbYVel -= kbVelDecay * Mathf.Sign(kbYVel);
+            Debug.Log("decay vel");
+        }
+        else
+        {
+            kbYVel = 0;
+            Debug.Log("decay end");
         }
 
 
@@ -763,8 +778,11 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            EditYV(1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Sin(angle));
+            kbYVel = (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Sin(angle));
             kbVel = (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Cos(angle));
+            Debug.Log("hit angle: " + angle);
+            Debug.Log("edited YV by " + (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Sin(angle)));
+            Debug.Log("edited XV by " + (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Cos(angle)));
         }
 
         Debug.Log("attack recieved: dmg = " + dmg + " kb = " + kb + " angle = " + angle);
@@ -864,7 +882,8 @@ public class PlayerController : MonoBehaviour
     }
 
     public void EditYV(float y) {
-        rb.linearVelocity = new Vector3(rb.linearVelocity.x, y, rb.linearVelocity.z);
+        rb.linearVelocity = new Vector3(rb.linearVelocity.x, y + kbYVel, rb.linearVelocity.z);
+        // kbYVel = 0;
         // Debug.Log("linear y velocity set to " + y);
     }
 }
