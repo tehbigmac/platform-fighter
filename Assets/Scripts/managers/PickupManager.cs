@@ -6,7 +6,7 @@ public class PickupManager : MonoBehaviour
     public Vector3[] pickupSpawnPositions = new Vector3[3];
 
     public GameObject rerollStagePrefab;
-    public GameObject rerollSpecialPrefab;
+    //public GameObject rerollSpecialPrefab;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -17,10 +17,10 @@ public class PickupManager : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        int rando = Random.Range(0, 100);
+        int rando = Random.Range(0, 600);
         if (rando == 0)
         {
-            // SpawnPickup(rerollStagePrefab);
+            SpawnPickup(rerollStagePrefab);
         }
 
         if (rando == 1)

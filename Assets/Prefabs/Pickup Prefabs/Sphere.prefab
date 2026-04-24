@@ -69,7 +69,7 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6338012935389587529}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 3c5873e4dd61e6c4bb00a1c4623cd593, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -129,7 +129,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.16
+  m_Radius: 0.2
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!212 &2462275714038235823
 SpriteRenderer:
@@ -202,7 +202,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
+  m_AnimatePhysics: 1
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
