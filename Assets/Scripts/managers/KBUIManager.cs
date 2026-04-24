@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph;
 
 public class KBUIManager : MonoBehaviour
 {
@@ -27,6 +28,12 @@ public class KBUIManager : MonoBehaviour
 
             KBUI[i].enabled = false;
         }
+
+        KBUI[0].color = new Color(0.5f, 0.7f, 1.0f, 1.0f);
+        KBUI[1].color = new Color(1.0f, 0.5f, 0.6f, 1.0f);
+        KBUI[2].color = new Color(0.7f, 1.0f, 0.5f, 1.0f);
+        KBUI[3].color = new Color(1.0f, 0.9f, 0.5f, 1.0f);
+
     }
 
 

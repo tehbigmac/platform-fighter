@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine.UIElements.Experimental;
 using System;
 using Unity.VisualScripting;
+using NUnit.Framework;
 // using System.Numerics;
 
 public class PlayerController : MonoBehaviour
@@ -38,7 +39,7 @@ public class PlayerController : MonoBehaviour
     private float toFall;
 
     private float jumpDecay = 0.5f;
-    private float fallDecay = 1.5f;
+    private float fallDecay = 1.2f;
 
     private float jumpForce = 22;               // base jump multi (might become obsolete) (NOT OBSOLETE DONT DELETE)
     private float terminalVel = 40;            // this ones probably useless
@@ -103,6 +104,8 @@ public class PlayerController : MonoBehaviour
     public bool inAirAttack = false;
     public bool mirror;
 
+    private SpriteRenderer spriteRenderer;
+
 
     // UNITY STUFF ------------------------------------------------------------------------------------------
     void Start()
@@ -115,9 +118,28 @@ public class PlayerController : MonoBehaviour
         shortJump = 1;
         specialsLib = GetComponent<SpecialsLib>();
         onGroundChecker = GameObject.Find("groundHb").GetComponent<OnGroundChecker>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         playerID = GetComponent<PlayerInput>().playerIndex;
         Debug.Log("Player index " + playerID + " spawned");
+
+        if (playerID == 1)
+        {
+            spriteRenderer.color = new Color(0.5f, 0.7f, 1.0f, 1.0f);
+        }
+        if (playerID == 2)
+        {
+            spriteRenderer.color = new Color(1.0f, 0.5f, 0.6f, 1.0f);
+        }
+        if (playerID == 3)
+        {
+            spriteRenderer.color = new Color(0.7f, 1.0f, 0.5f, 1.0f);
+        }
+        if (playerID == 4)
+        {
+            spriteRenderer.color = new Color(1.0f, 0.9f, 0.5f, 1.0f);
+        }
+
 
         transform.position = new Vector3(transform.position.x, transform.position.y + (-0.01f * playerID), transform.position.z);
 
@@ -126,6 +148,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        Debug.Log("playerid: " + playerID + " inAttack: " + inAttack + " canGetItem: " + canGetItem + " hasItem: " + hasItem);
         Vector3 origin = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         moveSpeed = 16;   // maximum movespeed
 
@@ -364,6 +387,8 @@ public class PlayerController : MonoBehaviour
             //if (mirror) { targetItem.transform.position = new Vector3(transform.position.x -1, transform.position.y, transform.position.z); }
             targetItem.transform.position = new Vector3(transform.position.x + 1, transform.position.y, transform.position.z);
         }
+
+        Debug.Log("ID: " + playerID);
     }
 
 
@@ -488,6 +513,7 @@ public class PlayerController : MonoBehaviour
         if (canGetItem && !hasItem) 
         {
             hasItem = true;
+            canGetItem = false;
             return;
         }
 
@@ -539,6 +565,27 @@ public class PlayerController : MonoBehaviour
         chargingStrong = value.Get<float>();
         justStrongAttacked = true;
         float angle = SimplifyStickAngle();
+        if (canMoveChecker() && !onGround)
+        // if (true)
+        {
+            if (angle == stickNull)
+            {
+                SortAttackType(NAir);
+            }
+            else if (angle == 0 || angle == 180)
+            {
+                if (BackAirInput()) { SortAttackType(BAir); }
+                else { SortAttackType(FAir); }
+            }
+            else if (angle == 90)
+            {
+                SortAttackType(UAir);
+            }
+            else if (angle == 270)
+            {
+                SortAttackType(DAir);
+            }
+        }
 
         if (canMoveChecker() && chargingStrong == 1 && !inAttack)
         {
@@ -650,7 +697,7 @@ public class PlayerController : MonoBehaviour
         {
             Die();
         }
-        if (other.CompareTag("Pickup") && !hasItem)
+        if (other.CompareTag("Pickup"))
         {
             canGetItem = true;
             targetItem = other.gameObject;
@@ -672,6 +719,8 @@ public class PlayerController : MonoBehaviour
         kbVel = 0;
         lives --;
         KB = 0;
+        hasItem = false;
+        inAttack = false;
     }
 
     public bool GetMirror()

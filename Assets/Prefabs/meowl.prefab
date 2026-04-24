@@ -2747,7 +2747,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 20
   kb: 15
-  angle: 180
+  angle: 362
   kbType: 362
   sLag: 5
   aLength: 5
