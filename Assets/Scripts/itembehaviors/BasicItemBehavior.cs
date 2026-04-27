@@ -9,6 +9,7 @@ public class BasicItemBehavior : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        // GetComponent<SphereCollider>().enabled = true;
     }
 
     private void FixedUpdate()

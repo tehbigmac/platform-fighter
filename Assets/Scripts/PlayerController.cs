@@ -384,8 +384,8 @@ public class PlayerController : MonoBehaviour
 
         if (hasItem)
         {
-            //if (mirror) { targetItem.transform.position = new Vector3(transform.position.x -1, transform.position.y, transform.position.z); }
-            targetItem.transform.position = new Vector3(transform.position.x + 1, transform.position.y, transform.position.z);
+            if (mirror) { targetItem.transform.position = new Vector3(transform.position.x + 1, transform.position.y, transform.position.z); }
+            else { targetItem.transform.position = new Vector3(transform.position.x - 1, transform.position.y, transform.position.z); }
         }
 
         Debug.Log("ID: " + playerID);
@@ -504,8 +504,10 @@ public class PlayerController : MonoBehaviour
     {
         if (hasItem) 
         {
-            targetItem.GetComponent<BasicItemBehavior>().AddLinearVelocity(5, 30, 0);
+            if (mirror) { targetItem.GetComponent<BasicItemBehavior>().AddLinearVelocity(5, 30, 0); }
+            else { targetItem.GetComponent<BasicItemBehavior>().AddLinearVelocity(-5, 30, 0); }
             targetItem.GetComponent<BasicItemBehavior>().ActivateFunction();
+            // targetItem.GetComponent<SphereCollider>().enabled = false;
             hasItem = false;
             return;
         }
