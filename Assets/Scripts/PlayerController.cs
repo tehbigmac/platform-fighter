@@ -91,6 +91,9 @@ public class PlayerController : MonoBehaviour
     private float airVel;                       // for changing velocity in mid-air; changes based on stick input
     private float airVelAdd = 1.5f;             // how much airVel changes every update
 
+    private float airRes = 1;
+    private float airResDecay = 0.01f;
+
     private Collider playerCollider;            // collider component of the player
     private OnGroundChecker onGroundChecker;
     private PlayerAudioController playerAudioController;
@@ -165,7 +168,7 @@ public class PlayerController : MonoBehaviour
         {
             stunTimer = -67;
             ReceiveAttack(atkData.dmg, atkData.kb, atkData.angle, atkData.origin, atkData.gb);
-            Debug.Log("poop");
+            Debug.Log("poop"); // wtf is this jake
         }
 
         // GROUND DETECTION
@@ -212,7 +215,7 @@ public class PlayerController : MonoBehaviour
             if (Mathf.Abs(rb.linearVelocity.x + airVel) > moveSpeed)
             {
                 airVel = 0;
-                EditXV(moveSpeed * Mathf.Sign(rb.linearVelocity.x));
+                EditXV((moveSpeed) * Mathf.Sign(rb.linearVelocity.x));
             }
             else
             {
@@ -249,6 +252,33 @@ public class PlayerController : MonoBehaviour
         {
             kbYVel = 0;
             Debug.Log("decay end");
+        }
+
+        // AIR DECAY
+
+        if (onGround)
+        {
+            airRes = 1;
+        }
+
+        else
+        {
+            // airRes = Mathf.Abs(airRes);
+            // airRes += airResDecay;
+            // airRes *= -Mathf.Sign(rb.linearVelocity.x);
+            // Debug.Log("airRes: " + airRes);
+
+            if (SimplifyStickAngle() == stickNull)
+            {
+                // airRes = (airRes < 100) ? airRes + airResDecay : 2;
+                airRes += airResDecay;
+                Debug.Log("airRes: " + airRes);
+            }
+
+            else
+            {
+                airRes = 1;
+            }
         }
 
 
@@ -958,6 +988,12 @@ public class PlayerController : MonoBehaviour
         return ((-((4 * (((4 * f) / multi) - 5.65f)) / Mathf.Sqrt(Mathf.Pow(((4 * f) / multi) - 5.65f, 2) + 4)) - (0.5f / Mathf.Pow(multi, 3))) + (multi * ((((5.6f * f) / Mathf.Pow(multi, 2)) - (7.56f / multi)) * Mathf.Pow(2.718f, -Mathf.Pow((((2 * f) / multi) - 2.7f), 2))))) * jumpForce * multi;
     }
 
+    // public float GreaterMagnitude(float a, float b)
+    // {
+    //     float greater = Mathf.Abs(a) > Mathf.Abs(b) ? a : b;
+    //     return greater;
+    // }
+
     // VELOCITY FUNCTIONS ------------------------------------------------------------------------------------------
 
     public void AddLinearVelocity(float x, float y, float z) {
@@ -969,7 +1005,7 @@ public class PlayerController : MonoBehaviour
     }
 
     public void EditXV(float x) {
-        rb.linearVelocity = new Vector3(x + kbVel, rb.linearVelocity.y, rb.linearVelocity.z);
+        rb.linearVelocity = new Vector3((x / airRes) + kbVel, rb.linearVelocity.y, rb.linearVelocity.z);
         // Debug.Log("linear x velocity set to " + x);
     }
 
