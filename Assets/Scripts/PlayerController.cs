@@ -33,8 +33,8 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody rb;
     private float moveSpeed;                    // how fast the player goes on the ground, and also the fastest a player can move in the air (ignoring knockback velocity)
-    
-    
+
+
     private float toJump;                       // important probably
     private float toFall;
 
@@ -76,6 +76,9 @@ public class PlayerController : MonoBehaviour
     private bool cantMove = false;
     private bool stun = false;
 
+    private float stunTimer = -67;
+    private RecievedAttackData atkData;
+
     private float stickNull = 6741;             // arbitrary value used for checking if stick is centered
 
     private Vector2 moveValue;                  // raw joystick input
@@ -83,13 +86,14 @@ public class PlayerController : MonoBehaviour
 
     private float kbVel;                        // velocity from knockback, calculated separately from movement velocity
     private float kbYVel;
-    private float kbVelDecay = 1;               // how much velocity from knockback decays every update
+    private float kbVelDecay = 0.67f;               // how much velocity from knockback decays every update
 
     private float airVel;                       // for changing velocity in mid-air; changes based on stick input
     private float airVelAdd = 1.5f;             // how much airVel changes every update
 
     private Collider playerCollider;            // collider component of the player
     private OnGroundChecker onGroundChecker;
+    private PlayerAudioController playerAudioController;
     private bool prevGrounded;                  // used to check if player landed on the frame and reset double jumps
     public LayerMask ground;                    // defines the ground layer for the player
 
@@ -119,6 +123,7 @@ public class PlayerController : MonoBehaviour
         specialsLib = GetComponent<SpecialsLib>();
         onGroundChecker = GameObject.Find("groundHb").GetComponent<OnGroundChecker>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        playerAudioController = GetComponent<PlayerAudioController>();
 
         playerID = GetComponent<PlayerInput>().playerIndex;
         Debug.Log("Player index " + playerID + " spawned");
@@ -151,6 +156,17 @@ public class PlayerController : MonoBehaviour
         Debug.Log("playerid: " + playerID + " inAttack: " + inAttack + " canGetItem: " + canGetItem + " hasItem: " + hasItem);
         Vector3 origin = new Vector3(transform.position.x, transform.position.y, transform.position.z);
         moveSpeed = 16;   // maximum movespeed
+
+        if (stunTimer > 0) 
+        {
+            stunTimer--;
+        }
+        else if (stunTimer <= 0 && stunTimer > -67)
+        {
+            stunTimer = -67;
+            ReceiveAttack(atkData.dmg, atkData.kb, atkData.angle, atkData.origin, atkData.gb);
+            Debug.Log("poop");
+        }
 
         // GROUND DETECTION
         prevGrounded = onGround;
@@ -253,7 +269,7 @@ public class PlayerController : MonoBehaviour
         //     {
         //         shortJump = 0.6f;
         //     }
-            
+
         //     toJump = FuckassJumpCalculator(jumpDuration, shortJump);
 
         //     EditYV(toJump);
@@ -320,8 +336,8 @@ public class PlayerController : MonoBehaviour
             shortJumping = false;
             Debug.Log("long jump");
         }
-        
-        
+
+
         if (activeJumping)
         {
             // Debug.Log("ts got called");
@@ -423,11 +439,11 @@ public class PlayerController : MonoBehaviour
         if (inAir) { inAirAttack = false; }
     }
 
-    public IEnumerator AttackLagHandler(GameObject[] hitboxes, bool inAir) 
+    public IEnumerator AttackLagHandler(GameObject[] hitboxes, bool inAir)
     {
         if (inAir) { inAirAttack = true; }
         inAttack = true;
-        for (int i = 0; i < hitboxes.Length; i ++) 
+        for (int i = 0; i < hitboxes.Length; i++)
         {
             float[] atkData = hitboxes[i].GetComponent<attack>().GetLagPack();
             yield return new WaitForSeconds(atkData[0]);
@@ -476,22 +492,22 @@ public class PlayerController : MonoBehaviour
             return;
         }
         jumpValue = value.Get<float>();
-        
+
         if (jumpValue == 1)
         {
-            
+
             jumping = true;
             shortJump = 1;
-            
+
             // jumpDuration = 0;
-            
+
             // Debug.Log("jumpValue: " + jumpValue);
         }
         else
         {
             jumping = false;
             jumpFrame = false;
-            
+
         }
     }
 
@@ -500,9 +516,9 @@ public class PlayerController : MonoBehaviour
         EditYV(rb.linearVelocity.y * 2);
     }
 
-    public void Attack(InputValue value) 
+    public void Attack(InputValue value)
     {
-        if (hasItem) 
+        if (hasItem)
         {
             if (mirror) { targetItem.GetComponent<BasicItemBehavior>().AddLinearVelocity(5, 30, 0); }
             else { targetItem.GetComponent<BasicItemBehavior>().AddLinearVelocity(-5, 30, 0); }
@@ -512,7 +528,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (canGetItem && !hasItem) 
+        if (canGetItem && !hasItem)
         {
             hasItem = true;
             canGetItem = false;
@@ -541,7 +557,7 @@ public class PlayerController : MonoBehaviour
                 SortAttackType(DAir);
             }
         }
-        else 
+        else
         {
             if (angle == stickNull)
             {
@@ -562,7 +578,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void StrongAttack(InputValue value) 
+    public void StrongAttack(InputValue value)
     {
         chargingStrong = value.Get<float>();
         justStrongAttacked = true;
@@ -607,7 +623,7 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log("Strong Attack in direction " + angle);
     }
-    
+
     public void Special(InputValue value)
     {
         float angle = SimplifyStickAngle();
@@ -644,7 +660,7 @@ public class PlayerController : MonoBehaviour
         if (cantMove == false) {
             cantMove = true;
             StartCoroutine(IFrames());
-            if (angle > 315 && angle <= 360 || angle < 45 && angle >= 0 ) {
+            if (angle > 315 && angle <= 360 || angle < 45 && angle >= 0) {
                 EditXV(dodgeForce);
                 Debug.Log("dodge right");
             }
@@ -689,13 +705,17 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Attack")) 
+        if (other.CompareTag("Attack"))
         {
             //Debug.Log("ow");
             var atkStats = other.GetComponent<attack>();
-            ReceiveAttack(atkStats.GetDamage(), atkStats.GetKb(), atkStats.GetAngle(), other.transform.position, other.gameObject);
+
+            atkData = new RecievedAttackData(atkStats.GetDamage(), atkStats.GetKb(), atkStats.GetAngle(), other.transform.position, other.gameObject);
+
+            stunTimer = other.GetComponent<attack>().CalcHitStun(KB);
+            Debug.Log("got hit, stun length = " + other.GetComponent<attack>().CalcHitStun(KB) + " seconds!!");
         }
-        if (other.CompareTag("Blast Zone")) 
+        if (other.CompareTag("Blast Zone"))
         {
             Die();
         }
@@ -708,13 +728,31 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.CompareTag("Pickup"))
+        if (other.CompareTag("Pickup"))
         {
             canGetItem = false;
         }
     }
 
     // MISC ------------------------------------------------------------------------------------------
+
+    public struct RecievedAttackData
+    {
+        public float dmg;
+        public float kb;
+        public float angle;
+        public Vector3 origin;
+        public GameObject gb; 
+
+        public RecievedAttackData(float _dmg, float _kb, float _angle, Vector3 _origin, GameObject _gb)
+        {
+            dmg = _dmg;
+            kb = _kb;
+            angle = _angle;
+            origin = _origin;
+            gb = _gb;
+        }
+    }
     public void Die() {
         transform.position = new Vector3(0, 6, 0);
         rb.linearVelocity = new Vector3(0, 0, 0);
@@ -787,7 +825,7 @@ public class PlayerController : MonoBehaviour
 
     private void ReceiveAttack(float dmg, float kb, float angle, Vector3 origin, GameObject gb)
     {
-        cantMove = true;
+
         if (angle == 362)
         {
             if (KB < 60)
@@ -799,11 +837,16 @@ public class PlayerController : MonoBehaviour
                 angle = 120;
             }
 
-            if (gb.transform.parent.transform.parent.GetComponent<PlayerController>().GetMirror()) 
+            if (gb.transform.parent.transform.parent.GetComponent<PlayerController>().GetMirror() && !gb.GetComponent<attack>().IsFrame()) 
             {
                 angle = 180 - angle;
                 Debug.Log("knocked right angle: " + angle);
             }
+            //else if (gb.transform.parent.transform.parent.transform.parent.GetComponent<PlayerController>().GetMirror() && gb.GetComponent<attack>().IsFrame())
+            //{
+            //    angle = 180 - angle;
+            //    Debug.Log("MULTIHIT VERSION knocked right angle: " + angle);
+            //}
             else
             {
                 Debug.Log("knocked LEFT AHHHH angle: " + angle);
@@ -824,8 +867,7 @@ public class PlayerController : MonoBehaviour
         {
             stun = true;
             EditXV(0);
-            EditYV(0);
-            StartCoroutine(WaitToDisable(0.3f, stun));
+            EditYV(5);
         }
         else
         {
@@ -837,7 +879,6 @@ public class PlayerController : MonoBehaviour
         }
 
         Debug.Log("attack recieved: dmg = " + dmg + " kb = " + kb + " angle = " + angle);
-        StartCoroutine(IFrames());
     }
 
     public float SimplifyStickAngle()

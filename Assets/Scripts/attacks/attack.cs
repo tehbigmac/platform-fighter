@@ -17,6 +17,7 @@ public class attack : MonoBehaviour
     public string attribute;
     public bool isStrong = false;
     public GameObject[] children;
+    public bool isFrame;
     
     private float[] lagStats;
 
@@ -50,5 +51,19 @@ public class attack : MonoBehaviour
     public bool IsStrong()
     {
         return isStrong;
+    }
+
+    public bool IsFrame()
+    {
+        return isFrame;
+    }
+
+    public float CalcHitStun (float kbValue)
+    {
+        Debug.Log("STUN DATA AHHHH KB: " + kbValue + " damage: " + damage + " kb: " + kb);
+        if (kbValue == 0) { kbValue++; }
+        var kbReturn = (Mathf.Log(kbValue * (0.5f * damage) * (0.5f * kb)) / 1000) + 2;
+        if (kbReturn > 2.01f) { kbReturn = 2.01f; }
+        return kbReturn;
     }
 }
