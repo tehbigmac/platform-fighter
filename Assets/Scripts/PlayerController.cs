@@ -243,16 +243,16 @@ public class PlayerController : MonoBehaviour
             Debug.Log("decay end");
         }
 
-        if (Mathf.Abs(kbYVel) > kbVelDecay)
-        {
-            kbYVel -= kbVelDecay * Mathf.Sign(kbYVel);
-            Debug.Log("decay vel");
-        }
-        else
-        {
-            kbYVel = 0;
-            Debug.Log("decay end");
-        }
+        // if (Mathf.Abs(kbYVel) > kbVelDecay)
+        // {
+        //     kbYVel -= kbVelDecay * Mathf.Sign(kbYVel);
+        //     Debug.Log("decay vel");
+        // }
+        // else
+        // {
+        //     kbYVel = 0;
+        //     Debug.Log("decay end");
+        // }
 
         // AIR DECAY
 
