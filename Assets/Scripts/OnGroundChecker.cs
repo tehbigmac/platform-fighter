@@ -13,12 +13,12 @@ public class OnGroundChecker : MonoBehaviour
 
     private void OnTriggerStay(Collider collision)
     {
-        if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("Semisolid"))
-        {
-            Debug.Log("trigger stay asd");
-            transform.parent.GetComponent<PlayerController>().ToggleRaycast(true);
-        
-        }
+        //if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("Semisolid"))
+        //{
+        //    Debug.Log("trigger stay asd");
+        //    transform.parent.GetComponent<PlayerController>().ToggleRaycast(true);
+        //
+        //}
         if (collision.gameObject.CompareTag("Semisolid")) 
         {
             transform.parent.GetComponent<PlayerController>().ToggleOnSemisolid(true);
