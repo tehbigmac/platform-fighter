@@ -35,8 +35,8 @@ public class PlayerController : MonoBehaviour
     private float moveSpeed;                    // how fast the player goes on the ground, and also the fastest a player can move in the air (ignoring knockback velocity)
 
 
-    private float toJump;                       // important probably
-    private float toFall;
+    public float toJump;                       // important probably
+    public float toFall;
 
     private float jumpDecay = 0.5f;
     private float fallDecay = 1.2f;
@@ -46,8 +46,8 @@ public class PlayerController : MonoBehaviour
 
 
     private GameObject targetItem;
-    private bool canGetItem = false;
-    private bool hasItem = false;
+    public bool canGetItem = false;
+    public bool hasItem = false;
 
     private float shortJump;
 
@@ -61,11 +61,11 @@ public class PlayerController : MonoBehaviour
     private float jumpDelay;
     private float jumps = 0;                    // how many jumps the player has left
 
-    private bool canRaycast = true;
-    private bool onSemisolidGround;
+    public bool canRaycast = true;
+    public bool onSemisolidGround;
 
 
-    private bool onGround;                      // raycast determines whether character is on ground or not
+    public bool onGround;                      // raycast determines whether character is on ground or not
 
     private float fastFallSpeed = -20;          // constant speed of fast fall
     private float dodgeCooldown = 0;

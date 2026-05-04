@@ -949,6 +949,7 @@ GameObject:
   - component: {fileID: 1603493319}
   - component: {fileID: 1603493320}
   - component: {fileID: 1603493321}
+  - component: {fileID: 1603493322}
   m_Layer: 0
   m_Name: UI Manager
   m_TagString: Untagged
@@ -1060,6 +1061,26 @@ MonoBehaviour:
   - {x: 400, y: -100}
   - {x: -400, y: 100}
   - {x: 400, y: 100}
+--- !u!114 &1603493322
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1603493316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0f77a5c02d0deb48af225397809b341, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sandBag: {fileID: 6905861942238064894, guid: b90c2fcffab808846b5d277e1aafb163, type: 3}
+  canvas: {fileID: 86484711}
+  debugPrefab: {fileID: 5360527354845559743, guid: 38335b3d3fa641040a108c969b44859a, type: 3}
+  debugUISpawnPositions:
+  - {x: -400, y: 150}
+  - {x: 400, y: 150}
+  - {x: 0, y: 0}
+  - {x: 0, y: 0}
 --- !u!1 &1616806870
 GameObject:
   m_ObjectHideFlags: 0
