@@ -73,19 +73,19 @@ public class PlayerController : MonoBehaviour
     private float chargingStrong;
     private bool justStrongAttacked = false;
 
-    private bool cantMove = false;
-    private bool stun = false;
+    public bool cantMove = false;
+    public bool stun = false;
 
-    private float stunTimer = -67;
-    private RecievedAttackData atkData;
+    public float stunTimer = -67;
+    public RecievedAttackData atkData;
 
     private float stickNull = 6741;             // arbitrary value used for checking if stick is centered
 
     private Vector2 moveValue;                  // raw joystick input
     private float curvedMoveValue;              // curves the joystick x input, used by x movement calculations
 
-    private float kbVel;                        // velocity from knockback, calculated separately from movement velocity
-    private float kbYVel;
+    public float kbVel;                        // velocity from knockback, calculated separately from movement velocity
+    public float kbYVel;
     private float kbVelDecay = 0.67f;               // how much velocity from knockback decays every update
 
     private float airVel;                       // for changing velocity in mid-air; changes based on stick input
@@ -232,15 +232,34 @@ public class PlayerController : MonoBehaviour
 
         // KB VELOCITY DECAY
 
-        if (Mathf.Abs(kbVel) > kbVelDecay)
+        if (Mathf.Sign(kbVel) != Mathf.Sign(Mathf.Cos(atkData.angle)))
         {
-            kbVel -= kbVelDecay * Mathf.Sign(kbVel);
-            Debug.Log("decay vel");
+            //kbVel -= kbVelDecay * Mathf.Sign(kbVel);
+            kbVel -= kbVelDecay * Mathf.Cos(atkData.angle);
+            
+            
+            
         }
         else
         {
-            kbVel = 0;
-            Debug.Log("decay end");
+            kbYVel = 0;
+            
+            
+        }
+
+        if (Mathf.Sign(kbYVel) != Mathf.Sign(Mathf.Sin(atkData.angle)))
+        {
+            //kbVel -= kbVelDecay * Mathf.Sign(kbVel);
+            kbYVel -= kbVelDecay * Mathf.Sin(atkData.angle);
+            
+            
+            
+        }
+        else
+        {
+            kbYVel = 0;
+            
+            
         }
 
         // if (Mathf.Abs(kbYVel) > kbVelDecay)
@@ -287,6 +306,7 @@ public class PlayerController : MonoBehaviour
         if (moveValue.y <= -0.5 && !onGround)
         {
             EditYV(fastFallSpeed);
+            Debug.Log("EditYV(fastFallSpeed);");
         }
 
         // JUMP
@@ -404,12 +424,12 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (onGround)
+        if (onGround && canMoveChecker())
         {
             toFall = 0;
         }
 
-        EditYV(toJump - toFall);
+        if (canMoveChecker()) { EditYV(toJump - toFall); Debug.Log("EditYV(toJump - toFall);");}
         // EditYV(toJump);
 
         Debug.Log($"toJump: {toJump} | toFall: {toFall} | onGround: {onGround}");
@@ -544,6 +564,7 @@ public class PlayerController : MonoBehaviour
     public void Release()
     {
         EditYV(rb.linearVelocity.y * 2);
+        Debug.Log("EditYV(rb.linearVelocity.y * 2);");
     }
 
     public void Attack(InputValue value)
@@ -742,7 +763,7 @@ public class PlayerController : MonoBehaviour
 
             atkData = new RecievedAttackData(atkStats.GetDamage(), atkStats.GetKb(), atkStats.GetAngle(), other.transform.position, other.gameObject);
 
-            stunTimer = other.GetComponent<attack>().CalcHitStun(KB);
+            stunTimer = other.GetComponent<attack>().CalcHitStun(KB); //HITSTUN SETTER
             Debug.Log("got hit, stun length = " + other.GetComponent<attack>().CalcHitStun(KB) + " seconds!!");
         }
         if (other.CompareTag("Blast Zone"))
@@ -787,6 +808,7 @@ public class PlayerController : MonoBehaviour
         transform.position = new Vector3(0, 6, 0);
         rb.linearVelocity = new Vector3(0, 0, 0);
         kbVel = 0;
+        kbYVel = 0;
         lives --;
         KB = 0;
         hasItem = false;
@@ -881,7 +903,9 @@ public class PlayerController : MonoBehaviour
             {
                 Debug.Log("knocked LEFT AHHHH angle: " + angle);
             }
+            
             angle = angle * Mathf.Deg2Rad;
+            atkData.angle = angle;
         }
         else if (angle == 361)
         {
@@ -898,11 +922,13 @@ public class PlayerController : MonoBehaviour
             stun = true;
             EditXV(0);
             EditYV(5);
+            Debug.Log("EditYV(5);");
         }
         else
         {
-            kbYVel = (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Sin(angle));
+            
             kbVel = (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Cos(angle));
+            kbYVel = (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Sin(angle));
             Debug.Log("hit angle: " + angle);
             Debug.Log("edited YV by " + (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Sin(angle)));
             Debug.Log("edited XV by " + (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Cos(angle)));
@@ -1012,6 +1038,6 @@ public class PlayerController : MonoBehaviour
     public void EditYV(float y) {
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, y + kbYVel, rb.linearVelocity.z);
         // kbYVel = 0;
-        // Debug.Log("linear y velocity set to " + y);
+        Debug.Log("linear y velocity set to " + y + kbYVel);
     }
 }

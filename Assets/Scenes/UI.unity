@@ -1077,8 +1077,8 @@ MonoBehaviour:
   canvas: {fileID: 86484711}
   debugPrefab: {fileID: 5360527354845559743, guid: 38335b3d3fa641040a108c969b44859a, type: 3}
   debugUISpawnPositions:
-  - {x: -400, y: 150}
-  - {x: 400, y: 150}
+  - {x: -400, y: 180}
+  - {x: 400, y: 180}
   - {x: 0, y: 0}
   - {x: 0, y: 0}
 --- !u!1 &1616806870

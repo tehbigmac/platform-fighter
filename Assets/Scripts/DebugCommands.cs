@@ -27,7 +27,12 @@ public class DebugCommands : MonoBehaviour
             rect.anchoredPosition = debugUISpawnPositions[i];
 
             debugUI[i].enabled = false;
+
+            
         }
+
+        debugUI[0].color = new Color(0.5f, 0.7f, 1.0f, 1.0f);
+        debugUI[1].color = new Color(1.0f, 0.5f, 0.6f, 1.0f);
     }
 
 
@@ -50,14 +55,25 @@ public class DebugCommands : MonoBehaviour
             debugUI[i].text = $@"
 
             KB: {players[i].KB}%
+
             toJump: {players[i].toJump}
             toFall: {players[i].toFall}
+
             canGetItem: {players[i].canGetItem}
             hasItem: {players[i].hasItem}
+
             canRaycast: {players[i].canRaycast}
             onSemisolidGround: {players[i].onSemisolidGround}
             onGround: {players[i].onGround}
 
+            cantMove: {players[i].cantMove}
+            stun: {players[i].stun}
+            stunTimer: {players[i].stunTimer}
+
+            kbVel: {players[i].kbVel}
+            kbYVel: {players[i].kbYVel}
+
+            atkData.angle: {players[i].atkData.angle}
 
             ";
             
