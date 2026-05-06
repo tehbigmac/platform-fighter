@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviour
 
     public float kbVel;                        // velocity from knockback, calculated separately from movement velocity
     public float kbYVel;
-    private float kbVelDecay = 0.67f;               // how much velocity from knockback decays every update
+    private float kbVelDecay = 1.00f;               // how much velocity from knockback decays every update (upped from 0.67)
 
     private float airVel;                       // for changing velocity in mid-air; changes based on stick input
     private float airVelAdd = 1.5f;             // how much airVel changes every update
@@ -131,22 +131,7 @@ public class PlayerController : MonoBehaviour
         playerID = GetComponent<PlayerInput>().playerIndex;
         Debug.Log("Player index " + playerID + " spawned");
 
-        if (playerID == 1)
-        {
-            spriteRenderer.color = new Color(0.5f, 0.7f, 1.0f, 1.0f);
-        }
-        if (playerID == 2)
-        {
-            spriteRenderer.color = new Color(1.0f, 0.5f, 0.6f, 1.0f);
-        }
-        if (playerID == 3)
-        {
-            spriteRenderer.color = new Color(0.7f, 1.0f, 0.5f, 1.0f);
-        }
-        if (playerID == 4)
-        {
-            spriteRenderer.color = new Color(1.0f, 0.9f, 0.5f, 1.0f);
-        }
+        ColorNormal();
 
 
         transform.position = new Vector3(transform.position.x, transform.position.y + (-0.01f * playerID), transform.position.z);
@@ -232,33 +217,36 @@ public class PlayerController : MonoBehaviour
 
         // KB VELOCITY DECAY
 
-        if (Mathf.Sign(kbVel) != Mathf.Sign(Mathf.Cos(atkData.angle)))
+        if (Mathf.Abs(kbVel) > kbVelDecay * Mathf.Abs(Mathf.Cos(atkData.angle)))
         {
             //kbVel -= kbVelDecay * Mathf.Sign(kbVel);
             kbVel -= kbVelDecay * Mathf.Cos(atkData.angle);
             
-            
+            Debug.Log("vellXTRUE");
             
         }
         else
         {
-            kbYVel = 0;
+            kbVel = 0;
+
+            Debug.Log("vellXFALSE");
             
             
         }
 
-        if (Mathf.Sign(kbYVel) != Mathf.Sign(Mathf.Sin(atkData.angle)))
+        if (Mathf.Abs(kbYVel) > kbVelDecay * Mathf.Abs(Mathf.Sin(atkData.angle)))
         {
             //kbVel -= kbVelDecay * Mathf.Sign(kbVel);
             kbYVel -= kbVelDecay * Mathf.Sin(atkData.angle);
             
-            
+            Debug.Log("vellYTRUE");
             
         }
         else
         {
             kbYVel = 0;
             
+            Debug.Log("vellYFALSE");
             
         }
 
@@ -904,8 +892,10 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("knocked LEFT AHHHH angle: " + angle);
             }
             
+            
+
             angle = angle * Mathf.Deg2Rad;
-            atkData.angle = angle;
+            
         }
         else if (angle == 361)
         {
@@ -927,14 +917,15 @@ public class PlayerController : MonoBehaviour
         else
         {
             
-            kbVel = (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Cos(angle));
-            kbYVel = (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Sin(angle));
+            kbVel = (((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Cos(angle));
+            kbYVel = (((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Sin(angle));
             Debug.Log("hit angle: " + angle);
             Debug.Log("edited YV by " + (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Sin(angle)));
             Debug.Log("edited XV by " + (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Cos(angle)));
         }
 
         Debug.Log("attack recieved: dmg = " + dmg + " kb = " + kb + " angle = " + angle);
+        atkData.angle = angle;
     }
 
     public float SimplifyStickAngle()
@@ -1040,4 +1031,31 @@ public class PlayerController : MonoBehaviour
         // kbYVel = 0;
         Debug.Log("linear y velocity set to " + y + kbYVel);
     }
+
+    public void ColorNormal()
+    {
+        if (playerID == 1)
+        {
+            spriteRenderer.color = new Color(0.5f, 0.7f, 1.0f, 1.0f);
+        }
+        if (playerID == 2)
+        {
+            spriteRenderer.color = new Color(1.0f, 0.5f, 0.6f, 1.0f);
+        }
+        if (playerID == 3)
+        {
+            spriteRenderer.color = new Color(0.7f, 1.0f, 0.5f, 1.0f);
+        }
+        if (playerID == 4)
+        {
+            spriteRenderer.color = new Color(1.0f, 0.9f, 0.5f, 1.0f);
+        }
+    }
+
+    public void ColorCantMove()
+    {
+        spriteRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+    }
+
+
 }

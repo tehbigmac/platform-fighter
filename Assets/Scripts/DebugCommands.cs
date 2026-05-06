@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using Unity.Mathematics;
+using System;
 
 public class DebugCommands : MonoBehaviour
 {
@@ -70,10 +72,12 @@ public class DebugCommands : MonoBehaviour
             stun: {players[i].stun}
             stunTimer: {players[i].stunTimer}
 
-            kbVel: {players[i].kbVel}
-            kbYVel: {players[i].kbYVel}
+            kbVel: {Math.Round(players[i].kbVel, 3)}
+            kbYVel: {Math.Round(players[i].kbYVel, 3)}
 
             atkData.angle: {players[i].atkData.angle}
+            {Mathf.Cos(players[i].atkData.angle)}
+            {Mathf.Sin(players[i].atkData.angle)}
 
             ";
             
