@@ -71,6 +71,9 @@ public class DebugCommands : MonoBehaviour
             cantMove: {players[i].cantMove}
             stun: {players[i].stun}
             stunTimer: {players[i].stunTimer}
+            hardKB: {players[i].hardKB}
+
+            stickAngle: {players[i].SimplifyStickAngle()}
 
             kbVel: {Math.Round(players[i].kbVel, 3)}
             kbYVel: {Math.Round(players[i].kbYVel, 3)}

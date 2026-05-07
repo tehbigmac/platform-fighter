@@ -75,6 +75,7 @@ public class PlayerController : MonoBehaviour
 
     public bool cantMove = false;
     public bool stun = false;
+    public bool hardKB = false;
 
     public float stunTimer = -67;
     public RecievedAttackData atkData;
@@ -142,16 +143,18 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         Debug.Log("playerid: " + playerID + " inAttack: " + inAttack + " canGetItem: " + canGetItem + " hasItem: " + hasItem);
-        Vector3 origin = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        Vector3 origin = new Vector3(transform.position.x, transform.position.y - 1, transform.position.z);
         moveSpeed = 16;   // maximum movespeed
 
         if (stunTimer > 0) 
         {
+            stun = true;
             stunTimer--;
         }
         else if (stunTimer <= 0 && stunTimer > -67)
         {
             stunTimer = -67;
+            stun = false;
             ReceiveAttack(atkData.dmg, atkData.kb, atkData.angle, atkData.origin, atkData.gb);
             Debug.Log("poop"); // wtf is this jake
         }
@@ -159,7 +162,7 @@ public class PlayerController : MonoBehaviour
         // GROUND DETECTION
         prevGrounded = onGround;
         //if (onGroundChecker.Check())
-        float asdasdasd = 0.05f + playerCollider.bounds.extents.y;
+        float asdasdasd = -0.95f + playerCollider.bounds.extents.y;
 
         if (canRaycast) { Debug.DrawRay(origin, Vector3.down * asdasdasd, Color.green); }
         else { Debug.DrawRay(origin, Vector3.down * asdasdasd, Color.red); }
@@ -223,6 +226,7 @@ public class PlayerController : MonoBehaviour
             kbVel -= kbVelDecay * Mathf.Cos(atkData.angle);
             
             Debug.Log("vellXTRUE");
+            hardKB = true;
             
         }
         else
@@ -230,6 +234,7 @@ public class PlayerController : MonoBehaviour
             kbVel = 0;
 
             Debug.Log("vellXFALSE");
+            hardKB = false;
             
             
         }
@@ -440,6 +445,15 @@ public class PlayerController : MonoBehaviour
         {
             if (mirror) { targetItem.transform.position = new Vector3(transform.position.x + 1, transform.position.y, transform.position.z); }
             else { targetItem.transform.position = new Vector3(transform.position.x - 1, transform.position.y, transform.position.z); }
+        }
+
+        if (!canMoveChecker())
+        {
+            ColorCantMove();
+        }
+        else
+        {
+            ColorNormal();
         }
 
         Debug.Log("ID: " + playerID);
@@ -930,7 +944,11 @@ public class PlayerController : MonoBehaviour
 
     public float SimplifyStickAngle()
     {
-        if (moveValue.y != 0)
+        if (hardKB)
+        {
+            return stickNull;
+        }
+        else if (moveValue.y != 0)
         {
             float stickAngle = Mathf.Rad2Deg * Mathf.Atan(moveValue.y / moveValue.x);
             
@@ -1023,13 +1041,13 @@ public class PlayerController : MonoBehaviour
 
     public void EditXV(float x) {
         rb.linearVelocity = new Vector3((x / airRes) + kbVel, rb.linearVelocity.y, rb.linearVelocity.z);
-        // Debug.Log("linear x velocity set to " + x);
+        Debug.Log("linear x velocity set to " + x);
     }
 
     public void EditYV(float y) {
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, y + kbYVel, rb.linearVelocity.z);
         // kbYVel = 0;
-        Debug.Log("linear y velocity set to " + y + kbYVel);
+        // Debug.Log("linear y velocity set to " + y + kbYVel);
     }
 
     public void ColorNormal()
@@ -1054,7 +1072,7 @@ public class PlayerController : MonoBehaviour
 
     public void ColorCantMove()
     {
-        spriteRenderer.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+        spriteRenderer.color = new Color(1.0f, 0.7f, 0.4f, 1.0f);
     }
 
 
