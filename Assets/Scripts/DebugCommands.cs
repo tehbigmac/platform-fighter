@@ -64,9 +64,8 @@ public class DebugCommands : MonoBehaviour
             canGetItem: {players[i].canGetItem}
             hasItem: {players[i].hasItem}
 
-            canRaycast: {players[i].canRaycast}
-            onSemisolidGround: {players[i].onSemisolidGround}
-            onGround: {players[i].onGround}
+            inAttack: {players[i].inAttack}
+            inAirAttack: {players[i].inAirAttack}
 
             cantMove: {players[i].cantMove}
             stun: {players[i].stun}

@@ -533,6 +533,19 @@ MonoBehaviour:
   DSAtk: {fileID: 8583030957251326721}
   USAtk: {fileID: 7007961571709444762}
   playerID: 0
+  toJump: 0
+  toFall: 0
+  canGetItem: 0
+  hasItem: 0
+  canRaycast: 1
+  onSemisolidGround: 0
+  onGround: 0
+  cantMove: 0
+  stun: 0
+  hardKB: 0
+  stunTimer: -67
+  kbVel: 0
+  kbYVel: 0
   ground:
     serializedVersion: 2
     m_Bits: 64
@@ -1917,7 +1930,7 @@ MonoBehaviour:
   kbType: reg
   sLag: 3
   aLength: 10
-  eLag: 5
+  eLag: 18
   attribute: reg
   isStrong: 0
   children: []
@@ -3145,7 +3158,7 @@ MonoBehaviour:
   kbType: reg
   sLag: 3
   aLength: 3
-  eLag: 5
+  eLag: 18
   attribute: reg
   isStrong: 0
   children: []
@@ -3277,7 +3290,7 @@ MonoBehaviour:
   kbType: reg
   sLag: 3
   aLength: 10
-  eLag: 5
+  eLag: 18
   attribute: reg
   isStrong: 0
   children: []

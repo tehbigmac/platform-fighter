@@ -571,6 +571,11 @@ public class PlayerController : MonoBehaviour
 
     public void Attack(InputValue value)
     {
+        if (inAttack)
+        {
+            return;
+        }
+
         if (hasItem)
         {
             if (mirror) { targetItem.GetComponent<BasicItemBehavior>().AddLinearVelocity(5, 30, 0); }
@@ -589,9 +594,10 @@ public class PlayerController : MonoBehaviour
         }
 
         float angle = SimplifyStickAngle();
-        if (canMoveChecker() && !onGround)
+        if (canMoveChecker() && !onGround && !inAttack)
         // if (true)
         {
+            inAttack = true;
             if (angle == stickNull)
             {
                 SortAttackType(NAir);
@@ -612,7 +618,8 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (angle == stickNull)
+            inAttack = true;
+            if (canMoveChecker() && angle == stickNull && !inAttack)
             {
                 SortAttackType(NAtk);
             }
@@ -836,12 +843,12 @@ public class PlayerController : MonoBehaviour
     {
         var isStrong = attack.GetComponent<attack>().IsStrong();
         string attackAttribute = attack.GetComponent<attack>().GetAttribute();
-        if (attackAttribute == "reg")
+        if (attackAttribute == "reg") // if regular attack
         {
-            Debug.Log("regular attack inputted!");
-            float[] lagStats = attack.GetComponent<attack>().GetLagPack();
-            if (isStrong) { StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], attack)); }
-            else { StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], attack, !onGround)); }
+            Debug.Log("regular attack inputted!"); // debug
+            float[] lagStats = attack.GetComponent<attack>().GetLagPack(); // import attack lag pack (startlag, endlag, and attack length)
+            if (isStrong) { StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], attack)); } // if a strong attack, begin a coroutine for strong attacks
+            else { StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], attack, !onGround)); } // if not strong, use regular attack function
         }
         else if (attackAttribute == "multi") 
         {
