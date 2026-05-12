@@ -21,7 +21,7 @@ public class SpecialsLib : MonoBehaviour
 
     public void IndexSpecials(string requestedSp, InputValue value) 
     {
-        Debug.Log("comparing " + requestedSp + " with " + SpecialsList.specialsList[0]);
+        Debug.Log("augh comparing " + requestedSp + " with " + SpecialsList.specialsList[0]);
         if (requestedSp == SpecialsList.specialsList[0])
         {
             Blast();

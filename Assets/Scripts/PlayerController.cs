@@ -140,25 +140,9 @@ public class PlayerController : MonoBehaviour
         // rb.useGravity = false;
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        Debug.Log("playerid: " + playerID + " inAttack: " + inAttack + " canGetItem: " + canGetItem + " hasItem: " + hasItem);
         Vector3 origin = new Vector3(transform.position.x, transform.position.y - 1, transform.position.z);
-        moveSpeed = 16;   // maximum movespeed
-
-        if (stunTimer > 0) 
-        {
-            stun = true;
-            stunTimer--;
-        }
-        else if (stunTimer <= 0 && stunTimer > -67)
-        {
-            stunTimer = -67;
-            stun = false;
-            ReceiveAttack(atkData.dmg, atkData.kb, atkData.angle, atkData.origin, atkData.gb);
-            Debug.Log("poop"); // wtf is this jake
-        }
-
         // GROUND DETECTION
         prevGrounded = onGround;
         //if (onGroundChecker.Check())
@@ -185,6 +169,25 @@ public class PlayerController : MonoBehaviour
             onGround = false;
             Debug.Log("Raycats failed asd. canraycast = " + canRaycast);
             // Debug.Log("ungrounded or broken");
+        }
+    }
+
+    void FixedUpdate()
+    {
+        Debug.Log("playerid: " + playerID + " inAttack: " + inAttack + " canGetItem: " + canGetItem + " hasItem: " + hasItem);
+        moveSpeed = 16;   // maximum movespeed
+
+        if (stunTimer > 0) 
+        {
+            stun = true;
+            stunTimer--;
+        }
+        else if (stunTimer <= 0 && stunTimer > -67)
+        {
+            stunTimer = -67;
+            stun = false;
+            ReceiveAttack(atkData.dmg, atkData.kb, atkData.angle, atkData.origin, atkData.gb);
+            Debug.Log("poop"); // wtf is this jake
         }
 
         // MOVEMENT UPDATES
@@ -619,7 +622,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             inAttack = true;
-            if (canMoveChecker() && angle == stickNull && !inAttack)
+            if (angle == stickNull)
             {
                 SortAttackType(NAtk);
             }
@@ -689,9 +692,9 @@ public class PlayerController : MonoBehaviour
         float angle = SimplifyStickAngle();
         if (angle == stickNull)
         {
-            // SpecialsLib.IndexSpecials("blast", value);
+            SpecialsLib.IndexSpecials("blast", value);
         }
-        Debug.Log("Special in direction " + angle);
+        Debug.Log("augh Special in direction " + angle);
     }
 
 
@@ -845,13 +848,14 @@ public class PlayerController : MonoBehaviour
         string attackAttribute = attack.GetComponent<attack>().GetAttribute();
         if (attackAttribute == "reg") // if regular attack
         {
-            Debug.Log("regular attack inputted!"); // debug
+            Debug.Log("regular attack inputted! fuh"); // debug
             float[] lagStats = attack.GetComponent<attack>().GetLagPack(); // import attack lag pack (startlag, endlag, and attack length)
             if (isStrong) { StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], attack)); } // if a strong attack, begin a coroutine for strong attacks
             else { StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], attack, !onGround)); } // if not strong, use regular attack function
         }
         else if (attackAttribute == "multi") 
         {
+            Debug.Log("multi hit attack inputted! fuh"); // debug
             GameObject[] attackPack = attack.GetComponent<attack>().GetChildren();
             StartCoroutine(AttackLagHandler(attackPack, !onGround));
         }

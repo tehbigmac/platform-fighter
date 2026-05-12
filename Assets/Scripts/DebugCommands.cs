@@ -61,8 +61,8 @@ public class DebugCommands : MonoBehaviour
             toJump: {players[i].toJump}
             toFall: {players[i].toFall}
 
-            canGetItem: {players[i].canGetItem}
-            hasItem: {players[i].hasItem}
+            onGround: {players[i].onGround}
+            canMoveChecker: {players[i].canMoveChecker()}
 
             inAttack: {players[i].inAttack}
             inAirAttack: {players[i].inAirAttack}
