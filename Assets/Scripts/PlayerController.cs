@@ -481,6 +481,11 @@ public class PlayerController : MonoBehaviour
         b = !b;
     }
 
+    public IEnumerator SwapInAttack(float s) {
+        yield return new WaitForSeconds(s);
+        inAttack = !inAttack;
+    }
+
     public IEnumerator AttackLagHandler(float sLag, float aLength, float eLag, GameObject gb, bool inAir) // inputs are: start lag, active hitbox length, end lag, hitbox object, is this an air attack
     {
         if (inAir) { inAirAttack = true; }
@@ -690,9 +695,15 @@ public class PlayerController : MonoBehaviour
     public void Special(InputValue value)
     {
         float angle = SimplifyStickAngle();
-        if (angle == stickNull)
+        if (angle == 270)
         {
-            SpecialsLib.IndexSpecials("blast", value);
+            inAttack = true;
+            specialsLib.IndexSpecials("blast", value);
+        }
+        if (angle == 90)
+        {
+            inAttack = true;
+            specialsLib.IndexSpecials("hijump", value);
         }
         Debug.Log("augh Special in direction " + angle);
     }

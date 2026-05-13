@@ -44,6 +44,7 @@ public class SpecialsLib : MonoBehaviour
     public void HiJump() 
     {
         playerController.EditYV(30);
+        playerController.SwapInAttack(5f);
     }
 
     public IEnumerator SwitchObjects(float s, GameObject gb, float s2, GameObject gb2, float s3)
