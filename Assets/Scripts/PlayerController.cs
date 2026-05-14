@@ -51,10 +51,10 @@ public class PlayerController : MonoBehaviour
 
     private float shortJump;
 
-    private float jumpValue;                    // returns 1 if player is jumping, 0 if not
+    public float jumpValue;                    // returns 1 if player is jumping, 0 if not
     private bool jumpFrame;
     private float prevJumpValue;
-    private bool jumping;                       // returns true if the player is in the jumping state, false if it is not. technically redundant but booleans are so much easier to read
+    public bool jumping;                       // returns true if the player is in the jumping state, false if it is not. technically redundant but booleans are so much easier to read
     private bool activeJumping;
     private bool prevActiveJumping;
     private bool shortJumping;
@@ -484,6 +484,7 @@ public class PlayerController : MonoBehaviour
     public IEnumerator SwapInAttack(float s) {
         yield return new WaitForSeconds(s);
         inAttack = !inAttack;
+        Debug.Log("augh i switched my inattacks !!");
     }
 
     public IEnumerator AttackLagHandler(float sLag, float aLength, float eLag, GameObject gb, bool inAir) // inputs are: start lag, active hitbox length, end lag, hitbox object, is this an air attack
@@ -694,18 +695,19 @@ public class PlayerController : MonoBehaviour
 
     public void Special(InputValue value)
     {
-        float angle = SimplifyStickAngle();
-        if (angle == 270)
-        {
-            inAttack = true;
-            specialsLib.IndexSpecials("blast", value);
+        float angle = SimplifyStickAngle();//grab stick angle at input
+        if (!inAttack && canMoveChecker()) { //if you can move + an extra inAttack checker
+            inAttack = true; //in attack is turned on
+            if (angle == 270)
+            {
+                specialsLib.IndexSpecials("blast", value);
+            }
+            if (angle == 90)
+            {
+                specialsLib.IndexSpecials("hijump", value);
+            }
+            Debug.Log("augh Special in direction " + angle);
         }
-        if (angle == 90)
-        {
-            inAttack = true;
-            specialsLib.IndexSpecials("hijump", value);
-        }
-        Debug.Log("augh Special in direction " + angle);
     }
 
 
