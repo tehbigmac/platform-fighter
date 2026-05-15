@@ -50,8 +50,13 @@ public class SpecialsLib : MonoBehaviour
 
     public void HiJump() 
     {
-        // playerController.jumping = true;
-        StartCoroutine(playerController.SwapInAttack(0.5f));
+        playerController.inAttack = false;
+        playerController.inMovingAttack = true;
+        playerController.toFall = 0;
+        playerController.toJump = 0;
+        playerController.jumps = 0;
+        playerController.ReceiveAttack(0, 41, 90, Vector3.zero, transform.gameObject);
+        StartCoroutine(playerController.YouCanAttackNow(0.5f));
     }
 
     public IEnumerator SwitchObjects(float s, GameObject gb, float s2, GameObject gb2, float s3)

@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
     private bool prevActiveJumping;
     private bool shortJumping;
     private float jumpDelay;
-    private float jumps = 0;                    // how many jumps the player has left
+    public float jumps = 0;                    // how many jumps the player has left
 
     public bool canRaycast = true;
     public bool onSemisolidGround;
@@ -110,6 +110,7 @@ public class PlayerController : MonoBehaviour
 
     public bool inAttack = false;                       //Unimplemented yet but will be placed in the universal canmove checker when we do that
     public bool inAirAttack = false;
+    public bool inMovingAttack;
     public bool mirror;
 
     private SpriteRenderer spriteRenderer;
@@ -487,6 +488,14 @@ public class PlayerController : MonoBehaviour
         Debug.Log("augh i switched my inattacks !!");
     }
 
+    public IEnumerator YouCanAttackNow(float s) 
+    {
+        yield return new WaitForSeconds(s);
+        inAttack = false;
+        inMovingAttack = false;
+        inAirAttack = false;
+    }
+
     public IEnumerator AttackLagHandler(float sLag, float aLength, float eLag, GameObject gb, bool inAir) // inputs are: start lag, active hitbox length, end lag, hitbox object, is this an air attack
     {
         if (inAir) { inAirAttack = true; }
@@ -603,7 +612,7 @@ public class PlayerController : MonoBehaviour
         }
 
         float angle = SimplifyStickAngle();
-        if (canMoveChecker() && !onGround && !inAttack)
+        if (canAttackChecker() && !onGround && !inAttack)
         // if (true)
         {
             inAttack = true;
@@ -652,7 +661,7 @@ public class PlayerController : MonoBehaviour
         chargingStrong = value.Get<float>();
         justStrongAttacked = true;
         float angle = SimplifyStickAngle();
-        if (canMoveChecker() && !onGround)
+        if (canAttackChecker() && !onGround)
         // if (true)
         {
             if (angle == stickNull)
@@ -674,7 +683,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (canMoveChecker() && chargingStrong == 1 && !inAttack)
+        if (canAttackChecker() && chargingStrong == 1 && !inAttack)
         {
             if ((angle == 0 || angle == 180 || angle == stickNull) && onGround)
             {
@@ -696,7 +705,7 @@ public class PlayerController : MonoBehaviour
     public void Special(InputValue value)
     {
         float angle = SimplifyStickAngle();//grab stick angle at input
-        if (!inAttack && canMoveChecker()) { //if you can move + an extra inAttack checker
+        if (!inAttack && canAttackChecker()) { //if you can move + an extra inAttack checker
             inAttack = true; //in attack is turned on
             if (angle == 270)
             {
@@ -764,6 +773,16 @@ public class PlayerController : MonoBehaviour
         }
         else if (stun)
         {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    public bool canAttackChecker() {
+        if(!canMoveChecker() || inMovingAttack || inAirAttack) {
             return false;
         }
         else
@@ -901,7 +920,7 @@ public class PlayerController : MonoBehaviour
 
     // MATHY FUNCTIONS ------------------------------------------------------------------------------------------
 
-    private void ReceiveAttack(float dmg, float kb, float angle, Vector3 origin, GameObject gb)
+    public void ReceiveAttack(float dmg, float kb, float angle, Vector3 origin, GameObject gb)
     {
 
         if (angle == 362)

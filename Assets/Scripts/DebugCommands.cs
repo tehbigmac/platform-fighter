@@ -63,9 +63,11 @@ public class DebugCommands : MonoBehaviour
 
             onGround: {players[i].onGround}
             canMoveChecker: {players[i].canMoveChecker()}
+            canAttackChecker: {players[i].canAttackChecker()}
 
             inAttack: {players[i].inAttack}
             inAirAttack: {players[i].inAirAttack}
+            inMovingAttack: {players[i].inMovingAttack}
 
             cantMove: {players[i].cantMove}
             stun: {players[i].stun}
@@ -76,10 +78,6 @@ public class DebugCommands : MonoBehaviour
 
             kbVel: {Math.Round(players[i].kbVel, 3)}
             kbYVel: {Math.Round(players[i].kbYVel, 3)}
-
-            atkData.angle: {players[i].atkData.angle}
-            {Mathf.Cos(players[i].atkData.angle)}
-            {Mathf.Sin(players[i].atkData.angle)}
 
             ";
             
