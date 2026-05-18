@@ -9,7 +9,6 @@ public class SpecialsLib : MonoBehaviour
     private PlayerController playerController;
 
     public GameObject blast;
-    public GameObject hiJump;
     public GameObject slam;
     public GameObject dash;
     public GameObject laser;
@@ -43,12 +42,13 @@ public class SpecialsLib : MonoBehaviour
     public void Blast() 
     {
         Debug.Log("poop debug");
-        blast.SetActive(true);
-        blast.transform.Find("frame1").gameObject.SetActive(true);
-        StartCoroutine(SwitchObjects(0.3f, blast.transform.Find("frame1").gameObject, 0.1f, blast.transform.Find("frame2").gameObject, 0.5f));
+        playerController.SortAttackType(blast);
+        //blast.SetActive(true);
+        //blast.transform.Find("frame1").gameObject.SetActive(true);
+        //StartCoroutine(SwitchObjects(0.3f, blast.transform.Find("frame1").gameObject, 0.1f, blast.transform.Find("frame2").gameObject, 0.5f));
     }
 
-    public void HiJump() 
+    public void HiJump() //hijump is REALLY CHOPPED we need a better system someday lmao
     {
         playerController.inAttack = false;
         playerController.inMovingAttack = true;
@@ -59,13 +59,9 @@ public class SpecialsLib : MonoBehaviour
         StartCoroutine(playerController.YouCanAttackNow(0.5f));
     }
 
-    public IEnumerator SwitchObjects(float s, GameObject gb, float s2, GameObject gb2, float s3)
+    public void DisableAllSpecials() //unfortunately will be hard coded :( specials are too wacky to not be
     {
-        yield return new WaitForSeconds(s);
-        gb.SetActive(false);
-        yield return new WaitForSeconds(s2);
-        gb2.SetActive(true);
-        yield return new WaitForSeconds(s3);
-        gb2.SetActive(false);
+        blast.transform.Find("frame1").gameObject.SetActive(false);
+        blast.transform.Find("frame2").gameObject.SetActive(false);
     }
 }

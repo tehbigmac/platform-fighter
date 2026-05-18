@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour
 
     public bool onGround;                      // raycast determines whether character is on ground or not
 
-    private float fastFallSpeed = -20;          // constant speed of fast fall
+    private float fastFallSpeed = -40;          // constant speed of fast fall
     private float dodgeCooldown = 0;
     private float dodgeForce = 10;
     private float chargingStrong;
@@ -146,7 +146,6 @@ public class PlayerController : MonoBehaviour
         Vector3 origin = new Vector3(transform.position.x, transform.position.y - 1, transform.position.z);
         // GROUND DETECTION
         prevGrounded = onGround;
-        //if (onGroundChecker.Check())
         float asdasdasd = -0.95f + playerCollider.bounds.extents.y;
 
         if (canRaycast) { Debug.DrawRay(origin, Vector3.down * asdasdasd, Color.green); }
@@ -191,7 +190,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("poop"); // wtf is this jake
         }
 
-        // MOVEMENT UPDATES
+        // X MOVEMENT UPDATES
 
         if (canMoveChecker() && onGround) // IF GROUNDED AND CAN MOVE
         // if (onGround)
@@ -546,13 +545,13 @@ public class PlayerController : MonoBehaviour
         yield break;
     }
 
-    //▮▮▮▮▮▮▮    ▮▮▮    ▮▮  ▮▮▮▮▮▮▮    ▮▮       ▮▮  ▮▮▮▮▮▮
-    //▮▮▮▮▮▮▮    ▮▮▮    ▮▮  ▮▮▮▮▮▮▮    ▮▮       ▮▮  ▮▮▮▮▮▮
-    //   ▮▮▮        ▮▮ ▮▮ ▮▮  ▮▮       ▮▮   ▮▮       ▮▮     ▮▮
-    //   ▮▮▮        ▮▮ ▮▮ ▮▮  ▮▮       ▮▮   ▮▮       ▮▮     ▮▮
-    //   ▮▮▮        ▮▮    ▮▮▮  ▮▮▮▮▮▮▮    ▮▮       ▮▮      ▮▮
-    //▮▮▮▮▮▮▮    ▮▮    ▮▮▮  ▮▮             ▮▮▮▮▮▮▮▮     ▮▮
-    //▮▮▮▮▮▮▮    ▮▮      ▮▮  ▮▮              ▮▮▮▮▮▮        ▮▮
+    //▮▮▮▮▮▮▮    ▮▮▮    ▮▮  ▮▮▮▮▮▮▮    ▮▮         ▮▮  ▮▮▮▮▮▮
+    //▮▮▮▮▮▮▮    ▮▮▮    ▮▮  ▮▮▮▮▮▮▮    ▮▮         ▮▮  ▮▮▮▮▮▮
+    //   ▮▮▮        ▮▮ ▮▮ ▮▮  ▮▮       ▮▮   ▮▮        ▮▮      ▮▮
+    //   ▮▮▮        ▮▮ ▮▮ ▮▮  ▮▮       ▮▮   ▮▮        ▮▮      ▮▮
+    //   ▮▮▮        ▮▮    ▮▮▮  ▮▮▮▮▮▮▮    ▮▮        ▮▮       ▮▮
+    //▮▮▮▮▮▮▮    ▮▮    ▮▮▮  ▮▮             ▮▮▮▮▮▮▮▮       ▮▮
+    //▮▮▮▮▮▮▮    ▮▮      ▮▮  ▮▮              ▮▮▮▮▮▮         ▮▮
     public void Jump(InputValue value)
     {
         if (onSemisolidGround && SimplifyStickAngle() == 270)
@@ -885,7 +884,7 @@ public class PlayerController : MonoBehaviour
             if (isStrong) { StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], attack)); } // if a strong attack, begin a coroutine for strong attacks
             else { StartCoroutine(AttackLagHandler(lagStats[0], lagStats[1], lagStats[2], attack, !onGround)); } // if not strong, use regular attack function
         }
-        else if (attackAttribute == "multi") 
+        else if (attackAttribute == "multi") //MULTI HIT ATTACKS
         {
             Debug.Log("multi hit attack inputted! fuh"); // debug
             GameObject[] attackPack = attack.GetComponent<attack>().GetChildren();
@@ -898,6 +897,7 @@ public class PlayerController : MonoBehaviour
         GameObject[] attacksList = {NAtk, FAtk, UAtk, DAtk, NAir, UAir, DAir, FAir, BAir, FSAtk, DSAtk, USAtk }; //list of every normal attack
 
         StopAllCoroutines(); //shuts off all coroutines
+        specialsLib.DisableAllSpecials();
 
         for (int i = 0; i < attacksList.Length; i++) //begins a loop that repeats once for every item in the attacksList
         {
@@ -915,6 +915,7 @@ public class PlayerController : MonoBehaviour
             }
             inAttack = false;
             inAirAttack = false;
+            inMovingAttack = false;
         }
     }
 
