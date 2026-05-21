@@ -55,7 +55,7 @@ public class SpecialsLib : MonoBehaviour
         playerController.toFall = 0;
         playerController.toJump = 0;
         playerController.jumps = 0;
-        playerController.ReceiveAttack(0, 41, 90, Vector3.zero, transform.gameObject);
+        playerController.ReceiveAttack(0, 41, 90);
         StartCoroutine(playerController.YouCanAttackNow(0.5f));
     }
 

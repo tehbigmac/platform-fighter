@@ -986,6 +986,52 @@ public class PlayerController : MonoBehaviour
         atkData.angle = angle;
     }
 
+    public void ReceiveAttack(float dmg, float kb, float angle)
+    {
+
+        if (angle == 362)
+        {
+            if (KB < 60)
+            {
+                angle = 180;
+            }
+            else
+            {
+                angle = 120;
+            }
+            
+            
+
+            angle = angle * Mathf.Deg2Rad;
+            
+        }
+        else 
+        {
+            angle *= Mathf.Deg2Rad;
+        }
+        KB += 0.1f * dmg;
+
+        if (kb == 0)
+        {
+            stun = true;
+            EditXV(0);
+            EditYV(5);
+            Debug.Log("EditYV(5);");
+        }
+        else
+        {
+            
+            kbVel = (((Mathf.Pow(0.00000000007f * 0, 5.0f) + (0.03f * 0) + 1.0f) * kb) * Mathf.Cos(angle));
+            kbYVel = (((Mathf.Pow(0.00000000007f * 0, 5.0f) + (0.03f * 0) + 1.0f) * kb) * Mathf.Sin(angle));
+            Debug.Log("hit angle: " + angle);
+            Debug.Log("edited YV by " + (1 + ((Mathf.Pow(0.00000000007f * 0, 5.0f) + (0.03f * 0) + 1.0f) * kb) * Mathf.Sin(angle)));
+            Debug.Log("edited XV by " + (1 + ((Mathf.Pow(0.00000000007f * 0, 5.0f) + (0.03f * 0) + 1.0f) * kb) * Mathf.Cos(angle)));
+        }
+
+        Debug.Log("attack received: dmg = " + dmg + " kb = " + kb + " angle = " + angle);
+        atkData.angle = angle;
+    }
+
     public float SimplifyStickAngle()
     {
         if (hardKB)
