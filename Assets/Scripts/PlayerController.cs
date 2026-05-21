@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour
     public bool hardKB = false;
 
     public float stunTimer = -67;
-    public RecievedAttackData atkData;
+    public ReceivedAttackData atkData;
 
     private float stickNull = 6741;             // arbitrary value used for checking if stick is centered
 
@@ -804,7 +804,7 @@ public class PlayerController : MonoBehaviour
             //Debug.Log("ow");
             var atkStats = other.GetComponent<attack>();
 
-            atkData = new RecievedAttackData(atkStats.GetDamage(), atkStats.GetKb(), atkStats.GetAngle(), other.transform.position, other.gameObject);
+            atkData = new ReceivedAttackData(atkStats.GetDamage(), atkStats.GetKb(), atkStats.GetAngle(), other.transform.position, other.gameObject);
 
             stunTimer = other.GetComponent<attack>().CalcHitStun(KB); //HITSTUN SETTER
             Debug.Log("got hit, stun length = " + other.GetComponent<attack>().CalcHitStun(KB) + " seconds!!");
@@ -830,7 +830,7 @@ public class PlayerController : MonoBehaviour
 
     // MISC ------------------------------------------------------------------------------------------
 
-    public struct RecievedAttackData
+    public struct ReceivedAttackData
     {
         public float dmg;
         public float kb;
@@ -838,7 +838,7 @@ public class PlayerController : MonoBehaviour
         public Vector3 origin;
         public GameObject gb; 
 
-        public RecievedAttackData(float _dmg, float _kb, float _angle, Vector3 _origin, GameObject _gb)
+        public ReceivedAttackData(float _dmg, float _kb, float _angle, Vector3 _origin, GameObject _gb)
         {
             dmg = _dmg;
             kb = _kb;
@@ -982,7 +982,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("edited XV by " + (1 + ((Mathf.Pow(0.00000000007f * KB, 5.0f) + (0.03f * KB) + 1.0f) * kb) * Mathf.Cos(angle)));
         }
 
-        Debug.Log("attack recieved: dmg = " + dmg + " kb = " + kb + " angle = " + angle);
+        Debug.Log("attack received: dmg = " + dmg + " kb = " + kb + " angle = " + angle);
         atkData.angle = angle;
     }
 
