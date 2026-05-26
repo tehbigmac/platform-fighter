@@ -6,6 +6,11 @@ public class UIBootStrapper : MonoBehaviour
 {
     void Awake()
     {
+        CompleteReload();
+    }
+
+    public void CompleteReload()
+    {
         if (!SceneManager.GetSceneByName("Managers").isLoaded)
         {
             SceneManager.LoadSceneAsync("Managers", LoadSceneMode.Additive);
