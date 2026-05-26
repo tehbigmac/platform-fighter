@@ -8,10 +8,12 @@ public class TimerUIManager : MonoBehaviour
     public float time;
     public TextMeshProUGUI timerUI;
 
+    private float timeLimit = 180;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        ResetTime();
+        time = timeLimit;
     }
 
     // Update is called once per frame
@@ -19,18 +21,19 @@ public class TimerUIManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            SceneManager.LoadSceneAsync(0, LoadSceneMode.Single);
+            ResetTime();
         }
+        
+        Debug.Log("time is " + time);
 
         if (time > 0)
         {
-            Debug.Log("time is bigger than zero FUCKKK");
+            
             time -= Time.deltaTime;
             DisplayTime(time);
         }
         else
         {
-            Debug.Log("time is NOT bigger than zero FUCKKK");
             ResetTime();
         }
         
@@ -38,16 +41,15 @@ public class TimerUIManager : MonoBehaviour
 
     void DisplayTime(float timeToDisplay)
     {
-        timeToDisplay += 1; // Optional: Adjusts display so it doesn't hit 0 early
-        float minutes = Mathf.FloorToInt(timeToDisplay / 60); // Calculate minutes
-        float seconds = Mathf.FloorToInt(timeToDisplay % 60); // Calculate seconds
-        timerUI.text = string.Format("{0:00}:{1:00}", minutes, seconds); // Format as 00:00
+        timeToDisplay += 1;
+        float minutes = Mathf.FloorToInt(timeToDisplay / 60);
+        float seconds = Mathf.FloorToInt(timeToDisplay % 60);
+        timerUI.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 
     void ResetTime()
     {
-        time = 3;
+        time = timeLimit;
         SceneManager.LoadSceneAsync(0, LoadSceneMode.Single);
-        Debug.Log("FUCKKK");
     }
 }
