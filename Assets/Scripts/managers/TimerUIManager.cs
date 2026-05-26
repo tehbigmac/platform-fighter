@@ -24,11 +24,13 @@ public class TimerUIManager : MonoBehaviour
 
         if (time > 0)
         {
+            Debug.Log("time is bigger than zero FUCKKK");
             time -= Time.deltaTime;
             DisplayTime(time);
         }
         else
         {
+            Debug.Log("time is NOT bigger than zero FUCKKK");
             ResetTime();
         }
         
@@ -46,5 +48,6 @@ public class TimerUIManager : MonoBehaviour
     {
         time = 3;
         SceneManager.LoadSceneAsync(0, LoadSceneMode.Single);
+        Debug.Log("FUCKKK");
     }
 }
