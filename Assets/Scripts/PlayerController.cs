@@ -714,6 +714,11 @@ public class PlayerController : MonoBehaviour
             {
                 specialsLib.IndexSpecials("hijump", value);
             }
+            if (angle == 180 || angle == 0 || angle == stickNull)
+            {
+                inAttack = false;
+                Attack(value);
+            }
             Debug.Log("augh Special in direction " + angle);
         }
     }
