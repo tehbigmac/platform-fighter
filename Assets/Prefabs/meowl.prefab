@@ -96,7 +96,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.49269813, y: 1.156, z: -6.9227824}
-  m_LocalScale: {x: 2.3343976, y: 2.3030932, z: 1.3005}
+  m_LocalScale: {x: 3.2132983, y: 3.2825987, z: 1.3005}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2948043744162271122}
@@ -228,7 +228,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.49269813, y: 1.215, z: -6.9227824}
-  m_LocalScale: {x: 1.795, y: 0.96999997, z: 1}
+  m_LocalScale: {x: 1.795, y: 2.3166509, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2948043744162271122}
@@ -322,7 +322,7 @@ MonoBehaviour:
   damage: 150
   kb: 1
   angle: 361
-  kbType: reg
+  kbType: stun
   sLag: 12
   aLength: 3
   eLag: 2
@@ -558,6 +558,7 @@ MonoBehaviour:
   inAttack: 0
   inAirAttack: 0
   inMovingAttack: 0
+  hardKb: 0
   mirror: 0
 --- !u!114 &627478309679450327
 MonoBehaviour:
@@ -2415,7 +2416,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 15
-  kb: 10
+  kb: 12
   angle: 90
   kbType: reg
   sLag: 10
@@ -2918,9 +2919,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 20
-  kb: 15
+  kb: 12
   angle: 362
-  kbType: 362
+  kbType: reg
   sLag: 5
   aLength: 5
   eLag: 10
@@ -3050,8 +3051,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 20
-  kb: 15
-  angle: 90
+  kb: 12
+  angle: 75
   kbType: reg
   sLag: 10
   aLength: 5

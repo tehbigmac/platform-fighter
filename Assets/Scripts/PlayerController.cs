@@ -87,13 +87,13 @@ public class PlayerController : MonoBehaviour
 
     public float kbVel;                        // velocity from knockback, calculated separately from movement velocity
     public float kbYVel;
-    private float kbVelDecay = 1.00f;               // how much velocity from knockback decays every update (upped from 0.67)
+    private float kbVelDecay = 0.5f;               // how much velocity from knockback decays every update (upped from 0.67)
 
     private float airVel;                       // for changing velocity in mid-air; changes based on stick input
     private float airVelAdd = 1.5f;             // how much airVel changes every update
 
     private float airRes = 1;
-    private float airResDecay = 0.01f;
+    private float airResDecay = 0.02f;
 
     private Collider playerCollider;            // collider component of the player
     private OnGroundChecker onGroundChecker;
@@ -110,8 +110,13 @@ public class PlayerController : MonoBehaviour
 
     public bool inAttack = false;                       //Unimplemented yet but will be placed in the universal canmove checker when we do that
     public bool inAirAttack = false;
-    public bool inMovingAttack;
+    public bool inMovingAttack = false;
+    public bool hardKb = false;
     public bool mirror;
+
+    public string upSpecial;
+    public string downSpecial;
+    public string sideSpecial;
 
     private SpriteRenderer spriteRenderer;
 
@@ -708,18 +713,21 @@ public class PlayerController : MonoBehaviour
             inAttack = true; //in attack is turned on
             if (angle == 270)
             {
-                specialsLib.IndexSpecials("blast", value);
+                specialsLib.IndexDownSpecials("blast", value);
             }
             if (angle == 90)
             {
-                specialsLib.IndexSpecials("hijump", value);
+                specialsLib.IndexUpSpecials("hijump", value);
             }
-            if (angle == 180 || angle == 0 || angle == stickNull)
+            if (angle == 180 || angle == 0)
             {
                 inAttack = false;
                 Attack(value);
             }
-            Debug.Log("augh Special in direction " + angle);
+            if (angle == stickNull)
+            {
+                Debug.Log("augh Special in direction " + angle);
+            }
         }
     }
 
@@ -933,7 +941,7 @@ public class PlayerController : MonoBehaviour
         {
             if (KB < 60)
             {
-                angle = 180;
+                angle = 150;
             }
             else
             {
