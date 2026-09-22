@@ -562,7 +562,7 @@ public class PlayerController : MonoBehaviour
         if (onSemisolidGround && SimplifyStickAngle() == 270)
         {
             canRaycast = false;
-            transform.position = new Vector3(transform.position.x, transform.position.y - 0.2f, transform.position.z);
+            transform.position = new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z);
             return;
         }
         jumpValue = value.Get<float>();
